@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  gremien-o-mat:
+    build:
+        context: .
+    restart: always
+    # environment:
+        # VARS HERE
+        # - VAR1=
