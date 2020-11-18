@@ -1,0 +1,287 @@
+[
+  {
+    "title": "Freizeit",
+    "question": "Sollten die Städte Wiesbaden und Rüsselsheim ein größeres Angebot für Freizeitaktivitäten für Studierende schaffen?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":2,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":0,"Neff":1,"Nowicki":1,"Stahl":0,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Die Angebote für den Studierenden wie Museen und Kulturveranstaltungen erscheinen mir ausreichend wie zum Beispiel freien Eintritt in Museen.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Die Städte sollten versuchen, so attraktiv wie möglich für Studierende zu werden.",
+        "Wechler":""
+      }
+    },
+  {
+    "title": "Freizeit",
+    "question": "Sollte es eine Schwimmbadflat für Rüsselsheim und Wiesbaden geben?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":1,"Iffland":0,"Kudelko":0,"Neff":0,"Nowicki":0,"Stahl":1,"Wechler":1},
+    "comments":
+      {
+        "Bojcum":"Eine Schwimmbadflat ermöglicht einen Sportlichen Ausgleich während des Studiums.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Kommt auf die Kosten und die Anzahl der Schwimmbäder an. Das Kleinfeldchen direkt neben dem Campus KSR hat schon sehr günstige Studipreise",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Freizeit",
+    "question": "Sollte es ein größeres Angebot von politischen und kulturellen Events geben? (Ringvorlesungen, Ausstellung, etc.)",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":1,"Iffland":0,"Kudelko":0,"Neff":1,"Nowicki":1,"Stahl":0,"Wechler":1},
+    "comments":
+      {
+        "Bojcum":"Gerader Politischer und kultureller Austausch ist in unserer Zeit sehr wichtig und fördert die Diskussionskultur und das Verständnis füreinander.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ja, außerdem sollte dafür mehr Werbung gemacht werden",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Freizeit",
+    "question": "Sollte es mehr Freizeitaktivitäten an den einzelnen Campus`´en geben?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":0,"Neff":0,"Nowicki":1,"Stahl":0,"Wechler":0},
+    "comments":
+      {
+        "Bojcum":"Um die Kommunikation zwischen der Fakultäten zu verbessern, bin ich für mehr Freizeitaktivitäten am Standort Wiesbaden.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ja, auf den Standorten der Hochschule sollte mehr studentisches Leben stattfinden",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Essen",
+    "question": "Sollte es ein größeres Angebot an veganer und vegetarischer Nahrung geben?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":1,"Carmanns":1,"Hastenteufel":1,"Iffland":0,"Kudelko":1,"Neff":1,"Nowicki":0,"Stahl":1,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Ein ausreichendes Angebot für die jeweiligen Vorlieben ist wichtig, allerdings ist bei einer Abwägung die Belastung des Mensapersonals zu berücksichtigen.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Das Angebot finde ich als Veganer ok, allerdings sollten bei allen und nicht nur bei Hauptspeisen die Infos über Vegan/Vegetarisch angeschrieben werden",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Essen",
+    "question": "Sollte man Plastiktüten und Einwegbecher in den Mensen verbieten?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":1,"Neff":0,"Nowicki":0,"Stahl":0,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Diese Maßnahme würde den ökologischen Fußabdruck der Hochschule deutlich verbessern.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ja, allerdings liegt das nicht in der Entscheidungsmacht des StuPA",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Gremien",
+    "question": "Soll es einen gleichen Anteil von Frauen und Männern in Gremien geben?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":2,"Carmanns":0,"Hastenteufel":1,"Iffland":1,"Kudelko":1,"Neff":2,"Nowicki":1,"Stahl":1,"Wechler":1},
+    "comments":
+      {
+        "Bojcum":"Die Besetzung der Gremien sollten den Wahlen überlassen bleiben.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Es wäre wünschenswert, allerdings haben wir bei einigen Gremien zur Zeit sowieso ein Problem mit zu wenig Mitgliedern, dass wir die Beteiligung nicht noch durch Quoten reduzieren sollten. ",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Gremien",
+    "question": "Unterstützt du den medialen Ausbau der Gremien?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":0,"Neff":0,"Nowicki":0,"Stahl":0,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Es würde die Kommunikation untereinander verbessern.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ja",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Politik",
+    "question": "Sollten StuPa und AStA sich auf politischer Ebene mehr für die Interessen der Studierenden einsetzen?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":0,"Neff":1,"Nowicki":1,"Stahl":1,"Wechler":1}, 
+    "comments":
+      {
+        "Bojcum":"Die Interessen der Studierenden sollte durch ihre gewählten Gremien auch auf politischer Ebene vertreten sein.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Der AStA macht das bereits so gut er kann.",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Politik",
+    "question": "Bist du für das Verbot der Symptomangabe bei Attesten?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":0,"Neff":1,"Nowicki":0,"Stahl":0,"Wechler":2},
+    "comments":
+      {
+        "Bojcum":"Die Privatsphäre sollte so weit wie möglich geschützt sein.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ja",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Politik",
+    "question": "Sollte man das Gründen von Hochschulgruppen fördern?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":0,"Hastenteufel":1,"Iffland":0,"Kudelko":0,"Neff":0,"Nowicki":0,"Stahl":0,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Das Bilden von Hochschulgruppen fördert die jeweiligen Interseen der Studieneden und die Kommunikation unter ihnen.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ja, ein paar mehr Hochschulgruppen täte dem studentischen Leben an der HSRM gut",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Mobilität",
+    "question": "Sollte man einen Ausbau von Fahrradstellplätzen anstatt von PKW-Stellplätzen vorantreiben?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":1,"Carmanns":0,"Hastenteufel":0,"Iffland":0,"Kudelko":1,"Neff":0,"Nowicki":1,"Stahl":2,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Es ist von Standort zu Standort abzuwägen, wie hoch der Bedarf an Rad- bzw. PKW- Parkplätzen ist, oder ob die Flächen für andere Projekte genutzt werden sollten, wie z.B.: Studentenwohnheime.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ich befürworte zwar eine Stärkung des Radverkehrs, allerdings darf man nicht vergessen, dass viele unsere Studis Pendler sind, die auf den PKW angewiesen sind. ",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Mobilität",
+    "question": "Sollte man einen Ausbau des Nextbike-Systems vorantreiben?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":1,"Hastenteufel":0,"Iffland":0,"Kudelko":0,"Neff":0,"Nowicki":0,"Stahl":0,"Wechler":0}, 
+    "comments":
+      {
+        "Bojcum":"Der Ausbau reduziert den PKW- Verkehr und unterstützt die Abkehr der Nutzung von Autos.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Es wäre wünschenswert, wenn nicht nur der Stadtkern, sondern auch die einzelnen Stadtteile mehr in das System von Nextbike eingegliedert werden würden.",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Mobilität",
+    "question": "Sollte das Parkhaus am KSR nur von Studierenden genutzt werden, die eine bestimmte Entfernung weit weg wohnen?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":2,"Carmanns":1,"Hastenteufel":0,"Iffland":1,"Kudelko":2,"Neff":2,"Nowicki":2,"Stahl":0,"Wechler":1}, 
+    "comments":
+      {
+        "Bojcum":"Im Bezug auf die Entfernung von Wohnort zur Hochschule sollte kein Studierender benachteiligt werden.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Das wäre wünschenswert, allerdings stellt sich hier die Frage der Umsetzbarkeit. Man müsste Dafür in den Dialog mit der Hochschule treten.",
+        "Wechler":""
+      }
+  },
+  {
+    "title": "Studienplätze",
+    "question": "Sollten mehr Studiengänge auf Englisch bzw. International angeboten werden?",
+    "annotation": "",
+    "style": "standard",
+    "answers": {"Bojcum":0,"Carmanns":1,"Hastenteufel":1,"Iffland":0,"Kudelko":0,"Neff":1,"Nowicki":0,"Stahl":2,"Wechler":1}, 
+    "comments":
+      {
+        "Bojcum":"Die englische Sprache und die internationale Ausrichtung der Studienfächer ist für den persönlichen bzw. beruflichen Werdegang essenziell.",
+        "Carmanns":"",
+        "Hastenteufel":"",
+        "Iffland":"",
+        "Kudelko":"",
+        "Neff":"",
+        "Nowicki":"",
+        "Stahl":"Ich halte das Angebot von Englischen Modulen im Studiengang für wenig Zielführend um mehr Internationale Kompetenzen zu schaffen. Die stärkere Förderung von Auslandssemestern finde ich dafür besser, als mehr Englischdozenten an die HSRM zu holen.",
+        "Wechler":""
+      }
+  }
+]

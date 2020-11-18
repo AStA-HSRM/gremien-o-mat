@@ -1,0 +1,65 @@
+{
+  "Bojcum":
+    {
+      "shortname" : "Bojcum",
+      "longname" : "Maximilian Bojcum",
+      "website" : "overlays/maximilianbojcum",
+      "logo" : "PB/Maximilian.jpg"
+    },
+    "Carmanns":
+    {
+      "shortname" : "Carmanns",
+      "longname" : "Max Carmanns",
+      "website" : "overlays/maxcarmanns",
+      "logo" : "PB/Max.jpg"
+    },
+    "Hastenteufel":
+    {
+      "shortname" : "Hastenteufel",
+      "longname" : "Paul Hastenteufel",
+      "website" : "overlays/paulhastenteufel",
+      "logo" : "PB/Paul.jpg"
+    },
+    "Iffland":
+    {
+      "shortname" : "Iffland",
+      "longname" : "Merle Iffland",
+      "website" : "overlays/merleiffland",
+      "logo" : "PB/Frau.jpg"
+    },
+    "Kudelko":
+    {
+      "shortname" : "Kudelko",
+      "longname" : "Mareike Kudelko",
+      "website" : "overlays/mareikekudelko",
+      "logo" : "PB/Mareike.jpg"
+    },
+    "Neff":
+    {
+      "shortname" : "Neff",
+      "longname" : "Florian Neff",
+      "website" : "overlays/florianneff",
+      "logo" : "PB/Florian.jpg"
+    },
+    "Nowicki":
+    {
+      "shortname" : "Nowicki",
+      "longname" : "Isabelle Nowicki",
+      "website" : "overlays/isabellenowicki",
+      "logo" : "PB/Isabelle.jpg"
+    },
+    "Stahl":
+    {
+      "shortname" : "Stahl",
+      "longname" : "Patrick Stahl",
+      "website" : "overlays/patrickstahl",
+      "logo" : "PB/Patrick.jpg"
+    },
+    "Wechler":
+    {
+      "shortname" : "Wechler",
+      "longname" : "Tim-Jonas Wechler",
+      "website" : "overlays/timjonaswechler",
+      "logo" : "PB/Mann.jpg"
+    }
+}
