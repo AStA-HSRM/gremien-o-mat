@@ -1,7 +1,7 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,macos,linux,gradle,java
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,macos,linux,gradle,java
+# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,gradle,java,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,gradle,java,visualstudiocode
 
 ### Java ###
 # Compiled class file
@@ -50,7 +50,8 @@ hs_err_pid*
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -132,7 +133,7 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,macos,linux,gradle,java
+# End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,gradle,java,visualstudiocode
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
