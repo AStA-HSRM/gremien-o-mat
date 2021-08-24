@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping
-public class IndexController {
+public class HomeController {
     
-    @GetMapping("/test")
+    @GetMapping("/")
     public String getHome(Model m) {
         return "home";
     }
