@@ -1,0 +1,9 @@
+version: "2"
+
+services:
+  tomcat-test:
+    build: .
+    restart: always
+    container_name: tomcat-test
+    ports: 
+      - 8080:8080
