@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GremiomatApplication<gremiomat>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "de.astahsrm.gremiomat.GremiomatApplication",
+            "projectName": "gremiomat",
+            "args": ""
+        }
+    ]
+}
