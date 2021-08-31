@@ -32,4 +32,16 @@ public class GremiumServiceImpl implements GremiumService {
         return gremiumRepository.findAll(Sort.by(Direction.DESC, "name"));
     }
 
+    @Override
+    public Optional<Gremium> getGremiumByAbbr(String abbr) {
+        for (Gremium gremium : gremiumRepository.findAll()) {
+            if(gremium.getAbbreviation().equals(abbr)) {
+                return Optional.of(gremium);
+            }
+        }
+        return Optional.empty();
+    }
+
+    
+
 }
