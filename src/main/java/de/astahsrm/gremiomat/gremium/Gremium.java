@@ -12,7 +12,6 @@ import javax.validation.constraints.Pattern;
 
 @Entity
 public class Gremium {
-
     @Id
     @GeneratedValue
     private long id;
@@ -77,6 +76,14 @@ public class Gremium {
         if (version != other.version)
             return false;
         return true;
+    }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
     public long getId() {
