@@ -24,12 +24,22 @@ public class GremiumController {
     }
 
     @GetMapping("gremien/{abbrv}")
-    public String getMethodName(@PathVariable long id, Model m) {
+    public String getGremiumInfo(@PathVariable long id, Model m) {
         Optional<Gremium> gremium = gremiumService.getGremiumById(id);
         if(gremium.isPresent()) {
             m.addAttribute("gremium", gremium);
             return "gremium_info";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+    }
+
+    @GetMapping("gremien/add")
+    public String addGremium(Model m) {
+        Gremium gremium = new Gremium();
+        gremium.setAbbreviation("tst");
+        gremium.setDescription("test-description");
+        gremium.setName("test-name");
+        gremiumService.saveGremium(gremium);
+        return "gremiens";
     }
 }
