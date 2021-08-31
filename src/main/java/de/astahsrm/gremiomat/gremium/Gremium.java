@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Entity
 public class Gremium {
@@ -21,6 +22,10 @@ public class Gremium {
 
     @NotBlank(message = "{notEmpty}")
     private String name;
+
+    @NotBlank(message = "{notEmpty}")
+    @Pattern(regexp = "^(?=.{1,16}$)[a-z]++(?:-[a-z]++)*+$")
+    private String abbreviation;
 
     @NotBlank(message = "{notEmpty}")
     @Lob
