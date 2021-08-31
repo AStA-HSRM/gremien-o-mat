@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.controller;
+package de.astahsrm.gremiomat.gremium;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

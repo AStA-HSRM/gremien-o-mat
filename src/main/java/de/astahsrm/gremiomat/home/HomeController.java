@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.controller;
+package de.astahsrm.gremiomat.home;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
