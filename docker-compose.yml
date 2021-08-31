@@ -1,10 +1,23 @@
 version: "2"
 
 services:
-  tomcat-test:
-    build: .
-    restart: always
-    container_name: tomcat-test
-    ports: 
-      - 8080:8080
+  # tomcat-test:
+    # build: .
+    # restart: always
+    # container_name: tomcat-test
+    # ports: 
+    #   - 8080:8080
       
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    # restart: always
+    ports:
+      - 3306:3306
+    # volumes:
+    #   - ./volumes/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev123
+      - MYSQL_DATABASE=temp_db
