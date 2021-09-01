@@ -8,8 +8,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 
-import de.astahsrm.gremiomat.gremium.Query;
-
 @Entity
 public class Answer {
 
@@ -22,13 +20,13 @@ public class Answer {
 
     @NotBlank
     @OneToOne(optional = false, cascade=CascadeType.PERSIST, orphanRemoval=false)
-    private Query question;
+    private long questionId;
 
     @NotBlank
     private int choice;
 
-    public Answer() {
-        this.question = new Query();
+    public Answer(long questionId) {
+        this.questionId = questionId;
         this.choice = 0;
     }
 }
