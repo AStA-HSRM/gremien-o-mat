@@ -40,12 +40,10 @@ public class Candidate {
 
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Gremium> gremium;
 
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JsonIdentityReference(alwaysAsId = true)
     private List<Answer> answers;
 
     @NotEmpty(message = "{notEmpty}")
