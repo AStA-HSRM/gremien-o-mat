@@ -16,11 +16,9 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.astahsrm.gremiomat.gremium.Gremium;
-
 @Entity
 public class Candidate {
-
+    
     @Id
     @GeneratedValue
     private long id;
@@ -39,7 +37,7 @@ public class Candidate {
 
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Gremium> gremium;
+    private List<Long> gremiumIds;
 
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -55,13 +53,13 @@ public class Candidate {
     @JsonIgnore
     private Byte[] bytes;
 
-    public Candidate() {
+    public Candidate(List<Long> gremiumIds) {
+        this.gremiumIds = gremiumIds;
         this.mimeType = "";
         this.imageFileName = "";
         this.firstname = "";
         this.lastname = "";
         this.email = "";
-        this.gremium = new ArrayList<>();
         this.answers = new ArrayList<>();
     }
 
@@ -74,13 +72,7 @@ public class Candidate {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
-        result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
         result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + ((imageFileName == null) ? 0 : imageFileName.hashCode());
-        result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
-        result = prime * result + ((mimeType == null) ? 0 : mimeType.hashCode());
-        result = prime * result + (int) (version ^ (version >>> 32));
         return result;
     }
 
@@ -93,36 +85,18 @@ public class Candidate {
         if (getClass() != obj.getClass())
             return false;
         Candidate other = (Candidate) obj;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        if (firstname == null) {
-            if (other.firstname != null)
-                return false;
-        } else if (!firstname.equals(other.firstname))
-            return false;
         if (id != other.id)
             return false;
-        if (imageFileName == null) {
-            if (other.imageFileName != null)
-                return false;
-        } else if (!imageFileName.equals(other.imageFileName))
-            return false;
-        if (lastname == null) {
-            if (other.lastname != null)
-                return false;
-        } else if (!lastname.equals(other.lastname))
-            return false;
-        if (mimeType == null) {
-            if (other.mimeType != null)
-                return false;
-        } else if (!mimeType.equals(other.mimeType))
-            return false;
-        if (version != other.version)
-            return false;
         return true;
+    }
+
+
+    public List<Long> getGremiumIds() {
+        return gremiumIds;
+    }
+
+    public void setGremiumIds(List<Long> gremiumIds) {
+        this.gremiumIds = gremiumIds;
     }
 
     public long getId() {
@@ -163,14 +137,6 @@ public class Candidate {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<Gremium> getGremium() {
-        return gremium;
-    }
-
-    public void setGremium(List<Gremium> gremium) {
-        this.gremium = gremium;
     }
 
     public String getMimeType() {
