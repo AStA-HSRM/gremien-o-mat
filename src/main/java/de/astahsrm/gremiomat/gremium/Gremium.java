@@ -90,6 +90,14 @@ public class Gremium {
         return true;
     }
 
+    public List<Query> getQueries() {
+        return queries;
+    }
+
+    public void setQueries(List<Query> queries) {
+        this.queries = queries;
+    }
+
     public String getAbbr() {
         return abbr;
     }
