@@ -3,6 +3,7 @@ package de.astahsrm.gremiomat.gremium;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +19,10 @@ public class Query {
 
     @NotBlank
     private String text;
+
+    @NotBlank
+    @OneToMany
+    private long gremiumId;
 
     public Query() {
         this.text = "";
