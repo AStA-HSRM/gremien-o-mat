@@ -37,13 +37,10 @@ public class GremiumServiceImpl implements GremiumService {
     @Override
     public Optional<Gremium> getGremiumByAbbr(String abbr) {
         for (Gremium gremium : gremiumRepository.findAll()) {
-            if(gremium.getAbbr().equals(abbr)) {
+            if (gremium.getAbbr().equals(abbr)) {
                 return Optional.of(gremium);
             }
         }
         return Optional.empty();
     }
-
-    
-
 }

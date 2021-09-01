@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,20 +28,45 @@ public class GremiumController {
 
     @GetMapping("/{abbr}")
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
-        Optional<Gremium> gremium = gremiumService.getGremiumByAbbr(abbr);
-        if(gremium.isPresent()) {
-            m.addAttribute("gremium", gremium.get());
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if(gremiumOptional.isPresent()) {
+            m.addAttribute("gremium", gremiumOptional.get());
             return "gremien/info";
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such Gremium exists!");
     }
     
+    @GetMapping("/{abbr}/{queryIndex}")
+    public String getQuery(Model m, @PathVariable String abbr, @PathVariable int queryIndex) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if(gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            if(gremium.getQueries().size() > queryIndex) {
+                m.addAttribute("gremium", gremium);
+                m.addAttribute("queryListSize", gremium.getQueries().size());
+                m.addAttribute("query", gremium.getQueries().get(queryIndex));
+                m.addAttribute("queryIndex", queryIndex);
+                return "gremien/query";
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such Query exists!");
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such Gremium exists!");
+    }
+
     @GetMapping("/add")
     public String addGremium(Model m) {
         Gremium gremium = new Gremium();
         gremium.setAbbr("tst");
         gremium.setDescription("test-description");
         gremium.setName("test-name");
+        ArrayList<Query> q = new ArrayList<>();
+        Query q1 = new Query();
+        q1.setText("Die Kuh ist doof!");
+        Query q2 = new Query();
+        q2.setText("Das Pferd macht mäh!");
+        q.add(q1);
+        q.add(q2);
+        gremium.setQueries(q);
         gremiumService.saveGremium(gremium);
         return "redirect:/gremien";
     }
