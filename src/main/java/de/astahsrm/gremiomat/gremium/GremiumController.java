@@ -19,19 +19,30 @@ public class GremiumController {
     @Autowired
     private GremiumService gremiumService;
 
-    @GetMapping("")
+    @GetMapping
     public String getGremien(Model m) {
-        m.addAttribute("all_gremiens", gremiumService.getAllGremiumsSortedByName());
-        return "gremiens";
+        m.addAttribute("gremien", gremiumService.getAllGremiumsSortedByName());
+        return "gremien";
     }
 
-    @GetMapping("/{abbrv}")
-    public String getGremiumInfo(@PathVariable long id, Model m) {
-        Optional<Gremium> gremium = gremiumService.getGremiumById(id);
+    @GetMapping("/{abbr}")
+    public String getGremiumInfo(@PathVariable String abbr, Model m) {
+        Optional<Gremium> gremium = gremiumService.getGremiumByAbbr(abbr);
         if(gremium.isPresent()) {
             m.addAttribute("gremium", gremium);
             return "gremium_info";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
+    /*
+    @GetMapping("/add")
+    public String addGremium(Model m) {
+        Gremium gremium = new Gremium();
+        gremium.setAbbr("tst");
+        gremium.setDescription("test-description");
+        gremium.setName("test-name");
+        gremiumService.saveGremium(gremium);
+        return "redirect:/gremien";
+    }
+    */
 }
