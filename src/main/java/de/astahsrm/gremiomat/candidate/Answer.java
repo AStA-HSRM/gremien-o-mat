@@ -25,9 +25,10 @@ public class Answer {
     private Query question;
 
     @NotBlank
-    private String text;
+    private int choice;
 
     public Answer() {
-        this.text = "";
+        this.question = new Query();
+        this.choice = 0;
     }
 }
