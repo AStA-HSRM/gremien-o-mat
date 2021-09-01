@@ -34,14 +34,4 @@ public class GremiumController {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
-
-    @GetMapping("/add")
-    public String addGremium(Model m) {
-        Gremium gremium = new Gremium();
-        gremium.setAbbreviation("tst");
-        gremium.setDescription("test-description");
-        gremium.setName("test-name");
-        gremiumService.saveGremium(gremium);
-        return "gremiens";
-    }
 }
