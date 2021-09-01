@@ -13,4 +13,6 @@ public interface GremiumService {
     public void delGremium(Long id);
 
     public Gremium saveGremium(Gremium gremium);
+
+    // TODO getCandidates function
 }
