@@ -24,7 +24,7 @@ public class Gremium {
 
     @NotBlank(message = "{notEmpty}")
     @Pattern(regexp = "^(?=.{1,16}$)[a-z]++(?:-[a-z]++)*+$")
-    private String abbreviation;
+    private String abbr;
 
     @NotBlank(message = "{notEmpty}")
     @Lob
@@ -33,6 +33,7 @@ public class Gremium {
 
     public Gremium() {
         this.name = "";
+        this.abbr = "";
         this.description = "";
     }
 
@@ -78,12 +79,12 @@ public class Gremium {
         return true;
     }
 
-    public String getAbbreviation() {
-        return abbreviation;
+    public String getAbbr() {
+        return abbr;
     }
 
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
+    public void setAbbr(String abbr) {
+        this.abbr = abbr;
     }
 
     public long getId() {
