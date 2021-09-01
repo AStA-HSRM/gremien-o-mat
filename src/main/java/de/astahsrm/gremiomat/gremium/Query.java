@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.query;
+package de.astahsrm.gremiomat.gremium;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

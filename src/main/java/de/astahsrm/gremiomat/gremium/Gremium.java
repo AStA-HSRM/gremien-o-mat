@@ -1,13 +1,19 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
@@ -31,10 +37,15 @@ public class Gremium {
     @Basic(fetch = FetchType.EAGER)
     private String description;
 
+    @NotNull
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Query> queries;
+
     public Gremium() {
         this.name = "";
         this.abbr = "";
         this.description = "";
+        this.queries = new ArrayList<>();
     }
 
     @Override

@@ -8,7 +8,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 
-import de.astahsrm.gremiomat.query.Query;
+import de.astahsrm.gremiomat.gremium.Query;
 
 @Entity
 public class Answer {
