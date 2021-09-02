@@ -14,5 +14,7 @@ public interface GremiumService {
 
     public Gremium saveGremium(Gremium gremium);
 
-    // TODO getCandidates function
+    // TODO Candidate service function
+
+    // TODO Query service funcions
 }
