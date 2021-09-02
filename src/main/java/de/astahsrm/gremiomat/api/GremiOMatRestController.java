@@ -9,17 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
-public class CandidateRestController {    
+public class GremiOMatRestController {    
 
-    // TODO Add candidate list with answers as return value
+    
     @GetMapping(value = "/candidates", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCandidatesWithAnswers() {
+        // TODO Add candidate list with answers as return value
         return null;
-    };
+    }
 
-    // TODO Add candidate response with answers as return value
+    
     @GetMapping(value = "/candidates/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCandidate(@PathVariable("id") long id) {
+        // TODO Add candidate response with answers as return value
         return null;
-    };
+    }
 }
