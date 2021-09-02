@@ -41,7 +41,7 @@ public class Candidate {
 
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Answer> answers;
+    private List<CandidateAnswer> answers;
 
     @NotEmpty(message = "{notEmpty}")
     private String mimeType;
@@ -155,11 +155,11 @@ public class Candidate {
         this.imageFileName = imageFileName;
     }
 
-    public List<Answer> getAnswers() {
+    public List<CandidateAnswer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public void setAnswers(List<CandidateAnswer> answers) {
         this.answers = answers;
     }
 
