@@ -1,10 +1,10 @@
 version: "2"
 
 services:
-  # tomcat-test:
-    # build: .
-    # restart: always
-    # container_name: tomcat-test
+  tomcat-test:
+    build: .
+    restart: always
+    network_mode: host
     # ports: 
     #   - 8080:8080
       
