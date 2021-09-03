@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-
+import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.candidate.CandidateService;
 @Controller
 @RequestMapping("/gremien")
 public class GremiumController {
 
     @Autowired
     private GremiumService gremiumService;
+
+    @Autowired
+    private CandidateService candidateService;
 
     @GetMapping
     public String getGremien(Model m) {
