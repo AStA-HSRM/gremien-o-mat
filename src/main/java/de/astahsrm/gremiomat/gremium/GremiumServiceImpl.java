@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import de.astahsrm.gremiomat.candidate.Candidate;
+
 @Service
 public class GremiumServiceImpl implements GremiumService {
 
@@ -42,5 +44,15 @@ public class GremiumServiceImpl implements GremiumService {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<Candidate> getGremiumCandidatesById(Long id) {
+        return gremiumRepository.findById(id).get().getCandidates();
+    }
+
+    @Override
+    public List<Query> getGremiumQueriesById(Long id) {
+        return gremiumRepository.findById(id).get().getQueries();
     }
 }
