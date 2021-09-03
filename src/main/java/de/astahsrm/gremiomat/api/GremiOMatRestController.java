@@ -2,6 +2,7 @@ package de.astahsrm.gremiomat.api;
 
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.astahsrm.gremiomat.gremium.GremiumService;
 import de.astahsrm.gremiomat.gremium.Gremium;
+import de.astahsrm.gremiomat.candidate.Candidate;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -35,8 +37,7 @@ public class GremiOMatRestController {
     };
 
     @GetMapping(value = "/gremium/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Optional<Gremium> getGremiumCandidates(@PathVariable("id") long id) {
-        // TODO This is wrong, needs getCandidatesByGremium function
-        return gremiumService.getGremiumById(id);
+    public List<Candidate> getGremiumCandidates(@PathVariable("id") long id) {
+        return gremiumService.getGremiumCandidatesById(id);
     }
 }
