@@ -16,6 +16,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import de.astahsrm.gremiomat.candidate.Candidate;
+
 @Entity
 public class Gremium {
     @Id
@@ -40,6 +42,10 @@ public class Gremium {
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Query> queries;
+
+    @NotNull
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Candidate> candidates;
 
     public Gremium() {
         this.name = "";
@@ -92,6 +98,10 @@ public class Gremium {
 
     public List<Query> getQueries() {
         return queries;
+    }
+
+    public List<Candidate> getCandidates() {
+        return candidates;
     }
 
     public void setQueries(List<Query> queries) {
