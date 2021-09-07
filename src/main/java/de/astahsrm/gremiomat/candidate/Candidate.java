@@ -90,6 +90,12 @@ public class Candidate {
         return true;
     }
 
+    public void sendWelcomeMail() {
+        // TODO placeholder function
+        //
+        // sendMail(email);
+    }
+
 
     public List<Long> getGremiumIds() {
         return gremiumIds;
