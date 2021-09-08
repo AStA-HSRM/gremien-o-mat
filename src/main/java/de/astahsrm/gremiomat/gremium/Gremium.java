@@ -7,7 +7,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -22,13 +21,11 @@ import de.astahsrm.gremiomat.candidate.Candidate;
 
 @Entity
 public class Gremium {
-    @Id
-    @GeneratedValue
-    private long id;
 
     @Version
     private long version;
 
+    @Id
     @NotBlank(message = "{notEmpty}")
     private String name;
 
@@ -67,17 +64,15 @@ public class Gremium {
 
     @Override
     public String toString() {
-        return "Gremium [description=" + description + ", id=" + id + ", name=" + name + ", version=" + version + "]";
+        return "Gremium [abbr=" + abbr + ", containedQueries=" + containedQueries + ", description=" + description
+                + ", joinedCandidates=" + joinedCandidates + ", name=" + name + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + (int) (id ^ (id >>> 32));
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + (int) (version ^ (version >>> 32));
         return result;
     }
 
@@ -90,19 +85,10 @@ public class Gremium {
         if (getClass() != obj.getClass())
             return false;
         Gremium other = (Gremium) obj;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (id != other.id)
-            return false;
         if (name == null) {
             if (other.name != null)
                 return false;
         } else if (!name.equals(other.name))
-            return false;
-        if (version != other.version)
             return false;
         return true;
     }
@@ -125,14 +111,6 @@ public class Gremium {
 
     public void setAbbr(String abbr) {
         this.abbr = abbr;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public long getVersion() {
