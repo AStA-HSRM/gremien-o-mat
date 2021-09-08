@@ -1,5 +1,8 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,16 +24,16 @@ public class Query {
 
     @NotBlank
     @OneToMany
-    private Gremium gremium;
+    private List<Gremium> gremien;
 
     public Query() {
         this.text = "";
-        this.gremium = null;
+        this.gremien = new ArrayList<>();
     }
 
     @Override
     public String toString() {
-        return "Query [gremium=" + gremium + ", id=" + id + ", text=" + text + "]";
+        return "Query [gremien=" + gremien + ", id=" + id + ", text=" + text + ", version=" + version + "]";
     }
 
     @Override
@@ -79,11 +82,11 @@ public class Query {
         this.text = text;
     }
 
-    public Gremium getGremium() {
-        return gremium;
+    public List<Gremium> getGremien() {
+        return gremien;
     }
 
-    public void setGremium(Gremium gremium) {
-        this.gremium = gremium;
+    public void setGremien(List<Gremium> gremien) {
+        this.gremien = gremien;
     }
 }
