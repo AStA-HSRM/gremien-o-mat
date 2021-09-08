@@ -5,25 +5,23 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Query {
-    @Id
-    @GeneratedValue
-    private long id;
 
     @Version
     private long version;
 
+    @Id
     @NotBlank
     private String text;
 
-    @NotBlank
+    @NotNull
     @ManyToMany(mappedBy = "containedQueries", cascade= CascadeType.PERSIST)
     private List<Gremium> gremien;
 
@@ -33,15 +31,10 @@ public class Query {
     }
 
     @Override
-    public String toString() {
-        return "Query [gremien=" + gremien + ", id=" + id + ", text=" + text + ", version=" + version + "]";
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
         return result;
     }
 
@@ -54,17 +47,17 @@ public class Query {
         if (getClass() != obj.getClass())
             return false;
         Query other = (Query) obj;
-        if (id != other.id)
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
             return false;
         return true;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "Query [text=" + text + "]";
     }
 
     public long getVersion() {
