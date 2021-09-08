@@ -1,6 +1,5 @@
 package de.astahsrm.gremiomat.candidate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,6 +7,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
+
+import de.astahsrm.gremiomat.gremium.Query;
 
 @Entity
 public class CandidateAnswer {
@@ -20,8 +21,8 @@ public class CandidateAnswer {
     private long version;
 
     @NotBlank
-    @OneToOne(optional = false, cascade=CascadeType.PERSIST, orphanRemoval=false)
-    private long questionId;
+    @OneToOne
+    private Query question;
 
     @NotBlank
     private int choice;
@@ -30,8 +31,8 @@ public class CandidateAnswer {
     @NotBlank
     private String reason;
 
-    public CandidateAnswer(long questionId) {
-        this.questionId = questionId;
+    public CandidateAnswer() {
+        this.question = null;
         this.choice = 0;
         this.reason = "";
     }
@@ -56,6 +57,14 @@ public class CandidateAnswer {
         return id != other.id;
     }
 
+    public Query getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Query question) {
+        this.question = question;
+    }
+
     public long getId() {
         return id;
     }
@@ -70,14 +79,6 @@ public class CandidateAnswer {
 
     public void setVersion(long version) {
         this.version = version;
-    }
-
-    public long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(long questionId) {
-        this.questionId = questionId;
     }
 
     public int getChoice() {

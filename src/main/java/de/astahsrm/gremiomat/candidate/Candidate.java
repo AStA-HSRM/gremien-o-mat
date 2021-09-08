@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
@@ -16,9 +17,11 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.astahsrm.gremiomat.gremium.Gremium;
+
 @Entity
 public class Candidate {
-    
+
     @Id
     @GeneratedValue
     private long id;
@@ -36,11 +39,11 @@ public class Candidate {
     private String email;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Long> gremiumIds;
+    @ManyToMany(mappedBy = "joinedCandidates", cascade = CascadeType.PERSIST)
+    private List<Gremium> gremien;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany
     private List<CandidateAnswer> answers;
 
     @NotEmpty(message = "{notEmpty}")
@@ -53,14 +56,14 @@ public class Candidate {
     @JsonIgnore
     private Byte[] bytes;
 
-    public Candidate(List<Long> gremiumIds) {
-        this.gremiumIds = gremiumIds;
+    public Candidate() {
         this.mimeType = "";
         this.imageFileName = "";
         this.firstname = "";
         this.lastname = "";
         this.email = "";
         this.answers = new ArrayList<>();
+        this.gremien = new ArrayList<>();
     }
 
     @Override
@@ -90,12 +93,12 @@ public class Candidate {
         return true;
     }
 
-    public List<Long> getGremiumIds() {
-        return gremiumIds;
+    public List<Gremium> getGremien() {
+        return gremien;
     }
 
-    public void setGremiumIds(List<Long> gremiumIds) {
-        this.gremiumIds = gremiumIds;
+    public void setGremien(List<Gremium> gremien) {
+        this.gremien = gremien;
     }
 
     public long getId() {

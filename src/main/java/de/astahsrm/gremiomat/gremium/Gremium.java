@@ -9,8 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -40,18 +42,27 @@ public class Gremium {
     private String description;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Query> queries;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+        name = "query_contain", 
+        joinColumns = @JoinColumn(name = "gremium_id"), 
+        inverseJoinColumns = @JoinColumn(name = "query_id"))
+    private List<Query> containedQueries;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<Candidate> candidates;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+        name = "candidate_join",
+        joinColumns = @JoinColumn(name = "gremium_id"), 
+        inverseJoinColumns = @JoinColumn(name = "candidate_id"))
+    private List<Candidate> joinedCandidates;
 
     public Gremium() {
         this.name = "";
         this.abbr = "";
         this.description = "";
-        this.queries = new ArrayList<>();
+        this.containedQueries = new ArrayList<>();
+        this.joinedCandidates = new ArrayList<>();
     }
 
     @Override
@@ -97,15 +108,15 @@ public class Gremium {
     }
 
     public List<Query> getQueries() {
-        return queries;
+        return containedQueries;
     }
 
     public List<Candidate> getCandidates() {
-        return candidates;
+        return joinedCandidates;
     }
 
     public void setQueries(List<Query> queries) {
-        this.queries = queries;
+        this.containedQueries = queries;
     }
 
     public String getAbbr() {

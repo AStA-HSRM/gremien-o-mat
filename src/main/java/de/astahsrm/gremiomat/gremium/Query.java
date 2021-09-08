@@ -3,10 +3,11 @@ package de.astahsrm.gremiomat.gremium;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 
@@ -23,7 +24,7 @@ public class Query {
     private String text;
 
     @NotBlank
-    @OneToMany
+    @ManyToMany(mappedBy = "containedQueries", cascade= CascadeType.PERSIST)
     private List<Gremium> gremien;
 
     public Query() {
