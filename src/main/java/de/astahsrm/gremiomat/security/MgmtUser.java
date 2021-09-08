@@ -20,11 +20,18 @@ public class MgmtUser {
     @OneToOne
     private Candidate candidateDetails;
 
-    public MgmtUser(@NotBlank String username, @NotBlank String password, @NotBlank String role, @NotNull Candidate candidateDetails) {
+    public MgmtUser(@NotBlank String username, @NotBlank String password, @NotNull Candidate candidateDetails) {
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.role = SecurityConfig.USER;
         this.candidateDetails = candidateDetails;
+    }
+
+    public MgmtUser(@NotBlank String username, @NotBlank String password) {
+        this.username = username;
+        this.password = password;
+        this.role = SecurityConfig.ADMIN;
+        this.candidateDetails = null;
     }
 
     public Candidate getCandidateDetails() {
