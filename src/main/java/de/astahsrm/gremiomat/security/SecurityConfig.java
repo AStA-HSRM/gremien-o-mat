@@ -45,13 +45,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder authmanagerbuilder) throws Exception {
+        // For testing purposes:
         PasswordEncoder pwenc = passwordEncoder();
         authmanagerbuilder.inMemoryAuthentication()
             .withUser("user").password(pwenc.encode("user")).roles(USER)
         .and()
             .withUser("admin").password(pwenc.encode("admin")).roles(ADMIN);
-        // User-auth with database:
-        // authmanagerbuilder.userDetailsService(mgmtUserDetailsService).passwordEncoder(passwordEncoder());
+        /* User-auth with DB:
+        authmanagerbuilder.userDetailsService(mgmtUserDetailsService).passwordEncoder(passwordEncoder());
+        */
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
