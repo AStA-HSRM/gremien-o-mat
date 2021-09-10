@@ -21,7 +21,7 @@ public class MgmtController {
     MgmtUserServiceImpl mgmtUserServiceImpl;
 
     @GetMapping
-    public String getGremien(Model m, Principal user) {
+    public String redirectUser(Model m, Principal user) {
         // For testing purposes:
         if (user.getName().equalsIgnoreCase(SecurityConfig.ADMIN)) {
             return "redirect:/admin";
