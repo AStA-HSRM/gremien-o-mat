@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.gremium;
+package de.astahsrm.gremiomat.query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import de.astahsrm.gremiomat.gremium.Gremium;
 
 @Entity
 public class Query {
