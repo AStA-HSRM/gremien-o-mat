@@ -10,6 +10,6 @@ public class UserController {
 
     @GetMapping
     public String getUserPage() {
-        return "mgmt/user/user-overview";
+        return "mgmt/user/user";
     }
 }
