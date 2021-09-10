@@ -28,11 +28,12 @@
     />
   </head>
   <body>
-    <h2>Admin page!</h2>
+    <h2>CSV User Upload</h2>
 
-    <ul>
-      <a th:href=@{admin/csv-user-upload}>CSV User upload</a>
-    </ul>
+    <form method="POST" th:action="@{/csv-user-upload}" enctype="multipart/form-data">
+        <input type="file" name="csv-file" id="csv-file">
+        <input type="submit" value="upload">
+    </form><!DOCTYPE html>
 
     <a th:href=@{/logout}>Logout</a>
   </body>
