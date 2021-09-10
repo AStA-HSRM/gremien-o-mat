@@ -11,12 +11,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+
+import de.astahsrm.gremiomat.query.Query;
+import de.astahsrm.gremiomat.query.QueryService;
 @Controller
 @RequestMapping("/gremien")
 public class GremiumController {
 
     @Autowired
     private GremiumService gremiumService;
+
+    @Autowired
+    private QueryService queryService;
 
     @GetMapping
     public String getGremien(Model m) {
@@ -62,6 +68,8 @@ public class GremiumController {
         q1.setText("Die Kuh ist doof!");
         Query q2 = new Query();
         q2.setText("Das Pferd macht mäh!");
+        queryService.saveQuery(q1);
+        queryService.saveQuery(q2);
         q.add(q1);
         q.add(q2);
         gremium.setQueries(q);

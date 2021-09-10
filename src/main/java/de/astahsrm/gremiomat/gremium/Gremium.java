@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.query.Query;
 
 @Entity
 public class Gremium {

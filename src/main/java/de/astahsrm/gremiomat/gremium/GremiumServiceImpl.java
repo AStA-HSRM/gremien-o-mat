@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.query.Query;
 
 @Service
 public class GremiumServiceImpl implements GremiumService {
@@ -48,11 +50,23 @@ public class GremiumServiceImpl implements GremiumService {
 
     @Override
     public List<Candidate> getGremiumCandidatesById(Long id) {
-        return gremiumRepository.findById(id).get().getCandidates();
+        Optional<Gremium> gremiumOptional = gremiumRepository.findById(id);
+        if(gremiumOptional.isPresent()) {
+            return gremiumOptional.get().getCandidates();
+        }
+        else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public List<Query> getGremiumQueriesById(Long id) {
-        return gremiumRepository.findById(id).get().getQueries();
+        Optional<Gremium> gremiumOptional = gremiumRepository.findById(id);
+        if(gremiumOptional.isPresent()) {
+            return gremiumOptional.get().getQueries();
+        }
+        else {
+            return new ArrayList<>();
+        }
     }
 }
