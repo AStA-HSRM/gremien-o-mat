@@ -1,6 +1,5 @@
 package de.astahsrm.gremiomat.gremium;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.query.Query;
+import javassist.NotFoundException;
 
 @Service
 public class GremiumServiceImpl implements GremiumService {
@@ -19,18 +19,18 @@ public class GremiumServiceImpl implements GremiumService {
     private GremiumRepository gremiumRepository;
 
     @Override
-    public Optional<Gremium> getGremiumById(Long id) {
-        return gremiumRepository.findById(id);
-    }
-
-    @Override
-    public void delGremium(Long id) {
-        gremiumRepository.deleteById(id);
-    }
-
-    @Override
     public Gremium saveGremium(Gremium gremium) {
         return gremiumRepository.save(gremium);
+    }
+
+    @Override
+    public Optional<Gremium> getGremiumByAbbr(String abbr) {
+        return gremiumRepository.findById(abbr);
+    }
+
+    @Override
+    public void delGremium(String gremiumAbbr) {
+        gremiumRepository.deleteById(gremiumAbbr);
     }
 
     @Override
@@ -39,34 +39,22 @@ public class GremiumServiceImpl implements GremiumService {
     }
 
     @Override
-    public Optional<Gremium> getGremiumByAbbr(String abbr) {
-        for (Gremium gremium : gremiumRepository.findAll()) {
-            if (gremium.getAbbr().equals(abbr)) {
-                return Optional.of(gremium);
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public List<Candidate> getGremiumCandidatesById(Long id) {
-        Optional<Gremium> gremiumOptional = gremiumRepository.findById(id);
-        if(gremiumOptional.isPresent()) {
+    public List<Candidate> getGremiumCandidatesByGremiumAbbr(String gremiumAbbr) throws NotFoundException {
+        Optional<Gremium> gremiumOptional = getGremiumByAbbr(gremiumAbbr);
+        if (gremiumOptional.isPresent()) {
             return gremiumOptional.get().getCandidates();
-        }
-        else {
-            return new ArrayList<>();
+        } else {
+            throw new NotFoundException("No such Gremium exists.");
         }
     }
 
     @Override
-    public List<Query> getGremiumQueriesById(Long id) {
-        Optional<Gremium> gremiumOptional = gremiumRepository.findById(id);
-        if(gremiumOptional.isPresent()) {
+    public List<Query> getGremiumQueriesByGremiumAbbr(String gremiumAbbr) throws NotFoundException {
+        Optional<Gremium> gremiumOptional = getGremiumByAbbr(gremiumAbbr);
+        if (gremiumOptional.isPresent()) {
             return gremiumOptional.get().getQueries();
-        }
-        else {
-            return new ArrayList<>();
+        } else {
+            throw new NotFoundException("No such Gremium exists.");
         }
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -33,8 +34,8 @@ public class GremiOMatRestController {
         return null;
     };
 
-    @GetMapping(value = "/gremium/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Candidate> getGremiumCandidates(@PathVariable("id") long id) {
-        return gremiumService.getGremiumCandidatesById(id);
+    @GetMapping(value = "/gremium/{abbr}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Candidate> getGremiumCandidates(@PathVariable("abbr") String abbr) throws NotFoundException {
+        return gremiumService.getGremiumCandidatesByGremiumAbbr(abbr);
     }
 }

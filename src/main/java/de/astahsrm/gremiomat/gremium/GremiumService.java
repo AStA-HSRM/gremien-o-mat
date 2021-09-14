@@ -5,19 +5,15 @@ import java.util.Optional;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.query.Query;
+import javassist.NotFoundException;
 
 public interface GremiumService {
-    public Optional<Gremium> getGremiumById(Long id);
-
-    public Optional<Gremium> getGremiumByAbbr(String abbr);
+    public Gremium saveGremium(Gremium gremium);
+    public Optional<Gremium> getGremiumByAbbr(String gremiumAbbr);
+    public void delGremium(String gremiumAbbr);
 
     public List<Gremium> getAllGremiumsSortedByName();
+    public List<Query> getGremiumQueriesByGremiumAbbr(String gremiumAbbr) throws NotFoundException;
+    public List<Candidate> getGremiumCandidatesByGremiumAbbr(String gremiumAbbr) throws NotFoundException;
 
-    public void delGremium(Long id);
-
-    public Gremium saveGremium(Gremium gremium);
-
-    public List<Candidate> getGremiumCandidatesById(Long gremiumId);
-
-    public List<Query> getGremiumQueriesById(Long gremiumId);
 }
