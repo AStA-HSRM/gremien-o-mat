@@ -26,10 +26,10 @@ public class Gremium {
     @Version
     private long version;
 
-    @Id
     @NotBlank(message = "{notEmpty}")
     private String name;
 
+    @Id
     @NotBlank(message = "{notEmpty}")
     @Pattern(regexp = "^(?=.{1,16}$)[a-z]++(?:-[a-z]++)*+$")
     private String abbr;
@@ -73,7 +73,7 @@ public class Gremium {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((abbr == null) ? 0 : abbr.hashCode());
         return result;
     }
 
@@ -86,10 +86,10 @@ public class Gremium {
         if (getClass() != obj.getClass())
             return false;
         Gremium other = (Gremium) obj;
-        if (name == null) {
-            if (other.name != null)
+        if (abbr == null) {
+            if (other.abbr != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!abbr.equals(other.abbr))
             return false;
         return true;
     }

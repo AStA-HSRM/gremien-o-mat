@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
@@ -22,10 +21,6 @@ import de.astahsrm.gremiomat.gremium.Gremium;
 @Entity
 public class Candidate {
 
-    @Id
-    @GeneratedValue
-    private long id;
-
     @Version
     private long version;
 
@@ -35,6 +30,7 @@ public class Candidate {
     @NotEmpty(message = "{notEmpty}")
     private String lastname;
 
+    @Id
     @NotEmpty(message = "{notEmpty}")
     private String email;
 
@@ -67,15 +63,10 @@ public class Candidate {
     }
 
     @Override
-    public String toString() {
-        return "Candidate [email=" + email + ", firstname=" + firstname + ", id=" + id + ", lastname=" + lastname + "]";
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
         return result;
     }
 
@@ -88,9 +79,18 @@ public class Candidate {
         if (getClass() != obj.getClass())
             return false;
         Candidate other = (Candidate) obj;
-        if (id != other.id)
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Candidate [email=" + email + ", firstname=" + firstname + ", gremien=" + gremien + ", lastname="
+                + lastname + "]";
     }
 
     public List<Gremium> getGremien() {
@@ -99,14 +99,6 @@ public class Candidate {
 
     public void setGremien(List<Gremium> gremien) {
         this.gremien = gremien;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public long getVersion() {
