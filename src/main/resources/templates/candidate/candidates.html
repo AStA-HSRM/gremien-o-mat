@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 
-<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
-<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html
+  lang="de"
+  xml:lang="de"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+>
   <head>
     <link
       rel="shortcut icon"
@@ -27,17 +31,8 @@
       href="//fonts.googleapis.com/css?family=Kumbh+Sans"
     />
   </head>
+
   <body>
-    <h2>CSV User Upload</h2>
-
-    <form method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" enctype="multipart/form-data">
-      <select name="gremiumSelect" id="gremiumSelect">
-        <option th:each="gremium : ${gremiumList}" th:value="${gremium.getAbbr()}" th:text="${gremium.getName()}"></option>
-        </select>
-        <input type="file" name="csv-file" id="csv-file">
-        <input type="submit" value="upload">
-    </form>
-
-    <a th:href=@{/logout}>Logout</a>
+    <p th:each="candidate : ${candidateList}" th:text = "${candidate.toString()}"></p>
   </body>
 </html>

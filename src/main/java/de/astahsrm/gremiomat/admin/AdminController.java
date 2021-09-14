@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.GremiumService;
 
@@ -26,6 +27,9 @@ public class AdminController {
 
     @Autowired
     private GremiumService gremiumService;
+
+    @Autowired
+    private CandidateService candidateService;
     
     @GetMapping
     public String getAdminPage() {
@@ -39,9 +43,16 @@ public class AdminController {
     }
     
     @PostMapping("/csv-user-upload")
-    public String processUserCSV(@RequestParam("csv-datei") MultipartFile csvFile, @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
+    public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile, @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
         csvService.generateCandidatesFromCSV(csvFile, gremiumService.getGremiumByAbbr(gremiumAbbr).get());
-        return "mgmt/admin/admin";
+        return "redirect:/admin";
+    }
+
+    // TODO temporary site for debugging
+    @GetMapping("/candidates")
+    public String getUsers(Model m) {
+        m.addAttribute("candidateList", candidateService.getAllCandidatesSortedByName());
+        return "candidate/candidates";
     }
 
     @GetMapping("/gremien")
