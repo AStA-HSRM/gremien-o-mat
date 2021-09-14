@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.admin;
+package de.astahsrm.gremiomat.csv;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,5 +12,4 @@ import de.astahsrm.gremiomat.gremium.Gremium;
 
 public interface CSVService {
     public List<Candidate> generateCandidatesFromCSV(MultipartFile csvFile, Gremium gremium) throws IOException, CsvException;
-
 }

@@ -1,20 +1,18 @@
-package de.astahsrm.gremiomat.admin;
+package de.astahsrm.gremiomat.csv;
 
-import java.io.Reader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
@@ -46,14 +44,11 @@ public class CSVServiceImpl implements CSVService {
 
             // List<Candidate> candidateList = new ArrayList<>();
 
-            try (CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1).build()) {
-
-                List<String[]> stringArrayList = reader.readAll();
-                
-                for (String[] entry : stringArrayList) {
+            try (CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1).build()) {               
+                for (String[] entry : reader.readAll()) {
 
                     Candidate candidate = new Candidate();
-                    List<Gremium> gremiumList = new ArrayList<Gremium>();
+                    List<Gremium> gremiumList = new ArrayList<>();
 
                     Optional<Candidate> candidateOptional = candidateService.getCandidateById(entry[2]);
 
