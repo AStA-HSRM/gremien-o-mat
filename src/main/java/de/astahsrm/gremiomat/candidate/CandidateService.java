@@ -3,15 +3,13 @@ package de.astahsrm.gremiomat.candidate;
 import java.util.List;
 import java.util.Optional;
 
+import javassist.NotFoundException;
+
 public interface CandidateService {
-    public Optional<Candidate> getCandidateById(Long id);
+    public Candidate saveCandidate(Candidate candidate);
+    public Optional<Candidate> getCandidateById(String candidateEmail);
+    public void delCandidate(String candidateEmail);
 
     public List<Candidate> getAllCandidatesSortedByName();
-
-    public List<Candidate> getGremiumCandidatesSortedByName(Long gremiumId);
-
-    public void delCandidate(Long id);
-
-    public Candidate saveCandidate(Candidate candidate);
-    
+    Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, String candidateEmail) throws NotFoundException, NotFoundException;
 }

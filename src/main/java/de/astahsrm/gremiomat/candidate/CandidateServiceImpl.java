@@ -7,46 +7,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+import javassist.NotFoundException;
+
 public class CandidateServiceImpl implements CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
 
     @Override
-    public Optional<Candidate> getCandidateById(Long id) {
-        return candidateRepository.findById(id);
-    }
-
-    // TODO pls check if this is right (probably not)
-    @Override
-    public List<Candidate> getAllCandidatesSortedByName() {
-        return candidateRepository.findAll(Sort.by(Direction.ASC, "lastname").and(Sort.by(Direction.ASC, "firstname")));
-    }
-
-    // TODO not implemented fully yet, need getGremiumCandidates function on GremiumService
-    //  also pls check if this is right
-    @Override
-    public List<Candidate> getGremiumCandidatesSortedByName(Long gremiumId) {
-        return candidateRepository.findAll();
-        
-        /* 
-        for (Candidate candidate : candidateRepository.findAll()) {
-            for (Gremium gremium: candidate.getGremium())
-                if (gremium.getId() == gremiumId) {
-                    return ??????;
-                }
-        }
-        */
-    }
-
-    @Override
-    public void delCandidate(Long id) {
-        candidateRepository.deleteById(id);
-    }
-
-    @Override
     public Candidate saveCandidate(Candidate candidate) {
         return candidateRepository.save(candidate);
     }
 
+    @Override
+    public Optional<Candidate> getCandidateById(String candidateEmail) {
+        return candidateRepository.findById(candidateEmail);
+    }
+
+    @Override
+    public void delCandidate(String candidateEmail) {
+        candidateRepository.deleteById(candidateEmail);
+    }
+
+    @Override
+    public List<Candidate> getAllCandidatesSortedByName() {
+        return candidateRepository.findAll(Sort.by(Direction.DESC, "lastname").and(Sort.by(Direction.DESC, "firstname")));
+    }
+
+    @Override
+    public Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, String candidateEmail) throws NotFoundException {
+        Optional<Candidate> candidateOptional = getCandidateById(candidateEmail);
+        if(candidateOptional.isPresent()) {
+            Candidate candidate = candidateOptional.get();
+            for (CandidateAnswer ele : candidate.getAnswers()) {
+                if(ele.getQuestion().getText().equals(queryTxt)) {
+                    return Optional.of(ele);
+                }
+            }
+            return Optional.empty();
+        }
+        else {
+            throw new NotFoundException("No such Candidate exists.");
+        }
+    }
 }
