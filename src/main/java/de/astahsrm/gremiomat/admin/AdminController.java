@@ -1,14 +1,31 @@
 package de.astahsrm.gremiomat.admin;
 
+import java.io.IOException;
+
+import com.opencsv.exceptions.CsvException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import de.astahsrm.gremiomat.gremium.Gremium;
+import de.astahsrm.gremiomat.gremium.GremiumService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    @Autowired
+    private CSVService csvService;
+
+    @Autowired
+    private GremiumService gremiumService;
     
     @GetMapping
     public String getAdminPage() {
@@ -16,13 +33,15 @@ public class AdminController {
     }
 
     @GetMapping("/csv-user-upload")
-    public String getCSVPage() {
+    public String getCSVPage(Model m) {
+        m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
         return "mgmt/admin/csv-user-upload";
     }
     
     @PostMapping("/csv-user-upload")
-    public String processUserCSV() {
-        return "";
+    public String processUserCSV(@RequestParam("csv-datei") MultipartFile csvFile, @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
+        csvService.generateCandidatesFromCSV(csvFile, gremiumService.getGremiumByAbbr(gremiumAbbr).get());
+        return "mgmt/admin/admin";
     }
 
     @GetMapping("/gremien")

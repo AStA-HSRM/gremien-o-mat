@@ -30,7 +30,11 @@
   <body>
     <h2>CSV User Upload</h2>
 
-    <form method="POST" th:action="@{/csv-user-upload}" enctype="multipart/form-data">
+    <form method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" enctype="multipart/form-data">
+      <select name="gremiumSelect" id="gremiumSelect">
+        <option th:each="gremium : ${gremiumList}" th:value="${gremium.getAbbr()}" th:text="${gremium.getName()}" 
+          th:selected=""></option>
+        </select>
         <input type="file" name="csv-file" id="csv-file">
         <input type="submit" value="upload">
     </form><!DOCTYPE html>
