@@ -4,12 +4,12 @@ services:
   tomcat-test:
     build: .
     restart: always
-    network_mode: host
-    # ports: 
-    #   - 8080:8080
+    # network_mode: host
+    ports: 
+      - 8080:8080
       
   db:
-    image: mariadb
+    image: mariadb:10.3
     # restart: always
     ports:
       - 3306:3306
