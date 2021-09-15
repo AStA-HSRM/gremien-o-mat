@@ -85,8 +85,9 @@ public class AdminController {
     }
 
     @GetMapping("/gremien/{abbr}/edit")
-    public String getGremiumEditPage(@PathVariable String abbr) {
-        return "";
+    public String getGremiumEditPage(@PathVariable String abbr, Model m) {
+        m.addAttribute("gremium", gremiumService.getGremiumByAbbr(abbr).get());
+        return "mgmt/admin/gremien-edit";
     }
 
     @PostMapping("/gremien/{abbr}/edit")
