@@ -9,14 +9,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.query.Query;
 import javassist.NotFoundException;
 
 @Service
 public class GremiumServiceImpl implements GremiumService {
 
+    public static final String GREMIUM_NOT_FOUND = "No such Gremium exists.";
+
     @Autowired
     private GremiumRepository gremiumRepository;
+
+    @Autowired
+    private CandidateService candidateService;
 
     @Override
     public Gremium saveGremium(Gremium gremium) {
@@ -29,8 +35,20 @@ public class GremiumServiceImpl implements GremiumService {
     }
 
     @Override
-    public void delGremium(String gremiumAbbr) {
-        gremiumRepository.deleteById(gremiumAbbr);
+    public void delByAbbrGremium(String abbr) {
+        Optional<Gremium> gremiumOptional = getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            for (Candidate cand : gremium.getJoinedCandidates()) {
+                Optional<Candidate> cOptional = candidateService.getCandidateById(cand.getEmail());
+                if (cOptional.isPresent()) {
+                    Candidate candidate = cOptional.get();
+                    candidate.delGremium(gremium);
+                    candidateService.saveCandidate(candidate);
+                }
+            }
+        }
+        gremiumRepository.deleteById(abbr);
     }
 
     @Override
@@ -39,22 +57,28 @@ public class GremiumServiceImpl implements GremiumService {
     }
 
     @Override
-    public List<Candidate> getGremiumCandidatesByGremiumAbbr(String gremiumAbbr) throws NotFoundException {
-        Optional<Gremium> gremiumOptional = getGremiumByAbbr(gremiumAbbr);
+    public List<Candidate> getGremiumCandidatesByGremiumAbbr(String abbr) throws NotFoundException {
+        Optional<Gremium> gremiumOptional = getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
-            return gremiumOptional.get().getCandidates();
+            return gremiumOptional.get().getJoinedCandidates();
         } else {
-            throw new NotFoundException("No such Gremium exists.");
+            throw new NotFoundException(GREMIUM_NOT_FOUND);
         }
     }
 
     @Override
-    public List<Query> getGremiumQueriesByGremiumAbbr(String gremiumAbbr) throws NotFoundException {
-        Optional<Gremium> gremiumOptional = getGremiumByAbbr(gremiumAbbr);
+    public List<Query> getGremiumQueriesByGremiumAbbr(String abbr) throws NotFoundException {
+        Optional<Gremium> gremiumOptional = getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
-            return gremiumOptional.get().getQueries();
+            return gremiumOptional.get().getContainedQueries();
         } else {
-            throw new NotFoundException("No such Gremium exists.");
+            throw new NotFoundException(GREMIUM_NOT_FOUND);
         }
+    }
+
+    @Override
+    public void addCandidateToGremium(Candidate candidate, Gremium gremium) {
+        gremium.addCandidate(candidate);
+        gremiumRepository.save(gremium);
     }
 }

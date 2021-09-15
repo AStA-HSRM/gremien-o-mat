@@ -50,9 +50,9 @@ public class AdminController {
             csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
             return "redirect:/admin/candidates";
         } catch (IOException | CsvException e) {
-            return "400";
+            return "error/400";
         } catch (NotFoundException e) {
-            return "404";
+            return "error/404";
         }
     }
 

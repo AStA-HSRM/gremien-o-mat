@@ -2,8 +2,6 @@ package de.astahsrm.gremiomat.csv;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import com.opencsv.CSVReader;
@@ -34,13 +32,13 @@ public class CSVServiceImpl implements CSVService {
      * first column of a CSV file, the last name in the second column and the mail
      * address in the third column, like so:
      * 
-     * -------------------------------------------------------- | First Name | Last
-     * Name | Mail Address |
+     * -------------------------------------------------------- 
+     * | First Name | Last Name | Mail Address |
      * --------------------------------------------------------
-     * -------------------------------------------------------- | Max | Mustermann |
-     * max.mustermann@example.com |
-     * -------------------------------------------------------- | John | Doe |
-     * john.doe@example.com |
+     * -------------------------------------------------------- 
+     * | Max | Mustermann | max.mustermann@example.com |
+     * -------------------------------------------------------- 
+     * | John | Doe | john.doe@example.com |
      * --------------------------------------------------------
      */
 
@@ -55,25 +53,23 @@ public class CSVServiceImpl implements CSVService {
                 String[] entry;
                 while ((entry = reader.readNext()) != null) {
                     Candidate candidate = new Candidate();
-                    List<Gremium> gremiumList = new ArrayList<>();
                     Optional<Candidate> candidateOptional = candidateService.getCandidateById(entry[2]);
                     if (candidateOptional.isPresent()) {
                         candidate = candidateOptional.get();
-                        gremiumList = candidate.getGremien();
-                        gremiumList.add(gremium);
-                        candidate.setGremien(gremiumList);
-                        candidateService.saveCandidate(candidate);
+                        candidate.addGremium(gremium);
+                        gremiumService.addCandidateToGremium(candidateService.saveCandidate(candidate), gremium);
                     } else {
-                        gremiumList.add(gremium);
                         candidate.setFirstname(entry[0]);
                         candidate.setLastname(entry[1]);
                         candidate.setEmail(entry[2]);
-                        candidate.setGremien(gremiumList);
-                        candidateService.saveCandidate(candidate);
+                        candidate.addGremium(gremium);
+                        gremiumService.addCandidateToGremium(candidateService.saveCandidate(candidate), gremium);
                     }
                 }
             }
         }
-        throw new NotFoundException("No such Gremium exists.");
+        else {
+            throw new NotFoundException("No such Gremium exists.");
+        }
     }
 }
