@@ -71,7 +71,7 @@ public class AdminController {
 
     @GetMapping("/gremien/new")
     public String getNewGremiumEditPage() {
-        return "";
+        return "mgmt/admin/gremien-edit";
     }
 
     @PostMapping("/gremien/new")
