@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import javassist.NotFoundException;
 
 @Controller
 @RequestMapping("/admin")
@@ -30,7 +31,7 @@ public class AdminController {
 
     @Autowired
     private CandidateService candidateService;
-    
+
     @GetMapping
     public String getAdminPage() {
         return "mgmt/admin/admin";
@@ -41,11 +42,18 @@ public class AdminController {
         m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
         return "mgmt/admin/csv-user-upload";
     }
-    
+
     @PostMapping("/csv-user-upload")
-    public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile, @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
-        csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
-        return "redirect:/admin/candidates";
+    public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile,
+            @RequestParam("gremiumSelect") String gremiumAbbr) {
+        try {
+            csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
+            return "redirect:/admin/candidates";
+        } catch (IOException | CsvException e) {
+            return "400";
+        } catch (NotFoundException e) {
+            return "404";
+        }
     }
 
     // TODO temporary site for debugging
@@ -69,7 +77,7 @@ public class AdminController {
     public String postNewUserGremiumPage() {
         return "redirect:/admin/gremien";
     }
-    
+
     @GetMapping("/gremien/{abbr}")
     public String getGremiumInfoPage(@PathVariable String abbr) {
         return "";
@@ -99,7 +107,7 @@ public class AdminController {
     public String getUserOverview() {
         return "";
     }
-    
+
     @GetMapping("/users/new")
     public String getNewUserEditPage() {
         return "";
