@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -42,10 +41,8 @@ public class Candidate {
     @OneToMany
     private List<CandidateAnswer> answers;
 
-    @NotEmpty(message = "{notEmpty}")
     private String mimeType;
 
-    @Size(min = 5, message = "{minSize}")
     private String imageFileName;
 
     @Lob
@@ -87,14 +84,29 @@ public class Candidate {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Candidate [email=" + email + ", firstname=" + firstname + ", gremien=" + gremien + ", lastname="
-                + lastname + "]";
-    }
-
     public List<Gremium> getGremien() {
         return gremien;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder bld = new StringBuilder();
+        bld.append("Candidate [email=" + email + ", firstname=" + firstname + ", gremien= {");
+        for (Gremium g : this.gremien) {
+            bld.append(g.getAbbr() + ",");
+        }
+        bld.deleteCharAt(bld.toString().length()-1);
+        bld.append("}, lastname=" + lastname + "]");
+        return bld.toString();
+    }
+
+    public void addGremium(Gremium gremium) {
+        if (!this.gremien.contains(gremium))
+            this.gremien.add(gremium);
+    }
+
+    public void delGremium(Gremium gremium) {
+        this.gremien.remove(gremium);
     }
 
     public void setGremien(List<Gremium> gremien) {
