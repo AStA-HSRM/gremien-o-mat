@@ -125,14 +125,14 @@ public class AdminController {
         return "";
     }
 
-    @GetMapping("/gremien/{username}/edit")
+    @GetMapping("/users/{username}/edit")
     public String getUserEditPage(@PathVariable String username) {
         return "";
     }
 
-    @PostMapping("/gremien/{username}/edit")
+    @PostMapping("/users/{username}/edit")
     public String postUserEditPage(@PathVariable String username) {
-        return "redirect:/admin/gremien/" + username;
+        return "redirect:/admin/users/" + username;
     }
 
 }
