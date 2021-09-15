@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
+import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
 import javassist.NotFoundException;
 
@@ -50,6 +51,7 @@ public class AdminController {
             csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
             return "redirect:/admin/candidates";
         } catch (IOException | CsvException e) {
+            // TODO notify user that upload is faulty
             return "error/400";
         } catch (NotFoundException e) {
             return "error/404";
@@ -75,7 +77,17 @@ public class AdminController {
     }
 
     @PostMapping("/gremien/new")
-    public String postNewUserGremiumPage() {
+    public String postNewUserGremiumPage(
+        @RequestParam("gremium-name") String name,
+        @RequestParam("gremium-abbr") String abbr,
+        @RequestParam("gremium-desc") String desc
+    )
+    {   
+        Gremium gremium = new Gremium();
+        gremium.setName(name);
+        gremium.setAbbr(abbr);
+        gremium.setDescription(desc);
+        gremiumService.saveGremium(gremium);
         return "redirect:/admin/gremien";
     }
 
