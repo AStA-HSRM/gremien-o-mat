@@ -103,8 +103,18 @@ public class AdminController {
     }
 
     @PostMapping("/gremien/{abbr}/edit")
-    public String postGremiumEditPage(@PathVariable String abbr) {
-        return "";
+    public String postGremiumEditPage(
+        @RequestParam("gremium-name") String name,
+        @RequestParam("gremium-abbr") String abbr,
+        @RequestParam("gremium-desc") String desc
+    )
+    {
+        // TODO implement check if Gremium exists, to be safe
+        Gremium gremium = gremiumService.getGremiumByAbbr(abbr).get();
+        gremium.setName(name);
+        gremium.setDescription(desc);
+        gremiumService.saveGremium(gremium);
+        return "redirect:/admin/gremien";
     }
 
     @GetMapping("/gremien/{abbr}/{queryIndex}/edit")
