@@ -64,8 +64,9 @@ public class AdminController {
     }
 
     @GetMapping("/gremien")
-    public String getGremienOverview() {
-        return "";
+    public String getGremienOverview(Model m) {
+        m.addAttribute("gremienList", gremiumService.getAllGremiumsSortedByName());
+        return "mgmt/admin/gremien-overview";
     }
 
     @GetMapping("/gremien/new")

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      th:href="@{/assets/favicon/favicon.ico}"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="text/html; charset=utf-8" />
+    <title th:text="#{title} + ' | ' + #{org}"></title>
+    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//fonts.googleapis.com/css?family=Poppins"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//fonts.googleapis.com/css?family=Kumbh+Sans"
+    />
+  </head>
+  <body>
+    <table th:if="${gremienList}" style="border: 2px solid black; border-collapse: collapse;">
+        <tr style="border: 1px solid black;">
+            <th style="border: 1px solid black;">Gremium Abbr</th>
+            <th style="border: 1px solid black;">Gremium Name</th>
+            <th style="border: 1px solid black;">MGMT</th>
+        </tr>
+        <tr th:each="gremium : ${gremienList}" style="border: 1px solid black;">
+            <td th:text="${gremium.getAbbr()}" style="border: 1px solid black;"></td>
+            <td th:text="${gremium.getName()}" style="border: 1px solid black;"></td>
+            <td style="border: 1px solid black;">
+                <a th:href="'/admin/gremien/' + ${gremium.getAbbr()} + '/edit'">Edit</a>
+            </td>
+        </tr>
+    </table>
+    
+    <!--
+    <ul th:if="${gremienList}">
+        <li th:each="gremium : ${gremienList}" th:text="${gremium.getName()}">
+            <a th:href="'/admin/gremien/' + ${gremium.getAbbr()}">Edit</a>
+        </li>
+    </ul>
+    -->
+
+    <a th:href=@{/logout}>Logout</a>
+  </body>
+</html>
