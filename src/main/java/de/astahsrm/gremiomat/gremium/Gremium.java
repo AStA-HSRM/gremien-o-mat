@@ -41,18 +41,12 @@ public class Gremium {
 
     @NotNull
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-        name = "query_contain", 
-        joinColumns = @JoinColumn(name = "gremium_id"), 
-        inverseJoinColumns = @JoinColumn(name = "query_id"))
+    @JoinTable(name = "query_contain", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "query_id"))
     private List<Query> containedQueries;
 
     @NotNull
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-        name = "candidate_join",
-        joinColumns = @JoinColumn(name = "gremium_id"), 
-        inverseJoinColumns = @JoinColumn(name = "candidate_id"))
+    @JoinTable(name = "candidate_join", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "candidate_id"))
     private List<Candidate> joinedCandidates;
 
     public Gremium() {
@@ -94,24 +88,13 @@ public class Gremium {
         return true;
     }
 
-    public List<Query> getQueries() {
-        return containedQueries;
+    public void addCandidate(Candidate candidate) {
+        if (!this.joinedCandidates.contains(candidate))
+            this.joinedCandidates.add(candidate);
     }
 
-    public List<Candidate> getCandidates() {
-        return joinedCandidates;
-    }
-
-    public void setQueries(List<Query> queries) {
-        this.containedQueries = queries;
-    }
-
-    public String getAbbr() {
-        return abbr;
-    }
-
-    public void setAbbr(String abbr) {
-        this.abbr = abbr;
+    public void delCandidate(Candidate candidate) {
+        this.joinedCandidates.remove(candidate);
     }
 
     public long getVersion() {
@@ -130,6 +113,14 @@ public class Gremium {
         this.name = name;
     }
 
+    public String getAbbr() {
+        return abbr;
+    }
+
+    public void setAbbr(String abbr) {
+        this.abbr = abbr;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -137,4 +128,21 @@ public class Gremium {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public List<Query> getContainedQueries() {
+        return containedQueries;
+    }
+
+    public void setContainedQueries(List<Query> containedQueries) {
+        this.containedQueries = containedQueries;
+    }
+
+    public List<Candidate> getJoinedCandidates() {
+        return joinedCandidates;
+    }
+
+    public void setJoinedCandidates(List<Candidate> joinedCandidates) {
+        this.joinedCandidates = joinedCandidates;
+    }
+
 }

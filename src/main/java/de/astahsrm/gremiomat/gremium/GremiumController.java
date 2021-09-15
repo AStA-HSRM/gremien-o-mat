@@ -45,10 +45,10 @@ public class GremiumController {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if(gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            if(gremium.getQueries().size() > queryIndex) {
+            if(gremium.getContainedQueries().size() > queryIndex) {
                 m.addAttribute("gremium", gremium);
-                m.addAttribute("queryListSize", gremium.getQueries().size());
-                m.addAttribute("query", gremium.getQueries().get(queryIndex));
+                m.addAttribute("queryListSize", gremium.getContainedQueries().size());
+                m.addAttribute("query", gremium.getContainedQueries().get(queryIndex));
                 m.addAttribute("queryIndex", queryIndex);
                 return "gremien/query";
             }
@@ -68,11 +68,9 @@ public class GremiumController {
         q1.setText("Die Kuh ist doof!");
         Query q2 = new Query();
         q2.setText("Das Pferd macht mäh!");
-        queryService.saveQuery(q1);
-        queryService.saveQuery(q2);
-        q.add(q1);
-        q.add(q2);
-        gremium.setQueries(q);
+        q.add(queryService.saveQuery(q1));
+        q.add(queryService.saveQuery(q2));
+        gremium.setContainedQueries(q);
         gremiumService.saveGremium(gremium);
         return "redirect:/gremien";
     }

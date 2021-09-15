@@ -9,11 +9,11 @@ import javassist.NotFoundException;
 
 public interface GremiumService {
     public Gremium saveGremium(Gremium gremium);
-    public Optional<Gremium> getGremiumByAbbr(String gremiumAbbr);
-    public void delGremium(String gremiumAbbr);
-
+    public Optional<Gremium> getGremiumByAbbr(String abbr);
+    public void delByAbbrGremium(String abbr);
     public List<Gremium> getAllGremiumsSortedByName();
-    public List<Query> getGremiumQueriesByGremiumAbbr(String gremiumAbbr) throws NotFoundException;
-    public List<Candidate> getGremiumCandidatesByGremiumAbbr(String gremiumAbbr) throws NotFoundException;
+    public void addCandidateToGremium(Candidate candidate, Gremium gremium);
+    public List<Query> getGremiumQueriesByGremiumAbbr(String abbr) throws NotFoundException;
+    public List<Candidate> getGremiumCandidatesByGremiumAbbr(String abbr) throws NotFoundException;
 
 }
