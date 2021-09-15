@@ -64,13 +64,14 @@ public class AdminController {
     }
 
     @GetMapping("/gremien")
-    public String getGremienOverview() {
-        return "";
+    public String getGremienOverview(Model m) {
+        m.addAttribute("gremienList", gremiumService.getAllGremiumsSortedByName());
+        return "mgmt/admin/gremien-overview";
     }
 
     @GetMapping("/gremien/new")
     public String getNewGremiumEditPage() {
-        return "";
+        return "mgmt/admin/gremien-edit";
     }
 
     @PostMapping("/gremien/new")
@@ -84,8 +85,9 @@ public class AdminController {
     }
 
     @GetMapping("/gremien/{abbr}/edit")
-    public String getGremiumEditPage(@PathVariable String abbr) {
-        return "";
+    public String getGremiumEditPage(@PathVariable String abbr, Model m) {
+        m.addAttribute("gremium", gremiumService.getGremiumByAbbr(abbr).get());
+        return "mgmt/admin/gremien-edit";
     }
 
     @PostMapping("/gremien/{abbr}/edit")
@@ -123,14 +125,14 @@ public class AdminController {
         return "";
     }
 
-    @GetMapping("/gremien/{username}/edit")
+    @GetMapping("/users/{username}/edit")
     public String getUserEditPage(@PathVariable String username) {
         return "";
     }
 
-    @PostMapping("/gremien/{username}/edit")
+    @PostMapping("/users/{username}/edit")
     public String postUserEditPage(@PathVariable String username) {
-        return "redirect:/admin/gremien/" + username;
+        return "redirect:/admin/users/" + username;
     }
 
 }
