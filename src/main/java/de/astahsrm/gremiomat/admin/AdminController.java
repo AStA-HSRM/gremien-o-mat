@@ -44,8 +44,8 @@ public class AdminController {
     
     @PostMapping("/csv-user-upload")
     public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile, @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
-        csvService.generateCandidatesFromCSV(csvFile, gremiumService.getGremiumByAbbr(gremiumAbbr).get());
-        return "redirect:/admin";
+        csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
+        return "redirect:/admin/candidates";
     }
 
     // TODO temporary site for debugging

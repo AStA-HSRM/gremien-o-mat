@@ -17,12 +17,16 @@ import org.springframework.web.multipart.MultipartFile;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
+import de.astahsrm.gremiomat.gremium.GremiumService;
 
 @Service
 public class CSVServiceImpl implements CSVService {
 
         @Autowired
         private CandidateService candidateService;
+
+        @Autowired
+        private GremiumService gremiumService;
    
         /*
             This function assumes that the first name of a candidate is placed in the first column of a CSV file,
@@ -40,7 +44,9 @@ public class CSVServiceImpl implements CSVService {
 
 
         @Override
-        public List<Candidate> generateCandidatesFromCSV(MultipartFile csvFile, Gremium gremium) throws IOException, CsvException {
+        public List<Candidate> generateCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr) throws IOException, CsvException {
+
+            Gremium gremium = gremiumService.getGremiumByAbbr(gremiumAbbr).get();
 
             // List<Candidate> candidateList = new ArrayList<>();
 
