@@ -1,12 +1,12 @@
 version: "2"
 
 services:
-  tomcat-test:
+  spring:
     build: .
     restart: always
     # network_mode: host
     ports: 
-      - 8080:8080
+      - 8090:8090
       
   db:
     image: mariadb:10.3
