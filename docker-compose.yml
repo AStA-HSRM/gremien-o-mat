@@ -1,13 +1,6 @@
 version: "2"
 
-services:
-  spring:
-    build: .
-    restart: always
-    # network_mode: host
-    ports: 
-      - 8090:8090
-      
+services:      
   db:
     image: mariadb:10.3
     # restart: always
@@ -27,3 +20,23 @@ services:
       - db
     ports:
       - 8000:8080
+      
+  spring:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    environment:
+      # required arguments
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/temp_db
+      - SPRING_DATASOURCE_USERNAME=dev
+      - SPRING_DATASOURCE_PASSWORD=dev123
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.mariadb.jdbc.Driver
+      # optional arguments
+      # - SERVER_PORT=8090
+      # - DEBUG=true
+      # - SPRING_THYMELEAF_CACHE=false
+      # - LOGGING_LEVEL_WEB=DEBUG
+    # network_mode: host
+    ports: 
+      - 8090:8090
