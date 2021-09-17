@@ -7,7 +7,7 @@ services:
     ports:
       - 3306:3306
     # volumes:
-    #   - ./volumes/mysql:/var/lib/mysql
+    #   - ./docker-persistence/mysql:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=admin
       - MYSQL_USER=dev
@@ -20,7 +20,7 @@ services:
       - db
     ports:
       - 8000:8080
-      
+  
   spring:
     build: .
     restart: always
