@@ -17,6 +17,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 
+    // TODO antmatchers for access and requests
+
     /* 
     @Autowired
     private MgmtUserDetailsService mgmtUserDetailsService;

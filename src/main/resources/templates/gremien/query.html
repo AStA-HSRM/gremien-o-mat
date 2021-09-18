@@ -32,17 +32,32 @@
     />
   </head>
 
-  <body>    
-    <h2 th:text = "${query.text}"></h2>
-    <input type="radio" id="ok" name="opinion" value="1">
-    <label for="ok">Stimme zu</label><br>
-    <input type="radio" id="neutral" name="opinion" value="0">
-    <label for="neutral">Neutral</label><br>
-    <input type="radio" id="not-ok" name="opinion" value="-1">
-    <label for="not-ok">Stimme nicht zu</label>
-    <br>
-    <br>
-    <a th:if = "${queryIndex} gt 0 and ${queryIndex-1} ge 0" th:href = "@{./__${queryIndex-1}__}">Vorherige Frage</a>
-    <a th:if = "${queryIndex} lt ${queryListSize} and ${queryIndex+1} lt ${queryListSize}" th:href = "@{./__${queryIndex+1}__}">Nächste Frage</a>
+  <body>
+    <h2 th:text="${query.text}"></h2>
+    <form th:method="POST" th:action="@{./__${queryIndex}__}" th:object="${queryForm}">
+      <input type="radio" id="ok" th:field="*{opinion}" value="1" />
+      <label for="ok">Stimme zu</label><br />
+      <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
+      <label for="neutral">Neutral</label><br />
+      <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
+      <label for="not-ok">Stimme nicht zu</label>
+      <br />
+      <br />
+      <button
+        th:if="${queryIndex} gt 0 and ${queryIndex-1} ge 0"
+        th:href="@{./__${queryIndex-1}__}"
+        type="submit"
+        name="prev-query"
+      >
+        Vorherige Frage
+      </button>
+      <button
+        th:if="${queryIndex} lt ${queryListSize} and ${queryIndex+1} lt ${queryListSize}"
+        type="submit"
+        name="next-query"
+      >
+        Nächste Frage
+      </button>
+    </form>
   </body>
 </html>
