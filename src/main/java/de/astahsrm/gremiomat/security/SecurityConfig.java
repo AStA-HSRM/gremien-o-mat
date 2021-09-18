@@ -2,7 +2,6 @@ package de.astahsrm.gremiomat.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,12 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
         http.authorizeRequests().antMatchers("/assets/**", "/css/**", "/favicon/**", "/img/**").permitAll()
-                .antMatchers("/gremien/**", "/gremien**").permitAll()
-                .antMatchers("/mgmt", "/logout").permitAll()
-                .antMatchers(HttpMethod.DELETE).hasRole(ADMIN)
-                .antMatchers("/user*", "/user/*").authenticated()
-                .anyRequest().hasAnyRole(ADMIN)
+                .antMatchers("/**","**").permitAll()
                 .and()
                 .formLogin()
                 .defaultSuccessUrl("/mgmt")
