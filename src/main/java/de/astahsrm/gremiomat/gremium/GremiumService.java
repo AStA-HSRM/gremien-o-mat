@@ -8,6 +8,7 @@ import de.astahsrm.gremiomat.query.Query;
 import javassist.NotFoundException;
 
 public interface GremiumService {
+    public static final String GREMIUM_NOT_FOUND = "No such Gremium exists.";
     public Gremium saveGremium(Gremium gremium);
     public Optional<Gremium> getGremiumByAbbr(String abbr);
     public void delByAbbrGremium(String abbr);

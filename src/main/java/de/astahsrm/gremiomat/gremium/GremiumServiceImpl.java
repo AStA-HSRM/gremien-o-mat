@@ -15,9 +15,6 @@ import javassist.NotFoundException;
 
 @Service
 public class GremiumServiceImpl implements GremiumService {
-
-    public static final String GREMIUM_NOT_FOUND = "No such Gremium exists.";
-
     @Autowired
     private GremiumRepository gremiumRepository;
 
