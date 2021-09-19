@@ -1,10 +1,12 @@
 package de.astahsrm.gremiomat.admin;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import com.opencsv.exceptions.CsvException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
@@ -46,18 +49,11 @@ public class AdminController {
 
     @PostMapping("/csv-user-upload")
     public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile,
-            @RequestParam("gremiumSelect") String gremiumAbbr) {
-        try {
-            csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
-            return "redirect:/admin/candidates";
-        } catch (IOException | CsvException e) {
-            // TODO notify user that upload is faulty
-            return "error/400";
-        } catch (NotFoundException e) {
-            return "error/404";
-        }
+            @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException, NotFoundException {
+        csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
+        return "redirect:/admin/candidates";
     }
-    
+
     @GetMapping("/candidates")
     public String getUsers(Model m) {
         m.addAttribute("candidateList", candidateService.getAllCandidatesSortedByName());
@@ -76,12 +72,8 @@ public class AdminController {
     }
 
     @PostMapping("/gremien/new")
-    public String postNewUserGremiumPage(
-        @RequestParam("gremium-name") String name,
-        @RequestParam("gremium-abbr") String abbr,
-        @RequestParam("gremium-desc") String desc
-    )
-    {   
+    public String postNewUserGremiumPage(@RequestParam("gremium-name") String name,
+            @RequestParam("gremium-abbr") String abbr, @RequestParam("gremium-desc") String desc) {
         Gremium gremium = new Gremium();
         gremium.setName(name);
         gremium.setAbbr(abbr);
@@ -97,23 +89,26 @@ public class AdminController {
 
     @GetMapping("/gremien/{abbr}/edit")
     public String getGremiumEditPage(@PathVariable String abbr, Model m) {
-        m.addAttribute("gremium", gremiumService.getGremiumByAbbr(abbr).get());
-        return "mgmt/admin/gremien-edit";
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            m.addAttribute("gremium", gremiumOptional.get());
+            return "mgmt/admin/gremien-edit";
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
     @PostMapping("/gremien/{abbr}/edit")
-    public String postGremiumEditPage(
-        @RequestParam("gremium-name") String name,
-        @RequestParam("gremium-abbr") String abbr,
-        @RequestParam("gremium-desc") String desc
-    )
-    {
-        // TODO implement check if Gremium exists, to be safe
-        Gremium gremium = gremiumService.getGremiumByAbbr(abbr).get();
-        gremium.setName(name);
-        gremium.setDescription(desc);
-        gremiumService.saveGremium(gremium);
-        return "redirect:/admin/gremien";
+    public String postGremiumEditPage(@RequestParam("gremium-name") String name,
+            @RequestParam("gremium-abbr") String abbr, @RequestParam("gremium-desc") String desc) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            gremium.setName(name);
+            gremium.setDescription(desc);
+            gremiumService.saveGremium(gremium);
+            return "redirect:/admin/gremien";
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
     @GetMapping("/gremien/{abbr}/{queryIndex}/edit")
