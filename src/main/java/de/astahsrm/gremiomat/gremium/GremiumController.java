@@ -35,9 +35,6 @@ public class GremiumController {
     @Autowired
     private GremiumService gremiumService;
 
-    @Autowired
-    private QueryService queryService;
-
     @ModelAttribute(USER_ANSWERS)
     public void initSession(Model m) {
         if (m.getAttribute(USER_ANSWERS) == null) {
@@ -73,7 +70,7 @@ public class GremiumController {
                 m.addAttribute("query", gremium.getContainedQueries().get(queryIndex));
                 m.addAttribute("queryIndex", queryIndex);
                 m.addAttribute("queryForm", new QueryForm());
-                m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size());
+                m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size() || queryIndex == gremium.getContainedQueries().size()-1);
                 return "gremien/query";
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
@@ -155,24 +152,6 @@ public class GremiumController {
     @PostMapping("/{abbr}/results")
     public String getResults(SessionStatus status) {
         status.setComplete();
-        return "redirect:/gremien";
-    }
-
-    @GetMapping("/add")
-    public String addGremium(Model m) {
-        Gremium gremium = new Gremium();
-        gremium.setAbbr("tst");
-        gremium.setDescription("test-description");
-        gremium.setName("test-name");
-        ArrayList<Query> q = new ArrayList<>();
-        Query q1 = new Query();
-        q1.setText("Die Kuh ist doof!");
-        Query q2 = new Query();
-        q2.setText("Das Pferd macht mäh!");
-        q.add(queryService.saveQuery(q1));
-        q.add(queryService.saveQuery(q2));
-        gremium.setContainedQueries(q);
-        gremiumService.saveGremium(gremium);
         return "redirect:/gremien";
     }
 
