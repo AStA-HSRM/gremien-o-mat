@@ -34,6 +34,34 @@ INSERT INTO candidate (version, firstname, lastname, email) VALUES
 (0,'Tracy L','Stack','10@mail.de'),
 (0,'Linda J','Alvarado','11@mail.de');
 
+INSERT INTO candidate_answer (id, version, question_text, choice, reason) VALUES
+  (1,0,'Dieser Aussage soll zugestimmt werden.',0,'Weil ich der erste Kandidat bin!'),
+  (2,0,'Dieser Aussage soll nicht zugestimmt werden.',0,'Weil ich der erste Kandidat bin!'),
+  (3,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',0,'Weil ich der erste Kandidat bin!'),
+  (4,0,'Dieser Aussage soll zugestimmt werden.',1,'Weil ich der zweite Kandidat bin!'),
+  (5,0,'Dieser Aussage soll nicht zugestimmt werden.',0,'Weil ich der zweite Kandidat bin!'),
+  (6,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',1,'Weil ich der zweite Kandidat bin!'),
+  (7,0,'Dieser Aussage soll zugestimmt werden.',-1,'Weil ich der dritte Kandidat bin!'),
+  (8,0,'Dieser Aussage soll nicht zugestimmt werden.',1,'Weil ich der dritte Kandidat bin!'),
+  (9,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',1,'Weil ich der dritte Kandidat bin!'),
+  (10,0,'Dieser Aussage soll zugestimmt werden.',1,'Weil ich der vierte Kandidat bin!'),
+  (11,0,'Dieser Aussage soll nicht zugestimmt werden.',-1,'Weil ich der vierte Kandidat bin!'),
+  (12,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',0,'Weil ich der vierte Kandidat bin!');
+
+INSERT INTO candidate_answers (answers_id, candidate_email) VALUES
+(1,'1@mail.de'),
+(2,'1@mail.de'),
+(3,'1@mail.de'),
+(4,'2@mail.de'),
+(5,'2@mail.de'),
+(6,'2@mail.de'),
+(7,'3@mail.de'),
+(8,'3@mail.de'),
+(9,'3@mail.de'),
+(10,'4@mail.de'),
+(11,'4@mail.de'),
+(12,'4@mail.de');
+
 INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
 ('DTG','1@mail.de'),
 ('DTG','2@mail.de'),
