@@ -57,12 +57,11 @@ public class AdminController {
             return "error/404";
         }
     }
-
-    // TODO temporary site for debugging
+    
     @GetMapping("/candidates")
     public String getUsers(Model m) {
         m.addAttribute("candidateList", candidateService.getAllCandidatesSortedByName());
-        return "candidate/candidates";
+        return "mgmt/admin/user-overview";
     }
 
     @GetMapping("/gremien")
