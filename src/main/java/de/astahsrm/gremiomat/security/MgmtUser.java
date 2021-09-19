@@ -3,6 +3,7 @@ package de.astahsrm.gremiomat.security;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 import  javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +11,8 @@ import de.astahsrm.gremiomat.candidate.Candidate;
 
 @Entity
 public class MgmtUser {
+    @Version
+    private long version;
     @Id
     @NotBlank 
     private String username;
@@ -64,5 +67,13 @@ public class MgmtUser {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 }
