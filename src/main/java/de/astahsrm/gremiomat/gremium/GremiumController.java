@@ -2,6 +2,7 @@ package de.astahsrm.gremiomat.gremium;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.candidate.CandidateAnswer;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryForm;
 import de.astahsrm.gremiomat.query.QueryService;
@@ -121,6 +124,29 @@ public class GremiumController {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
+            ArrayList<Candidate> candidates = (ArrayList<Candidate>) gremium.getJoinedCandidates();
+            HashMap<Candidate, Double> compatibility = new HashMap<>();
+            // Goes through every candidate in gremium
+            for (Candidate candidate : candidates) {
+                double percentage = 0;
+                double answersInCommon = 0;
+                // Goes through every entry inside of 'userAnswers' Map
+                for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
+                    /*
+                     * Finds matching Query from 'userAnswers' Map and compares it to candidate's
+                     * answer. Increments 'answersInCommon' if candidate's answer and user's answer
+                     * are equal.
+                     */
+                    for (CandidateAnswer ans : candidate.getAnswers()) {
+                        if (ans.getQuestion().equals(entry.getKey()) && entry.getValue() == ans.getChoice()) {
+                            answersInCommon++;
+                            break;
+                        }
+                    }
+                }
+                percentage = (answersInCommon / userAnswers.size()) * 100;
+                compatibility.put(candidate, percentage);
+            }
             return "gremien/results";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
