@@ -45,11 +45,17 @@
       <br />
       <button
         th:if="${queryIndex} gt 0 and ${queryIndex-1} ge 0"
-        th:href="@{./__${queryIndex-1}__}"
         type="submit"
         name="prev-query"
       >
         Vorherige Frage
+      </button>
+      <button
+      th:if="${isQueriesAnswered}"
+      type="submit"
+      name="results"
+    >
+      Zum Ergebnis
       </button>
       <button
         th:if="${queryIndex} lt ${queryListSize} and ${queryIndex+1} lt ${queryListSize}"
