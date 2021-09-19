@@ -1,6 +1,5 @@
 package de.astahsrm.gremiomat.gremium;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -121,10 +120,9 @@ public class GremiumController {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            ArrayList<Candidate> candidates = (ArrayList<Candidate>) gremium.getJoinedCandidates();
             HashMap<Candidate, Double> compatibility = new HashMap<>();
             // Goes through every candidate in gremium
-            for (Candidate candidate : candidates) {
+            for (Candidate candidate : gremium.getJoinedCandidates()) {
                 double percentage = 0;
                 double answersInCommon = 0;
                 // Goes through every entry inside of 'userAnswers' Map
@@ -144,6 +142,7 @@ public class GremiumController {
                 percentage = (answersInCommon / userAnswers.size()) * 100;
                 compatibility.put(candidate, percentage);
             }
+            m.addAttribute("comp", compatibility);
             return "gremien/results";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
