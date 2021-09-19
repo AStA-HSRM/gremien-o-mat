@@ -1,7 +1,8 @@
 INSERT INTO gremium (version, name, abbr, description) VALUES
   (0, 'Das Test Gremium', 'DTG', 'Das erste Test Gremium der Welt!'),
   (0, 'Kein Test Gremium', 'KTG', 'Das hier ist wirklich kein Test.'),
-  (0, 'Vier Fragen Gremium','VFT', 'Das VFT hat 4 Fragen.');
+  (0, 'Vier Fragen Gremium','VFT', 'Das VFT hat 4 Fragen.'),
+  (0, 'CSV Query Upload Test','CQUT', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
 
 INSERT INTO query (version, text) VALUES
   (0,'Dieser Aussage soll zugestimmt werden.'),
