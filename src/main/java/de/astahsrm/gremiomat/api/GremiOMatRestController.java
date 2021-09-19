@@ -18,7 +18,6 @@ import javassist.NotFoundException;
 @RequestMapping("/api/v1")
 public class GremiOMatRestController {
 
-    // TODO how do you do this
     @Autowired
     private GremiumService gremiumService;
 
