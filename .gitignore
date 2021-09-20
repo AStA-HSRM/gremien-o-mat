@@ -206,3 +206,6 @@ gradle-app.setting
 # ignore persistent docker development files but keep the root folder
 docker-persistence/*
 !docker-persistence/.gitkeep
+
+# ignore secret configuration files
+secret.properties
