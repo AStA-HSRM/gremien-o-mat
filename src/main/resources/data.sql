@@ -3,10 +3,10 @@ INSERT INTO mgmt_user (version, username, password, role) VALUES
 (0,'admin','admin', 'ADMIN');
 
 INSERT INTO gremium (version, name, abbr, description) VALUES
-  (0, 'Das Test Gremium', 'DTG', 'Das erste Test Gremium der Welt!'),
-  (0, 'Kein Test Gremium', 'KTG', 'Das hier ist wirklich kein Test.'),
-  (0, 'Vier Fragen Gremium','VFT', 'Das VFT hat 4 Fragen.'),
-  (0, 'CSV Query Upload Test','CQUT', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
+  (0, 'Das Test Gremium', 'dtg', 'Das erste Test Gremium der Welt!'),
+  (0, 'Kein Test Gremium', 'ktg', 'Das hier ist wirklich kein Test.'),
+  (0, 'Vier Fragen Gremium','vft', 'Das vft hat 4 Fragen.'),
+  (0, 'CSV Query Upload Test','cqut', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
 
 INSERT INTO query (version, text) VALUES
   (0,'Dieser Aussage soll zugestimmt werden.'),
@@ -63,31 +63,31 @@ INSERT INTO candidate_answers (answers_id, candidate_email) VALUES
 (12,'4@mail.de');
 
 INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
-('DTG','1@mail.de'),
-('DTG','2@mail.de'),
-('DTG','3@mail.de'),
-('DTG','4@mail.de'),
-('KTG','1@mail.de'),
-('KTG','5@mail.de'),
-('KTG','6@mail.de'),
-('KTG','7@mail.de'),
-('KTG','8@mail.de'),
-('VFT','1@mail.de'),
-('VFT','10@mail.de'),
-('VFT','11@mail.de'),
-('VFT','9@mail.de');
+('dtg','1@mail.de'),
+('dtg','2@mail.de'),
+('dtg','3@mail.de'),
+('dtg','4@mail.de'),
+('ktg','1@mail.de'),
+('ktg','5@mail.de'),
+('ktg','6@mail.de'),
+('ktg','7@mail.de'),
+('ktg','8@mail.de'),
+('vft','1@mail.de'),
+('vft','10@mail.de'),
+('vft','11@mail.de'),
+('vft','9@mail.de');
 
 INSERT INTO query_contain (gremium_id, query_id) VALUES
-('DTG','Dieser Aussage soll zugestimmt werden.'),
-('DTG','Dieser Aussage soll nicht zugestimmt werden.'),
-('DTG','Gegenüber dieser Frage sollte man neutral eingestimmt sein.'),
-('KTG','Griechenland ist besetzt von Griechen.'),
-('KTG','Bier schmeckt nicht.'),
-('KTG','Diese Aussage ist dir komplett egal.'),
-('KTG','Tomaten sind lila.'),
-('VFT','1. Frage!'),
-('VFT','2. Frage!'),
-('VFT','3. Frage!'),
-('VFT','4. Frage!');
+('dtg','Dieser Aussage soll zugestimmt werden.'),
+('dtg','Dieser Aussage soll nicht zugestimmt werden.'),
+('dtg','Gegenüber dieser Frage sollte man neutral eingestimmt sein.'),
+('ktg','Griechenland ist besetzt von Griechen.'),
+('ktg','Bier schmeckt nicht.'),
+('ktg','Diese Aussage ist dir komplett egal.'),
+('ktg','Tomaten sind lila.'),
+('vft','1. Frage!'),
+('vft','2. Frage!'),
+('vft','3. Frage!'),
+('vft','4. Frage!');
 
 
