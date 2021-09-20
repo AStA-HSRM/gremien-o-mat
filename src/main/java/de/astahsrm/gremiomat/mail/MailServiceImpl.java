@@ -3,6 +3,7 @@ package de.astahsrm.gremiomat.mail;
 import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Service;
 public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender emailSender;
+
+    // read out mail username from application.properties
+    @Value("${mail.username}")
+    private String fromEmail;
 
     @Override
     public void sendWelcomeMailToCandidate(Candidate candidate, String password) {
