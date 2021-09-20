@@ -14,7 +14,7 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender emailSender;
 
     // read out mail username from application.properties
-    @Value("${mail.username}")
+    @Value("${spring.mail.username}")
     private String fromEmail;
 
     @Override
