@@ -32,6 +32,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=dev
       - SPRING_DATASOURCE_PASSWORD=dev123
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.mariadb.jdbc.Driver
+      - SPRING_MAIL_USERNAME=mail@example.com
+      - SPRING_MAIL_PASSWORD=N0tTh3Actu4lP4SSw0rd
       # optional arguments
       # - SERVER_PORT=8090
       # - DEBUG=true
