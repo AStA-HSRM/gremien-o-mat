@@ -2,6 +2,7 @@ package de.astahsrm.gremiomat.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class MailServiceImpl implements MailService {
     // read out mail username from application.properties
     @Value("${spring.mail.username}")
     private String fromEmail;
+
+    @Autowired
+    private SpringTemplateEngine thymeleafTemplateEngine;
 
     @Override
     public void sendWelcomeMailToCandidate(Candidate candidate, String password) {
