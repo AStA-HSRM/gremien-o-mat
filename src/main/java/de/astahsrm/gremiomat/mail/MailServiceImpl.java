@@ -2,10 +2,12 @@ package de.astahsrm.gremiomat.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 
@@ -22,7 +24,7 @@ public class MailServiceImpl implements MailService {
     private SpringTemplateEngine thymeleafTemplateEngine;
 
     @Override
-    public void sendWelcomeMailToCandidate(Candidate candidate, String password) {
+    public void sendWelcomeMailToCandidate(Candidate candidate, String plainPassword) {
         /*
          * @Autowired public SimpleMailMessage template;
          * 
@@ -30,11 +32,14 @@ public class MailServiceImpl implements MailService {
          * sendSimpleMessage(to, subject, text);
          */
 
+        Context context = new Context();
+
         SimpleMailMessage message = new SimpleMailMessage();
+
         message.setFrom(fromEmail);
         message.setTo(candidate.getEmail());
         message.setSubject("Example subject");
-        message.setText("Example text");
+        message.setText(thymeleafTemplateEngine.process("mail/test", context));
         emailSender.send(message);
     }
 }
