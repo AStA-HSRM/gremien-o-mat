@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import javassist.NotFoundException;
 
 @Service
 public class CandidateServiceImpl implements CandidateService {
@@ -54,7 +53,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, String candidateEmail) throws NotFoundException {
+    public Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, String candidateEmail){
         Optional<Candidate> candidateOptional = getCandidateById(candidateEmail);
         if(candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
@@ -65,8 +64,6 @@ public class CandidateServiceImpl implements CandidateService {
             }
             return Optional.empty();
         }
-        else {
-            throw new NotFoundException("No such Candidate exists.");
-        }
+        return Optional.empty();
     }
 }
