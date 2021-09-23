@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Version;
@@ -16,10 +17,14 @@ import de.astahsrm.gremiomat.gremium.Gremium;
 @Entity
 public class Query {
 
+    @Id
+    @GeneratedValue
+    private long id;
+
     @Version
     private long version;
 
-    @Id
+    
     @NotBlank
     private String text;
 
@@ -84,5 +89,13 @@ public class Query {
 
     public void setGremien(List<Gremium> gremien) {
         this.gremien = gremien;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

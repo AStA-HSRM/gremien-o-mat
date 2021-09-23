@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.query;
 
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
 
 @Service
-public class QueryServiceImpl implements QueryService{
+public class QueryServiceImpl implements QueryService {
 
     @Autowired
     private QueryRepository queryRepository;
@@ -23,24 +24,27 @@ public class QueryServiceImpl implements QueryService{
     }
 
     @Override
-    public Optional<Query> getQueryByQueryTxt(String queryTxt) {
-        return queryRepository.findById(queryTxt);
+    public Optional<Query> getQueryById(long queryId) {
+        return queryRepository.findById(queryId);
     }
 
     @Override
-    public void delQueryByQueryTxt(String queryTxt) {
-       queryRepository.deleteById(queryTxt);
+    public void delQueryById(long queryId) {
+        queryRepository.deleteById(queryId);
     }
 
     @Override
     public void delQueryByIndexAndGremium(int queryIndex, String abbr) {
         Optional<Gremium> gremOpt = gremiumService.getGremiumByAbbr(abbr);
-        if(gremOpt.isPresent()) {
+        if (gremOpt.isPresent()) {
             Query q = gremOpt.get().getContainedQueries().get(queryIndex);
-            if(q != null) {
-                delQueryByQueryTxt(q.getText());
+            if (q != null) {
+                delQueryById(q.getId());
             }
         }
+        else {
+            throw new EntityNotFoundException();
+        }
     }
-    
+
 }

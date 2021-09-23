@@ -8,18 +8,18 @@ INSERT INTO gremium (version, name, abbr, description) VALUES
   (0, 'Vier Fragen Gremium','vft', 'Das vft hat 4 Fragen.'),
   (0, 'CSV Query Upload Test','cqut', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
 
-INSERT INTO query (version, text) VALUES
-  (0,'Dieser Aussage soll zugestimmt werden.'),
-  (0,'Dieser Aussage soll nicht zugestimmt werden.'),
-  (0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.'),
-  (0,'Griechenland ist besetzt von Griechen.'),
-  (0,'Bier schmeckt nicht.'),
-  (0,'Diese Aussage ist dir komplett egal.'),
-  (0,'Tomaten sind lila.'),
-  (0,'1. Frage!'),
-  (0,'2. Frage!'),
-  (0,'3. Frage!'),
-  (0,'4. Frage!');
+INSERT INTO query (id, version, text) VALUES
+  (0,0,'Dieser Aussage soll zugestimmt werden.'),
+  (1,0,'Dieser Aussage soll nicht zugestimmt werden.'),
+  (2,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.'),
+  (3,0,'Griechenland ist besetzt von Griechen.'),
+  (4,0,'Bier schmeckt nicht.'),
+  (5,0,'Diese Aussage ist dir komplett egal.'),
+  (6,0,'Tomaten sind lila.'),
+  (7,0,'1. Frage!'),
+  (8,0,'2. Frage!'),
+  (9,0,'3. Frage!'),
+  (10,0,'4. Frage!');
 
 INSERT INTO candidate (version, firstname, lastname, email) VALUES
 (0,'Darth','Vader','1@mail.de'),
@@ -34,33 +34,33 @@ INSERT INTO candidate (version, firstname, lastname, email) VALUES
 (0,'Tracy L','Stack','10@mail.de'),
 (0,'Linda J','Alvarado','11@mail.de');
 
-INSERT INTO candidate_answer (id, version, question_text, choice, reason) VALUES
-  (1,0,'Dieser Aussage soll zugestimmt werden.',0,'Weil ich der erste Kandidat bin!'),
-  (2,0,'Dieser Aussage soll nicht zugestimmt werden.',0,'Weil ich der erste Kandidat bin!'),
-  (3,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',0,'Weil ich der erste Kandidat bin!'),
-  (4,0,'Dieser Aussage soll zugestimmt werden.',1,'Weil ich der zweite Kandidat bin!'),
-  (5,0,'Dieser Aussage soll nicht zugestimmt werden.',0,'Weil ich der zweite Kandidat bin!'),
-  (6,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',1,'Weil ich der zweite Kandidat bin!'),
-  (7,0,'Dieser Aussage soll zugestimmt werden.',-1,'Weil ich der dritte Kandidat bin!'),
-  (8,0,'Dieser Aussage soll nicht zugestimmt werden.',1,'Weil ich der dritte Kandidat bin!'),
-  (9,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',1,'Weil ich der dritte Kandidat bin!'),
-  (10,0,'Dieser Aussage soll zugestimmt werden.',1,'Weil ich der vierte Kandidat bin!'),
-  (11,0,'Dieser Aussage soll nicht zugestimmt werden.',-1,'Weil ich der vierte Kandidat bin!'),
-  (12,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.',0,'Weil ich der vierte Kandidat bin!');
+INSERT INTO candidate_answer (id, version, question_id, choice, reason) VALUES
+  (31,0,0,0,'Weil ich der erste Kandidat bin!'),
+  (32,0,1,0,'Weil ich der erste Kandidat bin!'),
+  (33,0,3,0,'Weil ich der erste Kandidat bin!'),
+  (34,0,0,1,'Weil ich der zweite Kandidat bin!'),
+  (35,0,1,0,'Weil ich der zweite Kandidat bin!'),
+  (36,0,3,1,'Weil ich der zweite Kandidat bin!'),
+  (37,0,0,-1,'Weil ich der dritte Kandidat bin!'),
+  (38,0,1,1,'Weil ich der dritte Kandidat bin!'),
+  (39,0,3,1,'Weil ich der dritte Kandidat bin!'),
+  (310,0,0,1,'Weil ich der vierte Kandidat bin!'),
+  (311,0,1,-1,'Weil ich der vierte Kandidat bin!'),
+  (312,0,3,0,'Weil ich der vierte Kandidat bin!');
 
 INSERT INTO candidate_answers (answers_id, candidate_email) VALUES
-(1,'1@mail.de'),
-(2,'1@mail.de'),
-(3,'1@mail.de'),
-(4,'2@mail.de'),
-(5,'2@mail.de'),
-(6,'2@mail.de'),
-(7,'3@mail.de'),
-(8,'3@mail.de'),
-(9,'3@mail.de'),
-(10,'4@mail.de'),
-(11,'4@mail.de'),
-(12,'4@mail.de');
+(31,'1@mail.de'),
+(32,'1@mail.de'),
+(33,'1@mail.de'),
+(34,'2@mail.de'),
+(35,'2@mail.de'),
+(36,'2@mail.de'),
+(37,'3@mail.de'),
+(38,'3@mail.de'),
+(39,'3@mail.de'),
+(310,'4@mail.de'),
+(311,'4@mail.de'),
+(312,'4@mail.de');
 
 INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
 ('dtg','1@mail.de'),
@@ -78,16 +78,16 @@ INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
 ('vft','9@mail.de');
 
 INSERT INTO query_contain (gremium_id, query_id) VALUES
-('dtg','Dieser Aussage soll zugestimmt werden.'),
-('dtg','Dieser Aussage soll nicht zugestimmt werden.'),
-('dtg','Gegenüber dieser Frage sollte man neutral eingestimmt sein.'),
-('ktg','Griechenland ist besetzt von Griechen.'),
-('ktg','Bier schmeckt nicht.'),
-('ktg','Diese Aussage ist dir komplett egal.'),
-('ktg','Tomaten sind lila.'),
-('vft','1. Frage!'),
-('vft','2. Frage!'),
-('vft','3. Frage!'),
-('vft','4. Frage!');
+('dtg',0),
+('dtg',1),
+('dtg',2),
+('ktg',3),
+('ktg',4),
+('ktg',5),
+('ktg',6),
+('vft',7),
+('vft',8),
+('vft',9),
+('vft',10);
 
 
