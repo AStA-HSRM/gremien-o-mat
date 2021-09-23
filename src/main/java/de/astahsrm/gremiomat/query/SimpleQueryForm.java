@@ -1,6 +1,6 @@
 package de.astahsrm.gremiomat.query;
 
-public class QueryForm {
+public class SimpleQueryForm {
     private int opinion;
     public int getOpinion() {
         return opinion;
