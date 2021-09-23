@@ -48,16 +48,17 @@ public class UserController {
             Gremium gremium = gremiumOptional.get();
             if (queryIndex < gremium.getContainedQueries().size()) {
                 Query query = gremium.getContainedQueries().get(queryIndex);
-                EditQueryForm qef = new EditQueryForm();
+                EditQueryForm form = new EditQueryForm();
+                form.setGremien(query.getGremien());
                 Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
                 Optional<CandidateAnswer> ansOpt = candidateService.getCandidateAnswerByQueryTxt(query.getText(),
                         userDetails.getEmail());
                 if (ansOpt.isPresent()) {
                     CandidateAnswer ans = ansOpt.get();
-                    qef.setOpinion(ans.getChoice());
-                    qef.setReason(ans.getReason());
+                    form.setOpinion(ans.getChoice());
+                    form.setReason(ans.getReason());
                 }
-                m.addAttribute("form", qef);
+                m.addAttribute("form", form);
                 m.addAttribute("query", query);
                 m.addAttribute("role", "USER");
                 return "mgmt/user-query-edit";
