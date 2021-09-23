@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,10 @@ public class AdminController {
 
     @Autowired
     private CandidateService candidateService;
-    
+
+    @Autowired
+    private QueryService queryService;
+
     @GetMapping
     public String getAdminPage() {
         return "mgmt/admin/admin";
@@ -123,10 +127,11 @@ public class AdminController {
             Gremium gremium = gremiumOptional.get();
             if (queryIndex < gremium.getContainedQueries().size()) {
                 Query query = gremium.getContainedQueries().get(queryIndex);
-                EditQueryForm eqf = new EditQueryForm();
-                eqf.setQueryTxt(query.getText());
-                m.addAttribute("form", eqf);
-                m.addAttribute("query",query) ;
+                EditQueryForm form = new EditQueryForm();
+                form.setQueryTxt(query.getText());
+                form.setGremien(query.getGremien());
+                m.addAttribute("form", form);
+                m.addAttribute("query", query);
                 m.addAttribute("role", "ADMIN");
                 return "mgmt/user-query-edit";
             }
@@ -135,9 +140,24 @@ public class AdminController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping("/gremien/{abbr}/{queryIndex}/edit")
-    public String postGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex) {
-        return "";
+    @PostMapping(value = "/gremien/{abbr}/{queryIndex}/edit", params = "save")
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, EditQueryForm eqf, BindingResult res, Model m) {
+        if(res.hasErrors()) {
+            m.addAttribute("error", res.getAllErrors());
+            return "";
+        } else {
+            Query q = new Query();
+            q.setGremien(eqf.getGremien());
+            q.setText(eqf.getQueryTxt());
+            queryService.saveQuery(q);
+            return "redirect:/admin/gremien/" + abbr;
+        }
+    }
+
+    @PostMapping(value = "/gremien/{abbr}/{queryIndex}/edit", params = "del")
+    public String postDelGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex) {
+        queryService.delQueryByIndexAndGremium(queryIndex, abbr);
+        return "redirect:/admin/gremien/" + abbr;
     }
 
     @GetMapping("/users")
