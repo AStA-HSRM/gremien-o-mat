@@ -31,7 +31,6 @@
       href="//fonts.googleapis.com/css?family=Kumbh+Sans"
     />
   </head>
-
   <body>
     <h1 th:if="${role} eq 'USER'" th:text="${query.text}"></h1>
     <form th:method="POST" th:object="${form}">
@@ -43,7 +42,7 @@
       />
       <br />
       <div th:if="${role} eq 'USER'">
-        <input type="text" name="reason" id="reason" value="${reason}" /><br />
+        <input type="text" th:field="*{reason}" id="reason"/><br />
         <input type="radio" id="ok" th:field="*{opinion}" value="1" />
         <label for="ok">Stimme zu</label><br />
         <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
