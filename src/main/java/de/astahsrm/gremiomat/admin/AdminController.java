@@ -18,17 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.candidate.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.EditQueryForm;
+import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryService;
-import de.astahsrm.gremiomat.security.MgmtUserService;
-import de.astahsrm.gremiomat.security.SecurityConfig;
 import javassist.NotFoundException;
 
 @Controller
@@ -43,10 +39,7 @@ public class AdminController {
 
     @Autowired
     private CandidateService candidateService;
-
-    @Autowired
-    private MgmtUserService mgmtUserService;
-
+    
     @GetMapping
     public String getAdminPage() {
         return "mgmt/admin/admin";
@@ -129,20 +122,12 @@ public class AdminController {
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             if (queryIndex < gremium.getContainedQueries().size()) {
-                String role = mgmtUserService.getRoleOfUserById(loggedInUser.getName());
                 Query query = gremium.getContainedQueries().get(queryIndex);
-                EditQueryForm qef = new EditQueryForm();
-                if (role.equals(SecurityConfig.USER)) {
-                    Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-                    Optional<CandidateAnswer> ansOpt = candidateService.getCandidateAnswerByQueryTxt(query.getText(), userDetails.getEmail());
-                    if(ansOpt.isPresent()) {
-                        qef.setOpinion(ansOpt.get().getChoice());
-                        m.addAttribute("reason",ansOpt.get().getReason());
-                    }
-                }
-                m.addAttribute("form", qef);
-                m.addAttribute("query", query);
-                m.addAttribute("role", role);
+                EditQueryForm eqf = new EditQueryForm();
+                eqf.setQueryTxt(query.getText());
+                m.addAttribute("form", eqf);
+                m.addAttribute("query",query) ;
+                m.addAttribute("role", "ADMIN");
                 return "mgmt/user-query-edit";
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
