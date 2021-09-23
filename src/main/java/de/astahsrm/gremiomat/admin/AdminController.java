@@ -130,6 +130,8 @@ public class AdminController {
                 EditQueryForm form = new EditQueryForm();
                 form.setQueryTxt(query.getText());
                 form.setGremien(query.getGremien());
+                form.setId(query.getId());
+                m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
                 m.addAttribute("form", form);
                 m.addAttribute("query", query);
                 m.addAttribute("role", "ADMIN");
@@ -141,16 +143,21 @@ public class AdminController {
     }
 
     @PostMapping(value = "/gremien/{abbr}/{queryIndex}/edit", params = "save")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, EditQueryForm eqf, BindingResult res, Model m) {
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, EditQueryForm form, BindingResult res, Model m) {
         if(res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
-            return "";
+            return "mgmt/user-query-edit";
         } else {
-            Query q = new Query();
-            q.setGremien(eqf.getGremien());
-            q.setText(eqf.getQueryTxt());
-            queryService.saveQuery(q);
-            return "redirect:/admin/gremien/" + abbr;
+            Optional<Query> qOpt = queryService.getQueryById(form.getId());
+            if(qOpt.isPresent()) {
+                Query q = qOpt.get();
+                q.setGremien(form.getGremien());
+                q.setText(form.getQueryTxt());
+                q.setId(form.getId());
+                queryService.saveQuery(q);
+                return "redirect:/admin/gremien";
+            }
+            return "error";
         }
     }
 

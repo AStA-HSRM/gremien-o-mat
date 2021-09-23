@@ -34,6 +34,7 @@
   <body>
     <h1 th:if="${role} eq 'USER'" th:text="${query.text}"></h1>
     <form th:method="POST" th:object="${form}">
+      <input type="hidden" th:field="*{id}" value="${query.id}">
       <input
         th:if="${role} eq 'ADMIN'"
         type="text"
@@ -42,6 +43,7 @@
       />
       <br />
       <div th:if="${role} eq 'USER'">
+        <input type="hidden" th:field="*{gremien}" />
         <input type="text" th:field="*{reason}" id="reason"/><br />
         <input type="radio" id="ok" th:field="*{opinion}" value="1" />
         <label for="ok">Stimme zu</label><br />
@@ -49,6 +51,9 @@
         <label for="neutral">Neutral</label><br />
         <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
         <label for="not-ok">Stimme nicht zu</label>
+      </div>
+      <div th:if="${role} eq 'ADMIN'" th:each ="grem : ${allGremien}" multiple>
+        <input type="checkbox" th:value = "${grem}" th:text = "${grem.name}" th:field = "*{gremien}"></option>
       </div>
       <button type="submit" name="save">Save</button>
       <button th:if="${role} eq 'ADMIN'" type="submit" name="del">
