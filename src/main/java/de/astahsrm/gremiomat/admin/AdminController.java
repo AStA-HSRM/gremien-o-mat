@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.admin;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Optional;
 
 import com.opencsv.exceptions.CsvException;
@@ -17,10 +18,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.candidate.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.query.Query;
+import de.astahsrm.gremiomat.query.EditQueryForm;
+import de.astahsrm.gremiomat.query.QueryService;
+import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.security.SecurityConfig;
 import javassist.NotFoundException;
 
 @Controller
@@ -35,6 +43,9 @@ public class AdminController {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private MgmtUserService mgmtUserService;
 
     @GetMapping
     public String getAdminPage() {
@@ -112,8 +123,31 @@ public class AdminController {
     }
 
     @GetMapping("/gremien/{abbr}/{queryIndex}/edit")
-    public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex) {
-        return "";
+    public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, Model m,
+            Principal loggedInUser) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            if (queryIndex < gremium.getContainedQueries().size()) {
+                String role = mgmtUserService.getRoleOfUserById(loggedInUser.getName());
+                Query query = gremium.getContainedQueries().get(queryIndex);
+                EditQueryForm qef = new EditQueryForm();
+                if (role.equals(SecurityConfig.USER)) {
+                    Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+                    Optional<CandidateAnswer> ansOpt = candidateService.getCandidateAnswerByQueryTxt(query.getText(), userDetails.getEmail());
+                    if(ansOpt.isPresent()) {
+                        qef.setOpinion(ansOpt.get().getChoice());
+                        m.addAttribute("reason",ansOpt.get().getReason());
+                    }
+                }
+                m.addAttribute("form", qef);
+                m.addAttribute("query", query);
+                m.addAttribute("role", role);
+                return "mgmt/user-query-edit";
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
     @PostMapping("/gremien/{abbr}/{queryIndex}/edit")
