@@ -145,4 +145,9 @@ public class Gremium {
         this.joinedCandidates = joinedCandidates;
     }
 
+    public void addQuery(Query query) {
+        if (!this.containedQueries.contains(query))
+            this.containedQueries.add(query);
+    }
+
 }
