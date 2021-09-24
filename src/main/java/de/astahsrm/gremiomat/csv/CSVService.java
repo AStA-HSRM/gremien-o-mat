@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javassist.NotFoundException;
 
 public interface CSVService {
-    public void generateCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr)
-            throws IOException, CsvException, NotFoundException;
+    public void saveCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr) throws IOException, CsvException, NotFoundException;
+    public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr) throws IOException, CsvException, NotFoundException;
 }

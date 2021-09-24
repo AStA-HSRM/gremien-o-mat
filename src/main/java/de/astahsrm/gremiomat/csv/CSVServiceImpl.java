@@ -16,6 +16,8 @@ import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.query.Query;
+import de.astahsrm.gremiomat.query.QueryService;
 import javassist.NotFoundException;
 
 @Service
@@ -23,6 +25,9 @@ public class CSVServiceImpl implements CSVService {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private QueryService queryService;
 
     @Autowired
     private GremiumService gremiumService;
@@ -43,13 +48,13 @@ public class CSVServiceImpl implements CSVService {
      */
 
     @Override
-    public void generateCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr)
+    public void saveCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr)
             throws IOException, CsvException, NotFoundException {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(gremiumAbbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            try (CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream()))
-                    .withSkipLines(1).build()) {
+            CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
+                    .build();
                 String[] entry;
                 while ((entry = reader.readNext()) != null) {
                     Candidate candidate = new Candidate();
@@ -66,9 +71,33 @@ public class CSVServiceImpl implements CSVService {
                         gremiumService.addCandidateToGremium(candidateService.saveCandidate(candidate), gremium);
                     }
                 }
+        } else {
+            throw new NotFoundException("No such Gremium exists.");
             }
         }
-        else {
+
+    @Override
+    public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr)
+            throws IOException, CsvException, NotFoundException {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(gremiumAbbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
+                    .build();
+            String[] entry;
+            while ((entry = reader.readNext()) != null) {
+                Optional<Query> qOpt = queryService.getQueryByTxt(entry[0]);
+                Query q = null;
+                if (qOpt.isPresent()) {
+                    q = qOpt.get();
+                } else {
+                    q = new Query();
+                }
+                q.addGremium(gremium);
+                q.setText(entry[0]);
+                gremiumService.addQueryToGremium(queryService.saveQuery(q), gremium);
+            }
+        } else {
             throw new NotFoundException("No such Gremium exists.");
         }
     }
