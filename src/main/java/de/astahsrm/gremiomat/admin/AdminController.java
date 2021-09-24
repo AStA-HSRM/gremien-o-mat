@@ -50,16 +50,31 @@ public class AdminController {
     }
 
     @GetMapping("/csv-user-upload")
-    public String getCSVPage(Model m) {
+    public String getUserCSVPage(Model m) {
         m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
-        return "mgmt/admin/csv-user-upload";
+        m.addAttribute("head2", "CSV User Upload");
+        return "mgmt/admin/csv-upload";
     }
 
     @PostMapping("/csv-user-upload")
     public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile,
             @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException, NotFoundException {
-        csvService.generateCandidatesFromCSV(csvFile, gremiumAbbr);
+        csvService.saveCandidatesFromCSV(csvFile, gremiumAbbr);
         return "redirect:/admin/candidates";
+    }
+
+    @GetMapping("/csv-query-upload")
+    public String getQueryCSVPage(Model m) {
+        m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute("head2", "CSV Query Upload");
+        return "mgmt/admin/csv-upload";
+    }
+
+    @PostMapping("/csv-query-upload")
+    public String processQueryCSV(@RequestParam("csv-file") MultipartFile csvFile,
+            @RequestParam("gremiumSelect") String abbr) throws IOException, CsvException, NotFoundException {
+        csvService.saveQueriesFromCSV(csvFile, abbr);
+        return "redirect:/admin/gremien/" + abbr;
     }
 
     @GetMapping("/candidates")
