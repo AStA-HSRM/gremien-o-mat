@@ -29,6 +29,16 @@ public class QueryServiceImpl implements QueryService {
     }
 
     @Override
+    public Optional<Query> getQueryByTxt(String queryTxt) {
+        Query flag = new Query();
+        flag.setText(queryTxt);
+        if (queryRepository.findAll().contains(flag)) {
+            return Optional.of(queryRepository.findAll().get(queryRepository.findAll().indexOf(flag)));
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void delQueryById(long queryId) {
         queryRepository.deleteById(queryId);
     }
@@ -41,8 +51,7 @@ public class QueryServiceImpl implements QueryService {
             if (q != null) {
                 delQueryById(q.getId());
             }
-        }
-        else {
+        } else {
             throw new EntityNotFoundException();
         }
     }
