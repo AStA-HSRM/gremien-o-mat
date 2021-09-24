@@ -91,7 +91,7 @@ public class AdminController {
 
     @GetMapping("/gremien/new")
     public String getNewGremiumEditPage() {
-        return "mgmt/admin/gremien-edit";
+        return "mgmt/admin/gremium-edit";
     }
 
     @PostMapping("/gremien/new")
@@ -106,8 +106,13 @@ public class AdminController {
     }
 
     @GetMapping("/gremien/{abbr}")
-    public String getGremiumInfoPage(@PathVariable String abbr) {
-        return "";
+    public String getGremiumInfoPage(@PathVariable String abbr, Model m) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            m.addAttribute("gremium", gremiumOptional.get());
+            return "mgmt/gremium-overview";
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
     @GetMapping("/gremien/{abbr}/edit")
@@ -115,7 +120,7 @@ public class AdminController {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             m.addAttribute("gremium", gremiumOptional.get());
-            return "mgmt/admin/gremien-edit";
+            return "mgmt/admin/gremium-edit";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
