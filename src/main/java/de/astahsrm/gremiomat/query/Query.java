@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Version;
@@ -18,31 +19,22 @@ import de.astahsrm.gremiomat.gremium.Gremium;
 public class Query {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Version
     private long version;
 
-    
     @NotBlank
     private String text;
 
     @NotNull
-    @ManyToMany(mappedBy = "containedQueries", cascade= CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "containedQueries", cascade = CascadeType.PERSIST)
     private List<Gremium> gremien;
 
     public Query() {
         this.text = "";
         this.gremien = new ArrayList<>();
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((text == null) ? 0 : text.hashCode());
-        return result;
     }
 
     @Override
@@ -60,6 +52,14 @@ public class Query {
         } else if (!text.equals(other.text))
             return false;
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        return result;
     }
 
     @Override
@@ -97,5 +97,12 @@ public class Query {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public boolean addGremium(Gremium gremium) {
+        if (!this.gremien.contains(gremium))
+            return this.gremien.add(gremium);
+        else
+            return false;
     }
 }
