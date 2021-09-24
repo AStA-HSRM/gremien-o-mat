@@ -16,5 +16,6 @@ public interface GremiumService {
     public void addCandidateToGremium(Candidate candidate, Gremium gremium);
     public List<Query> getGremiumQueriesByGremiumAbbr(String abbr) throws NotFoundException;
     public List<Candidate> getGremiumCandidatesByGremiumAbbr(String abbr) throws NotFoundException;
+    public void addQueryToGremium(Query saveQuery, Gremium gremium);
 
 }

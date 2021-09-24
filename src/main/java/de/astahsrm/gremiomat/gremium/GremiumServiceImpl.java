@@ -78,4 +78,10 @@ public class GremiumServiceImpl implements GremiumService {
         gremium.addCandidate(candidate);
         gremiumRepository.save(gremium);
     }
+
+    @Override
+    public void addQueryToGremium(Query query, Gremium gremium) {
+        gremium.addQuery(query);
+        gremiumRepository.save(gremium);
+    }
 }
