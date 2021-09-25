@@ -28,31 +28,15 @@
     />
   </head>
   <body>
-    <div th:unless="${gremium}">
-      <h2>Create new Gremium</h2>
-      <form method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" enctype="multipart/form-data">
-        <label for="gremium-name">Gremium-Name:</label>
-        <input type="text" value="" id="gremium-name" name="gremium-name"><br/>
-        <label for="gremium-abbr">Gremium-Abkürzung:</label>
-        <input type="text" value="" id="gremium-abbr" name="gremium-abbr"><br/>
-        <label for="gremium-desc">Beschreibung:</label>
-        <textarea rows="4" cols="50" value="" id="gremium-desc" name="gremium-desc"></textarea><br/>
-        <input type="submit" value="Save">
-      </form>
-    </div>
-    <div th:if="${gremium}">
-      <h2 th:text="'Edit ' + ${gremium.name}"></h2>
-      <p th:text="'Abkürzung: ' + ${gremium.abbr}"></p>
-      <form method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" enctype="multipart/form-data">
-        <input type="hidden" th:value="${gremium.abbr}" id="gremium-abbr" name="gremium-abbr">
-        <label for="gremium-name">Gremium-Name:</label>
-        <input type="text" th:value="${gremium.name}" id="gremium-name" name="gremium-name"><br/>
-        <label for="gremium-desc">Beschreibung:</label>
-        <textarea rows="4" cols="50" th:text="${gremium.description}" id="gremium-desc" name="gremium-desc"></textarea><br/>
-        <input type="submit" value="Save">
-      </form>
-    </div>
-
+    <form th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${form}">
+      <label for="gremium-name">Gremium-Name:</label><br />
+      <input type="text" id="gremium-name" th:field="*{name}"/><br />
+      <label for="gremium-abbr">Gremium-Abbreviation:</label><br />
+      <input type="text" id="gremium-abbr" th:field="*{abbr}"><br/>
+      <label for="gremium-desc">Description:</label><br />
+      <textarea id="gremium-descr" th:field="*{description}"></textarea><br/>
+      <input type="submit" value="Save" name="save"/>
+    </form>
     <a th:href=@{/admin}>Back to admin area</a><br/>
     <a th:href=@{/logout}>Logout</a>
   </body>
