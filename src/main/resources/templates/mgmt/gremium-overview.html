@@ -28,15 +28,16 @@
     />
   </head>
   <body>
-    <h1 th:text = "${gremium.name}"></h1>
+    <h1 th:text = "|${gremium.name} [${gremium.abbr}]|"></h1>
     <p th:text="${gremium.description}"></p>
+    <a th:href="'/admin/gremien/' + ${gremium.abbr} + '/edit'">Edit Gremium</a>
     <h2>Candidates</h2>
-    <ul th:if = "${gremium.containedQueries.size()} > 0" th:each = "ele : ${gremium.joinedCandidates}">
-        <li th:text = "|${ele.firstname} ${ele.lastname}|"></li>
+    <ul th:if = "${gremium.containedQueries.size()} > 0" th:each = "ele, status : ${gremium.joinedCandidates}">
+        <li><a th:text = "|${ele.firstname} ${ele.lastname}|" th:href="@{/admin/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__}"></a> | <a th:href="@{/admin/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__/edit}">Edit</a></li>
     </ul>
     <h2>Queries</h2>
     <ul th:if = "${gremium.containedQueries.size()} > 0" th:each = "ele, status : ${gremium.containedQueries}">
-        <li th:text ="|${status.count}. ${ele.text}|"></li>
+        <li><span th:text ="${ele.text}"></span> | <a th:href="@{/admin/gremien/__${gremium.abbr}__/queries/__${status.count-1}__/edit}">Edit</a></li>
     </ul>
     <a th:href=@{/admin}>Back to admin area</a><br/>
     <a th:href=@{/logout}>Logout</a>

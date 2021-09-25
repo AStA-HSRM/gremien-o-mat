@@ -28,29 +28,10 @@
     />
   </head>
   <body>
-    <table th:if="${gremienList}" style="border: 2px solid black; border-collapse: collapse;">
-        <tr style="border: 1px solid black;">
-            <th style="border: 1px solid black;">Gremium Abbr</th>
-            <th style="border: 1px solid black;">Gremium Name</th>
-            <th style="border: 1px solid black;">MGMT</th>
-        </tr>
-        <tr th:each="gremium : ${gremienList}" style="border: 1px solid black;">
-            <td th:text="${gremium.getAbbr()}" style="border: 1px solid black;"></td>
-            <td th:text="${gremium.getName()}" style="border: 1px solid black;"></td>
-            <td style="border: 1px solid black;">
-                <a th:href="'/admin/gremien/' + ${gremium.getAbbr()} + '/edit'">Edit</a>
-            </td>
-        </tr>
-    </table>
-    
-    <!--
-    <ul th:if="${gremienList}">
-        <li th:each="gremium : ${gremienList}" th:text="${gremium.getName()}">
-            <a th:href="'/admin/gremien/' + ${gremium.getAbbr()}">Edit</a>
-        </li>
-    </ul>
-    -->
-
+    <h1>Gremien-Overview</h1>
+    <div th:each ="gremium : ${gremienList}">
+      <p><a th:href="@{/admin/gremien/__${gremium.abbr}__}" th:text="|${gremium.name} [${gremium.abbr}]|"></a> | <a th:href="'/admin/gremien/' + ${gremium.abbr} + '/edit'">Edit</a></p>
+    </div>
     <a th:href=@{/admin}>Back to admin area</a><br/>
     <a th:href=@{/logout}>Logout</a>
   </body>
