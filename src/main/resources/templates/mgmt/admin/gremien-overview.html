@@ -32,6 +32,7 @@
     <div th:each ="gremium : ${gremienList}">
       <p><a th:href="@{/admin/gremien/__${gremium.abbr}__}" th:text="|${gremium.name} [${gremium.abbr}]|"></a> | <a th:href="'/admin/gremien/' + ${gremium.abbr} + '/edit'">Edit</a></p>
     </div>
+    <a th:href=@{/admin/gremien/new}>New Gremium</a><br/>
     <a th:href=@{/admin}>Back to admin area</a><br/>
     <a th:href=@{/logout}>Logout</a>
   </body>
