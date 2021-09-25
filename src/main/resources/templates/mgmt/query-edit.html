@@ -33,7 +33,7 @@
   </head>
   <body>
     <h1 th:if="${role} eq 'USER'" th:text="${query.text}"></h1>
-    <form th:method="POST" th:object="${form}">
+    <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
       <input type="hidden" th:field="*{id}" value="${query.id}">
       <input
         th:if="${role} eq 'ADMIN'"
@@ -44,7 +44,7 @@
       <br />
       <div th:if="${role} eq 'USER'">
         <input type="hidden" th:field="*{gremien}" />
-        <input type="text" th:field="*{reason}" id="reason"/><br />
+        <textarea th:field="*{reason}" id="reason"></textarea><br />
         <input type="radio" id="ok" th:field="*{opinion}" value="1" />
         <label for="ok">Stimme zu</label><br />
         <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
