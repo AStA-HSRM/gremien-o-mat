@@ -134,12 +134,12 @@ public class AdminController {
             gremium.setName(name);
             gremium.setDescription(desc);
             gremiumService.saveGremium(gremium);
-            return "redirect:/admin/gremien";
+            return "redirect:/admin/gremien/" + abbr;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @GetMapping("/gremien/{abbr}/{queryIndex}/edit")
+    @GetMapping("/gremien/{abbr}/queries/{queryIndex}/edit")
     public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, Model m,
             Principal loggedInUser) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
@@ -162,7 +162,7 @@ public class AdminController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping(value = "/gremien/{abbr}/{queryIndex}/edit", params = "save")
+    @PostMapping(value = "/gremien/{abbr}/queries/{queryIndex}/edit", params = "save")
     public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, EditQueryForm form, BindingResult res, Model m) {
         if(res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
@@ -175,13 +175,13 @@ public class AdminController {
                 q.setText(form.getQueryTxt());
                 q.setId(form.getId());
                 queryService.saveQuery(q);
-                return "redirect:/admin/gremien";
+                return "redirect:/admin/gremien/" + abbr;
             }
             return "error";
         }
     }
 
-    @PostMapping(value = "/gremien/{abbr}/{queryIndex}/edit", params = "del")
+    @PostMapping(value = "/gremien/{abbr}/queries/{queryIndex}/edit", params = "del")
     public String postDelGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex) {
         queryService.delQueryByIndexAndGremium(queryIndex, abbr);
         return "redirect:/admin/gremien/" + abbr;
