@@ -30,6 +30,7 @@ import de.astahsrm.gremiomat.query.QueryService;
 public class GremiumController {
 
     private static final String USER_ANSWERS = "userAnswers";
+    private static final String REDIRECT_GREMIEN = "redirect:/gremien/";
 
     @Autowired
     private GremiumService gremiumService;
@@ -57,7 +58,7 @@ public class GremiumController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @GetMapping("/{abbr}/{queryIndex}")
+    @GetMapping("/{abbr}/queries/{queryIndex}")
     public String getQuery(@SessionAttribute HashMap<Query, Integer> userAnswers, @PathVariable String abbr,
             @PathVariable int queryIndex, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
@@ -69,7 +70,8 @@ public class GremiumController {
                 m.addAttribute("query", gremium.getContainedQueries().get(queryIndex));
                 m.addAttribute("queryIndex", queryIndex);
                 m.addAttribute("queryForm", new SimpleQueryForm());
-                m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size() || queryIndex == gremium.getContainedQueries().size()-1);
+                m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size()
+                        || queryIndex == gremium.getContainedQueries().size() - 1);
                 return "gremien/query";
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
@@ -77,44 +79,55 @@ public class GremiumController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping(value = "/{abbr}/{queryIndex}", params = "next-query")
-    public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers, @ModelAttribute SimpleQueryForm form,
-            @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "next-query")
+    public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
+            @ModelAttribute SimpleQueryForm form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             if (gremium.getContainedQueries().size() > queryIndex) {
                 userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
-                return "redirect:./" + Integer.toString(queryIndex + 1);
+                return REDIRECT_GREMIEN + abbr + "/queries/" + Integer.toString(queryIndex + 1);
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping(value = "/{abbr}/{queryIndex}", params = "prev-query")
-    public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers, @ModelAttribute SimpleQueryForm form,
-            @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "prev-query")
+    public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
+            @ModelAttribute SimpleQueryForm form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             if (gremium.getContainedQueries().size() > queryIndex) {
                 userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
-                return "redirect:./" + Integer.toString(queryIndex - 1);
+                return REDIRECT_GREMIEN + abbr + "/queries/" + Integer.toString(queryIndex - 1);
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping(value = "/{abbr}/{queryIndex}", params = "results")
-    public String resultsPost() {
-        return "redirect:./results";
+    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "results")
+    public String resultsPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
+            @ModelAttribute SimpleQueryForm form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            if (gremium.getContainedQueries().size() > queryIndex) {
+                userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
+                m.addAttribute(USER_ANSWERS, userAnswers);
+                return REDIRECT_GREMIEN + abbr + "/queries/results";
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @GetMapping("/{abbr}/results")
+    @GetMapping("/{abbr}/queries/results")
     public String getResults(@SessionAttribute HashMap<Query, Integer> userAnswers, @PathVariable String abbr,
             Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
@@ -133,8 +146,10 @@ public class GremiumController {
                      * are equal.
                      */
                     for (CandidateAnswer ans : candidate.getAnswers()) {
-                        if (ans.getQuestion().equals(entry.getKey()) && entry.getValue() == ans.getChoice()) {
-                            answersInCommon++;
+                        if (ans.getQuestion().equals(entry.getKey())) {
+                            if (entry.getValue() == ans.getChoice()) {
+                                answersInCommon++;
+                            }
                             break;
                         }
                     }
