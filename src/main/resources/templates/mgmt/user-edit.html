@@ -42,10 +42,10 @@
       <label for="course">Course:</label><br />
       <input type="text" id="course" th:field="*{course}"><br/>
       <label for="bio">Bio:</label><br />
-      <textarea id="bio" th:field="*{description}"></textarea><br/>
+      <textarea id="bio" th:field="*{bio}"></textarea><br/>
       <input type="submit" value="Save" name="save"/>
     </form>
-    <a th:href=@{/admin}>Back to admin area</a><br/>
+    <a th:href=@{/user}>Back to user area</a><br/>
     <a th:href=@{/logout}>Logout</a>
   </body>
 </html>
