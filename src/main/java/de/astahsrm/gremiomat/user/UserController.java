@@ -40,6 +40,26 @@ public class UserController {
         return "mgmt/user/user";
     }
 
+    @GetMapping("/info")
+    public String getUserInfoPage() {
+        return "mgmt/user/info";
+    }
+
+    @GetMapping("/info/edit")
+    public String getUserInfoEditPage() {
+        return "mgmt/user-edit";
+    }
+
+    @GetMapping("/queries")
+    public String getUserQueriesPage() {
+        return "mgmt/user/query-overview";
+    }
+
+    @GetMapping("/queries/{queryindex}/edit")
+    public String getUserQueriesEditPage() {
+        return "mgmt/query-edit";
+    }
+
     @GetMapping("/gremien/{abbr}/{queryIndex}/edit")
     public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, Model m,
             Principal loggedInUser) {
