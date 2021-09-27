@@ -23,7 +23,11 @@ public class MgmtUser {
     @OneToOne
     private Candidate candidateDetails;
 
+    public MgmtUser() {
+    }
+
     public MgmtUser(@NotBlank String username, @NotBlank String password, @NotNull Candidate candidateDetails) {
+        super();
         this.username = username;
         this.password = password;
         this.role = SecurityConfig.USER;
@@ -31,6 +35,7 @@ public class MgmtUser {
     }
 
     public MgmtUser(@NotBlank String username, @NotBlank String password) {
+        super();
         this.username = username;
         this.password = password;
         this.role = SecurityConfig.ADMIN;
