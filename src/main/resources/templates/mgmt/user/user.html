@@ -28,7 +28,11 @@
     />
   </head>
   <body>
-    <p>User page!</p>
+    <h2>User page</h2>
+    <ul>
+      <li><a th:href=@{/user/info}>Profile</a></li>
+      <li><a th:href=@{/user/queries}>Queries</a></li>
+    </ul>
     <a th:href=@{/logout}>Logout</a>
   </body>
 </html>

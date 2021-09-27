@@ -32,10 +32,17 @@
     />
   </head>
 
-  <body>    
+  <body>
     <p th:if="${comp.size} eq 0">Dieses Gremium hat keine Kandidaten.</p>
     <div th:each="entry : ${comp}">
-      <a th:text="|${entry.key.firstname} ${entry.key.lastname}|" th:href = @{.}></a><span th:text="| : ${entry.value} %|"></span><br />
+      <a
+        th:text="|${entry.key.firstname} ${entry.key.lastname}|"
+        th:href="@{.}"
+      ></a
+      ><span
+        th:text="| : ${#numbers.formatDecimal(entry.value, 1, 1)} %|"
+      ></span
+      ><br />
     </div>
   </body>
 </html>

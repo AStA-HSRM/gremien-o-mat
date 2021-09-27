@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      th:href="@{/assets/favicon/favicon.ico}"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="text/html; charset=utf-8" />
+    <title th:text="#{title} + ' | ' + #{org}"></title>
+    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//fonts.googleapis.com/css?family=Poppins"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//fonts.googleapis.com/css?family=Kumbh+Sans"
+    />
+  </head>
+  <body>
+    <form th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${form}">
+      <label for="pb">Profile Picture:</label>
+      <input type="file" name="pb" id="pb"><br>
+      <label for="firstname">Firstname:</label><br />
+      <input type="text"id="firstname" th:field="*{firstname}"/><br />
+      <label for="lastname">Lastname:</label><br />
+      <input type="text" id="lastname" th:field="*{lastname}"><br/>
+      <label for="age">Age:</label><br />
+      <input type="text" id="age" th:field="*{age}"><br/>
+      <label for="semester">Semester:</label><br />
+      <input type="text" id="semester" th:field="*{semester}"><br/>
+      <label for="course">Course:</label><br />
+      <input type="text" id="course" th:field="*{course}"><br/>
+      <label for="bio">Bio:</label><br />
+      <textarea id="bio" th:field="*{description}"></textarea><br/>
+      <input type="submit" value="Save" name="save"/>
+    </form>
+    <a th:href=@{/admin}>Back to admin area</a><br/>
+    <a th:href=@{/logout}>Logout</a>
+  </body>
+</html>

@@ -33,14 +33,14 @@
   </head>
   <body>
     <h1 th:if="${role} eq 'USER'" th:text="${query.text}"></h1>
+    <h1 th:if="${role} eq 'ADMIN'">Query Edit</h1>
     <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
       <input type="hidden" th:field="*{id}" value="${query.id}">
-      <input
+      <textarea
         th:if="${role} eq 'ADMIN'"
-        type="text"
         th:field = "*{queryTxt}"
         id="queryTxt"
-      />
+      ></textarea>
       <br />
       <div th:if="${role} eq 'USER'">
         <input type="hidden" th:field="*{gremien}" />
