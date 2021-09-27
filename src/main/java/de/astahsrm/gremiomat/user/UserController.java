@@ -41,12 +41,16 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public String getUserInfoPage() {
-        return "mgmt/user/info";
+    public String getUserInfoPage(Principal loggedInUser, Model m) {
+        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        m.addAttribute("candidate", userDetails);
+        return "mgmt/user/user-info";
     }
 
     @GetMapping("/info/edit")
-    public String getUserInfoEditPage() {
+    public String getUserInfoEditPage(Principal loggedInUser, Model m) {
+        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        m.addAttribute("form", userDetails);
         return "mgmt/user-edit";
     }
 
