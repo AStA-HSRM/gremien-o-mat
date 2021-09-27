@@ -1,7 +1,3 @@
-INSERT INTO mgmt_user (version, username, password, role) VALUES
-(0,'user','user','USER'),
-(0,'admin','admin', 'ADMIN');
-
 INSERT INTO gremium (version, name, abbr, description) VALUES
   (0, 'Das Test Gremium', 'dtg', 'Das erste Test Gremium der Welt!'),
   (0, 'CSV Query Upload Test','cqut', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
@@ -37,6 +33,10 @@ INSERT INTO candidate_answer (id, version, question_id, choice, reason) VALUES
   (-310,0,-1,1,'Weil ich der vierte Kandidat bin!'),
   (-311,0,-2,-1,'Weil ich der vierte Kandidat bin!'),
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
+
+INSERT INTO mgmt_user (version, username, password, role, candidate_details_email) VALUES
+(0,'user','user','USER','1@mail.de'),
+(0,'admin','admin', 'ADMIN', NULL);
 
 INSERT INTO candidate_answers (answers_id, candidate_email) VALUES
 (-31,'1@mail.de'),
