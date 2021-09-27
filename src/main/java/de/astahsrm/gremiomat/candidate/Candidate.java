@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -45,6 +46,16 @@ public class Candidate {
 
     private String imageFileName;
 
+    private String bio;
+
+    private String course;
+
+    @Column(columnDefinition = "integer default 0")
+    private int age;
+
+    @Column(columnDefinition = "integer default 0")
+    private int semester;
+
     @Lob
     @JsonIgnore
     private Byte[] bytes;
@@ -55,6 +66,7 @@ public class Candidate {
         this.firstname = "";
         this.lastname = "";
         this.email = "";
+        this.bio = "";
         this.answers = new ArrayList<>();
         this.gremien = new ArrayList<>();
     }
@@ -95,7 +107,7 @@ public class Candidate {
         for (Gremium g : this.gremien) {
             bld.append(g.getAbbr() + ",");
         }
-        bld.deleteCharAt(bld.toString().length()-1);
+        bld.deleteCharAt(bld.toString().length() - 1);
         bld.append("}, lastname=" + lastname + "]");
         return bld.toString();
     }
@@ -175,6 +187,38 @@ public class Candidate {
 
     public void setBytes(Byte[] bytes) {
         this.bytes = bytes;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getSemester() {
+        return semester;
+    }
+
+    public void setSemester(int semester) {
+        this.semester = semester;
     }
 
 }
