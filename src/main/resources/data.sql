@@ -35,8 +35,8 @@ INSERT INTO candidate_answer (id, version, question_id, choice, reason) VALUES
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
 
 INSERT INTO mgmt_user (version, username, password, role, candidate_details_email) VALUES
-(0,'user','user','USER','1@mail.de'),
-(0,'admin','admin', 'ADMIN', NULL);
+(0,'user','{noop}user','USER','1@mail.de'),
+(0,'admin','{noop}admin', 'ADMIN', NULL);
 
 INSERT INTO candidate_answers (answers_id, candidate_email) VALUES
 (-31,'1@mail.de'),
