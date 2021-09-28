@@ -1,5 +1,7 @@
 package de.astahsrm.gremiomat.security;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,15 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     @Override
     public Candidate getCandidateDetailsOfUser(String uid) {
         return mgmtUserRepository.getById(uid).getCandidateDetails();
+    }
+
+    @Override
+    public Optional<MgmtUser> getUserById(String uid) {
+        return mgmtUserRepository.findById(uid);
+    }
+
+    @Override
+    public MgmtUser saveUser(MgmtUser u) {
+        return mgmtUserRepository.save(u);
     }
 }
