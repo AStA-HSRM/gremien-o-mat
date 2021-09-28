@@ -7,6 +7,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import de.astahsrm.gremiomat.query.Query;
 
@@ -20,11 +22,11 @@ public class CandidateAnswer {
     @Version
     private long version;
 
-    @NotBlank
+    @NotNull
     @OneToOne
     private Query query;
 
-    @NotBlank
+    @PositiveOrZero
     private int opinion;
 
     @Lob
@@ -32,7 +34,7 @@ public class CandidateAnswer {
     private String reason;
 
     public CandidateAnswer() {
-        this.query = null;
+        this.query = new Query();
         this.opinion = 0;
         this.reason = "";
     }
@@ -97,5 +99,4 @@ public class CandidateAnswer {
         this.reason = reason;
     }
 
-    
 }
