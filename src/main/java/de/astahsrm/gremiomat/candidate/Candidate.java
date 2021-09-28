@@ -221,4 +221,10 @@ public class Candidate {
         this.semester = semester;
     }
 
+    public void addNewAnswer(CandidateAnswer ca) {
+        if(!this.answers.contains(ca)) {
+            this.answers.add(ca);
+        }
+    }
+
 }
