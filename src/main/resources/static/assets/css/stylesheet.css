@@ -369,6 +369,19 @@ span .svg {
   margin-bottom: 5rem;
 }
 
+.profile-img {
+  max-width: 100%;
+  border-radius: 100rem;
+  height: auto;
+}
+
+.profile-img-container {
+  width: 150px;
+  height: auto;
+  text-align: center;
+  padding: 15px;
+}
+
 .query {
   background-color: #a61d37;
   border-radius: 1em;
