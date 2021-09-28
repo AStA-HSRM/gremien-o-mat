@@ -32,31 +32,19 @@
     />
   </head>
   <body>
-    <h1 th:if="${role} eq 'USER'" th:text="${query.text}"></h1>
-    <h1 th:if="${role} eq 'ADMIN'">Query Edit</h1>
+    <h1>Query Edit</h1>
     <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
       <input type="hidden" th:field="*{id}" value="${query.id}">
       <textarea
-        th:if="${role} eq 'ADMIN'"
         th:field = "*{queryTxt}"
         id="queryTxt"
       ></textarea>
       <br />
-      <div th:if="${role} eq 'USER'">
-        <input type="hidden" th:field="*{gremien}" />
-        <textarea th:field="*{reason}" id="reason"></textarea><br />
-        <input type="radio" id="ok" th:field="*{opinion}" value="1" />
-        <label for="ok">Stimme zu</label><br />
-        <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
-        <label for="neutral">Neutral</label><br />
-        <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
-        <label for="not-ok">Stimme nicht zu</label>
-      </div>
-      <div th:if="${role} eq 'ADMIN'" th:each ="grem : ${allGremien}" multiple>
+      <div th:each ="grem : ${allGremien}" multiple>
         <input type="checkbox" th:value = "${grem}" th:text = "${grem.name}" th:field = "*{gremien}"></option>
       </div>
       <button type="submit" name="save">Save</button>
-      <button th:if="${role} eq 'ADMIN'" type="submit" name="del">
+      <button type="submit" name="del">
         Delete
       </button>
     </form>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
 <html
   lang="de"
   xml:lang="de"
@@ -31,8 +32,14 @@
       href="//fonts.googleapis.com/css?family=Kumbh+Sans"
     />
   </head>
-
   <body>
-    <p th:each="candidate : ${candidateList}" th:text = "${candidate.toString()}"></p>
+    <h1>All Answers</h1>
+    <div th:each="entry : ${queryAnswerMap}">
+      <h4 th:text="${entry.key.text}">
+      </h4>
+      <p th:text="${entry.value.reason}">
+      </p>
+      <a th:href="@{/user/answers/__${entry.key.id}__/edit}">Edit Answer</a>
+    </div>
   </body>
 </html>
