@@ -15,18 +15,25 @@
 </head>
 
 <body>
-    <div class="profile-img-container">
-        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
-    </div>
-    <div>
-        <p th:text="|Name: ${candidate.firstname} ${candidate.lastname}|"></p>
-        <p th:text="|Age: ${candidate.age}|"></p>
-        <p th:text="|Course: ${candidate.course}|"></p>
-        <p th:text="|Semester: ${candidate.semester}|"></p>
-        <p th:text="|Bio: ${candidate.bio}|"></p>
-    </div>
-    <a th:href="@{/user/info/edit}">Edit Profile</a><br />
-    <a th:href=@{/user}>Back to user area</a><br/>
+    <form th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td>
+                    <div class="profile-img-container">
+                        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="file" name="photo" id="photo"></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="upload" name="Save"></td>
+            </tr>
+        </table>
+    </form>
+    <a th:href=@{/user}>Back to user area</a>
+    <br>
     <a th:href=@{/logout}>Logout</a>
 </body>
 

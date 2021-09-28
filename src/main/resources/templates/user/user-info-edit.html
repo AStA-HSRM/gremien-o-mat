@@ -18,8 +18,11 @@
     <form th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${form}">
         <table>
             <tr>
-                <td>Profile Picture:</td>
-                <td><input type="file" name="pb" id="pb"></td>
+                <td>
+                    <div class="profile-img-container">
+                        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
+                    </div>
+                </td>
             </tr>
             <tr th:if="${#fields.hasErrors('firstname')}" th:each="err : ${#fields.errors('firstname')}">
                 <td th:text="${err}" class="error"></td>
