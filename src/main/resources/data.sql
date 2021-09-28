@@ -21,14 +21,14 @@ INSERT INTO candidate (version, firstname, lastname, email) VALUES
 (0,'Linda J','Alvarado','11@mail.de');
 
 INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
-  (-31,0,-1,0,'Weil ich der erste Kandidat bin!'),
-  (-32,0,-2,0,'Weil ich der erste Kandidat bin!'),
+  (-31,0,-1,1,'Weil ich der erste Kandidat bin!'),
+  (-32,0,-2,-1,'Weil ich der erste Kandidat bin!'),
   (-33,0,-3,0,'Weil ich der erste Kandidat bin!'),
   (-34,0,-1,1,'Weil ich der zweite Kandidat bin!'),
   (-35,0,-2,0,'Weil ich der zweite Kandidat bin!'),
   (-36,0,-3,1,'Weil ich der zweite Kandidat bin!'),
-  (-37,0,-1,1,'Weil ich der dritte Kandidat bin!'),
-  (-38,0,-2,1,'Weil ich der dritte Kandidat bin!'),
+  (-37,0,-1,0,'Weil ich der dritte Kandidat bin!'),
+  (-38,0,-2,-1,'Weil ich der dritte Kandidat bin!'),
   (-39,0,-3,1,'Weil ich der dritte Kandidat bin!'),
   (-310,0,-1,1,'Weil ich der vierte Kandidat bin!'),
   (-311,0,-2,-1,'Weil ich der vierte Kandidat bin!'),
