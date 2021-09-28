@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumForm;
@@ -38,9 +37,6 @@ public class AdminController {
 
     @Autowired
     private GremiumService gremiumService;
-
-    @Autowired
-    private CandidateService candidateService;
 
     @Autowired
     private QueryService queryService;
