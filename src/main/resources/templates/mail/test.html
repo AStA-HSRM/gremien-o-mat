@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <head>
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  </head>
-  <body>
-    <p th:text="#{greetings}"></p>
-    <p th:text="${text}"></p>
-    <p th:text="#{regards}"></p>
-    <p>
-      <em th:text="#{signature}"></em> <br />
-    </p>
-  </body>
+    <title th:text="#{title} + ' | ' + #{org}"></title>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
+
+<body>
+    <div>Welcome <b th:text="${name}"></b></div>
+    <div> Your username is <b th:text="${username}"></b></div>
+</body>
+
 </html>

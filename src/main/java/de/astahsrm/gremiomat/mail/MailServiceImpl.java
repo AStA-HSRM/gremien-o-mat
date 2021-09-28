@@ -1,44 +1,37 @@
 package de.astahsrm.gremiomat.mail;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-
-import de.astahsrm.gremiomat.candidate.Candidate;
 
 @Service
 public class MailServiceImpl implements MailService {
-    @Autowired
-    private JavaMailSender emailSender;
-
-    // read out mail username from application.properties
     @Value("${spring.mail.username}")
-    private String fromEmail;
+    private String from;
 
     @Autowired
-    private SpringTemplateEngine thymeleafTemplateEngine;
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     @Override
-    public void sendWelcomeMailToCandidate(Candidate candidate, String plainPassword) {
-        /*
-         * @Autowired public SimpleMailMessage template;
-         * 
-         * String text = String.format(template.getText(), templateArgs);
-         * sendSimpleMessage(to, subject, text);
-         */
-
+    public void sendMail(String to) throws MessagingException {
         Context context = new Context();
-
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setFrom(fromEmail);
-        message.setTo(candidate.getEmail());
-        message.setSubject("Example subject");
-        message.setText(thymeleafTemplateEngine.process("mail/test", context));
-        emailSender.send(message);
+        context.setVariable("name", "Jon Doe");
+        context.setVariable("username", "joDoe");
+        String process = templateEngine.process("mail/test", context);
+        javax.mail.internet.MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        helper.setSubject("Test");
+        helper.setText(process, true);
+        helper.setTo(to);
+        mailSender.send(mimeMessage);
     }
 }

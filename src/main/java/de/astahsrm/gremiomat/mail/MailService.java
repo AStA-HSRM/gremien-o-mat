@@ -1,7 +1,7 @@
 package de.astahsrm.gremiomat.mail;
 
-import de.astahsrm.gremiomat.candidate.Candidate;
+import javax.mail.MessagingException;
 
 public interface MailService {
-    public void sendWelcomeMailToCandidate(Candidate candidate, String plainPassword);  
+    public void sendMail(String to) throws MessagingException;
 }
