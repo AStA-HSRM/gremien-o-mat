@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="text/html; charset=utf-8" />
+    <title th:text="#{title} + ' | ' + #{org}"></title>
+    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
+
+<body>
+    <form th:method="POST" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${form}">
+        <table>
+            <tr>
+                <td>
+                    <div class="profile-img-container">
+                        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#fields.hasErrors('firstname')}" th:each="err : ${#fields.errors('firstname')}">
+                <td th:text="${err}" class="error"></td>
+            </tr>
+            <tr>
+                <td>Firstname:</td>
+                <td><input type="text" id="firstname" th:field="*{firstname}" /></td>
+            </tr>
+            <tr th:if="${#fields.hasErrors('lastname')}" th:each="err : ${#fields.errors('lastname')}">
+                <td th:text="${err}" class="error"></td>
+            </tr>
+            <tr>
+                <td>Lastname:</td>
+                <td><input type="text" id="lastname" th:field="*{lastname}"></td>
+            </tr>
+            <tr th:if="${#fields.hasErrors('age')}" th:each="err : ${#fields.errors('age')}">
+                <td th:text="${err}" class="error"></td>
+            </tr>
+            <tr>
+                <td>Age:</td>
+                <td><input type="text" id="age" th:field="*{age}"></td>
+            </tr>
+            <tr th:if="${#fields.hasErrors('semester')}" th:each="err : ${#fields.errors('semester')}">
+                <td th:text="${err}" class="error"></td>
+            </tr>
+            <tr>
+                <td>Semester:</td>
+                <td><input type="text" id="semester" th:field="*{semester}"></td>
+            </tr>
+            <tr th:if="${#fields.hasErrors('course')}" th:each="err : ${#fields.errors('course')}">
+                <td th:text="${err}" class="error"></td>
+            </tr>
+            <tr>
+                <td>Course:</td>
+                <td><input type="text" id="course" th:field="*{course}"></td>
+            </tr>
+            <tr th:if="${#fields.hasErrors('bio')}" th:each="err : ${#fields.errors('bio')}">
+                <td th:text="${err}" class="error"></td>
+            </tr>
+            <tr>
+                <td>Bio:</td>
+                <td><textarea id="bio" th:field="*{bio}"></textarea></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Save" name="save" /></td>
+            </tr>
+        </table>
+    </form>
+    <a th:href=@{/user}>Back to user area</a>
+    <br>
+    <a th:href=@{/logout}>Logout</a>
+</body>
+
+</html>

@@ -33,6 +33,7 @@
   </head>
 
   <body>    
+    <h1>Gremien</h1>
     <p th:if="${gremien.size} eq 0">Es konnten keine Gremien gefunden werden!</p>
     <div th:each="element: ${gremien}">
       <a th:text="${element.name}" th:href = @{gremien/__${element.abbr}__}></a>

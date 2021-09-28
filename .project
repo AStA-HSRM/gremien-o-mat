@@ -2,11 +2,8 @@
 <projectDescription>
 	<name>gremiomat</name>
 	<comment></comment>
-	<projects/>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
-	</natures>
+	<projects>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
@@ -29,6 +26,7 @@
 	<filteredResources>
 		<filter>
 			<id>1</id>
+			<name></name>
 			<type>30</type>
 			<name/>
 			<matcher>

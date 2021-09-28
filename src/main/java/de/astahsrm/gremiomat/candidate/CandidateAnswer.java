@@ -7,6 +7,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import de.astahsrm.gremiomat.query.Query;
 
@@ -20,20 +22,20 @@ public class CandidateAnswer {
     @Version
     private long version;
 
-    @NotBlank
+    @NotNull
     @OneToOne
-    private Query question;
+    private Query query;
 
-    @NotBlank
-    private int choice;
+    @PositiveOrZero
+    private int opinion;
 
     @Lob
     @NotBlank
     private String reason;
 
     public CandidateAnswer() {
-        this.question = null;
-        this.choice = 0;
+        this.query = new Query();
+        this.opinion = 0;
         this.reason = "";
     }
 
@@ -57,14 +59,6 @@ public class CandidateAnswer {
         return id != other.id;
     }
 
-    public Query getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Query question) {
-        this.question = question;
-    }
-
     public long getId() {
         return id;
     }
@@ -81,12 +75,20 @@ public class CandidateAnswer {
         this.version = version;
     }
 
-    public int getChoice() {
-        return choice;
+    public Query getQuery() {
+        return query;
     }
 
-    public void setChoice(int choice) {
-        this.choice = choice;
+    public void setQuery(Query query) {
+        this.query = query;
+    }
+
+    public int getOpinion() {
+        return opinion;
+    }
+
+    public void setOpinion(int opinion) {
+        this.opinion = opinion;
     }
 
     public String getReason() {

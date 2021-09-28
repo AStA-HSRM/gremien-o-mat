@@ -4,21 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import de.astahsrm.gremiomat.gremium.Gremium;
+import de.astahsrm.gremiomat.photo.Photo;
 
 @Entity
 public class Candidate {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Version
     private long version;
@@ -29,7 +35,6 @@ public class Candidate {
     @NotEmpty(message = "{notEmpty}")
     private String lastname;
 
-    @Id
     @NotEmpty(message = "{notEmpty}")
     private String email;
 
@@ -41,20 +46,25 @@ public class Candidate {
     @OneToMany
     private List<CandidateAnswer> answers;
 
-    private String mimeType;
+    @OneToOne
+    private Photo photo;
 
-    private String imageFileName;
+    @Column(columnDefinition = "integer default 0")
+    private int age;
 
-    @Lob
-    @JsonIgnore
-    private Byte[] bytes;
+    @Column(columnDefinition = "integer default 0")
+    private int semester;
+
+    private String bio;
+
+    private String course;
 
     public Candidate() {
-        this.mimeType = "";
-        this.imageFileName = "";
         this.firstname = "";
         this.lastname = "";
         this.email = "";
+        this.bio = "";
+        this.photo = new Photo();
         this.answers = new ArrayList<>();
         this.gremien = new ArrayList<>();
     }
@@ -95,7 +105,7 @@ public class Candidate {
         for (Gremium g : this.gremien) {
             bld.append(g.getAbbr() + ",");
         }
-        bld.deleteCharAt(bld.toString().length()-1);
+        bld.deleteCharAt(bld.toString().length() - 1);
         bld.append("}, lastname=" + lastname + "]");
         return bld.toString();
     }
@@ -145,22 +155,6 @@ public class Candidate {
         this.email = email;
     }
 
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
-    public String getImageFileName() {
-        return imageFileName;
-    }
-
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
-    }
-
     public List<CandidateAnswer> getAnswers() {
         return answers;
     }
@@ -169,12 +163,58 @@ public class Candidate {
         this.answers = answers;
     }
 
-    public Byte[] getBytes() {
-        return bytes;
+    public String getBio() {
+        return bio;
     }
 
-    public void setBytes(Byte[] bytes) {
-        this.bytes = bytes;
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getSemester() {
+        return semester;
+    }
+
+    public void setSemester(int semester) {
+        this.semester = semester;
+    }
+
+    public void addNewAnswer(CandidateAnswer ca) {
+        if (!this.answers.contains(ca)) {
+            this.answers.add(ca);
+        }
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
     }
 
 }

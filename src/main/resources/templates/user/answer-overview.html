@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="text/html; charset=utf-8" />
+    <title th:text="#{title} + ' | ' + #{org}"></title>
+    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
+
+<body>
+    <h1>All Answers</h1>
+    <table>
+        <div th:each="entry : ${queryAnswerMap}">
+            <tr>
+                <td>
+                    <strong th:text="${entry.key.text}"></strong>
+                    <th:block th:each="gremium : ${entry.key.gremien}">
+                        <span th:text="|[${gremium.abbr}]|"></span>
+                    </th:block>
+                </td>
+            </tr>
+            <tr>
+                <td th:switch="${entry.value.opinion}">
+                    <em th:case="'-1'">Stimme nicht zu</em>
+                    <em th:case="'0'">Neutral</em>
+                    <em th:case="'1'">Stimme zu</em>
+                    <span th:text="|: ${entry.value.reason}|"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a th:href="@{/user/answers/__${entry.key.id}__/edit}">Edit Answer</a>
+                </td>
+            </tr>
+        </div>
+    </table>
+</body>
+
+</html>

@@ -1,93 +1,54 @@
-INSERT INTO mgmt_user (version, username, password, role) VALUES
-(0,'user','user','USER'),
-(0,'admin','admin', 'ADMIN');
-
 INSERT INTO gremium (version, name, abbr, description) VALUES
   (0, 'Das Test Gremium', 'dtg', 'Das erste Test Gremium der Welt!'),
-  (0, 'Kein Test Gremium', 'ktg', 'Das hier ist wirklich kein Test.'),
-  (0, 'Vier Fragen Gremium','vft', 'Das vft hat 4 Fragen.'),
   (0, 'CSV Query Upload Test','cqut', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
 
 INSERT INTO query (id, version, text) VALUES
-  (-11,0,'Dieser Aussage soll zugestimmt werden.'),
-  (-1,0,'Dieser Aussage soll nicht zugestimmt werden.'),
-  (-2,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.'),
-  (-3,0,'Griechenland ist besetzt von Griechen.'),
-  (-4,0,'Bier schmeckt nicht.'),
-  (-5,0,'Diese Aussage ist dir komplett egal.'),
-  (-6,0,'Tomaten sind lila.'),
-  (-7,0,'1. Frage!'),
-  (-8,0,'2. Frage!'),
-  (-9,0,'3. Frage!'),
-  (-10,0,'4. Frage!');
+  (-1,0,'Dieser Aussage soll zugestimmt werden.'),
+  (-2,0,'Dieser Aussage soll nicht zugestimmt werden.'),
+  (-3,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.');
 
-INSERT INTO candidate (version, firstname, lastname, email) VALUES
-(0,'Darth','Vader','1@mail.de'),
-(0,'Kim','Kardashian','2@mail.de'),
-(0,'Robert','McClanahan','3@mail.de'),
-(0,'Virginia','Davis','4@mail.de'),
-(0,'Christine','Powell','5@mail.de'),
-(0,'Peggy','Kaufman','6@mail.de'),
-(0,'Charlotte L','Galvan','7@mail.de'),
-(0,'Charles K','Galvan','8@mail.de'),
-(0,'Hector','Toro','9@mail.de'),
-(0,'Tracy L','Stack','10@mail.de'),
-(0,'Linda J','Alvarado','11@mail.de');
+INSERT INTO candidate (id, version, firstname, lastname, email) VALUES
+(-20,0,'Darth','Vader','1@mail.de'),
+(-21,0,'Kim','Kardashian','2@mail.de'),
+(-22,0,'Robert','McClanahan','3@mail.de'),
+(-23,0,'Virginia','Davis','4@mail.de');
 
-INSERT INTO candidate_answer (id, version, question_id, choice, reason) VALUES
-  (-31,0,-11,0,'Weil ich der erste Kandidat bin!'),
-  (-32,0,-1,0,'Weil ich der erste Kandidat bin!'),
+INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
+  (-31,0,-1,1,'Weil ich der erste Kandidat bin!'),
+  (-32,0,-2,-1,'Weil ich der erste Kandidat bin!'),
   (-33,0,-3,0,'Weil ich der erste Kandidat bin!'),
-  (-34,0,-11,1,'Weil ich der zweite Kandidat bin!'),
-  (-35,0,-1,0,'Weil ich der zweite Kandidat bin!'),
+  (-34,0,-1,1,'Weil ich der zweite Kandidat bin!'),
+  (-35,0,-2,0,'Weil ich der zweite Kandidat bin!'),
   (-36,0,-3,1,'Weil ich der zweite Kandidat bin!'),
-  (-37,0,-11,-1,'Weil ich der dritte Kandidat bin!'),
-  (-38,0,-1,1,'Weil ich der dritte Kandidat bin!'),
+  (-37,0,-1,0,'Weil ich der dritte Kandidat bin!'),
+  (-38,0,-2,-1,'Weil ich der dritte Kandidat bin!'),
   (-39,0,-3,1,'Weil ich der dritte Kandidat bin!'),
-  (-310,0,-11,1,'Weil ich der vierte Kandidat bin!'),
-  (-311,0,-1,-1,'Weil ich der vierte Kandidat bin!'),
+  (-310,0,-1,1,'Weil ich der vierte Kandidat bin!'),
+  (-311,0,-2,-1,'Weil ich der vierte Kandidat bin!'),
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
 
-INSERT INTO candidate_answers (answers_id, candidate_email) VALUES
-(-31,'1@mail.de'),
-(-32,'1@mail.de'),
-(-33,'1@mail.de'),
-(-34,'2@mail.de'),
-(-35,'2@mail.de'),
-(-36,'2@mail.de'),
-(-37,'3@mail.de'),
-(-38,'3@mail.de'),
-(-39,'3@mail.de'),
-(-310,'4@mail.de'),
-(-311,'4@mail.de'),
-(-312,'4@mail.de');
+INSERT INTO mgmt_user (version, username, password, role, candidate_details_id) VALUES
+(0,'user','{noop}user','USER',-20),
+(0,'admin','{noop}admin', 'ADMIN', NULL);
+
+INSERT INTO candidate_answers (answers_id, candidate_id) VALUES
+(-31,-21),
+(-32,-21),
+(-33,-21),
+(-34,-22),
+(-35,-22),
+(-36,-22),
+(-37,-23),
+(-38,-23),
+(-39,-23);
 
 INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
-('dtg','1@mail.de'),
-('dtg','2@mail.de'),
-('dtg','3@mail.de'),
-('dtg','4@mail.de'),
-('ktg','1@mail.de'),
-('ktg','5@mail.de'),
-('ktg','6@mail.de'),
-('ktg','7@mail.de'),
-('ktg','8@mail.de'),
-('vft','1@mail.de'),
-('vft','10@mail.de'),
-('vft','11@mail.de'),
-('vft','9@mail.de');
+('dtg',-20),
+('dtg',-21),
+('dtg', -22);
 
 INSERT INTO query_contain (gremium_id, query_id) VALUES
-('dtg',-11),
 ('dtg',-1),
 ('dtg',-2),
-('ktg',-3),
-('ktg',-4),
-('ktg',-5),
-('ktg',-6),
-('vft',-7),
-('vft',-8),
-('vft',-9),
-('vft',-10);
-
+('dtg',-3);
 

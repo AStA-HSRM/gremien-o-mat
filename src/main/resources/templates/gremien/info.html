@@ -33,8 +33,12 @@
   </head>
 
   <body>    
-    <h2 th:text = "${gremium.name}"></h2>
+    <h1 th:text = "${gremium.name}"></h1>
     <p th:text = "${gremium.description}"></p>
-    <a th:href = "@{./__${gremium.abbr}__/0}">Zu den Fragen</a>
+    <h2>Candidates</h2>
+    <ul th:if = "${gremium.containedQueries.size()} > 0" th:each = "ele, status : ${gremium.joinedCandidates}">
+        <li><a th:text = "|${ele.firstname} ${ele.lastname}|" th:href="@{/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__}"></li>
+    </ul>
+    <a th:href = "@{/gremien/__${gremium.abbr}__/queries/0}">Zu den Fragen</a>
   </body>
 </html>

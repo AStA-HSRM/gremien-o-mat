@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 
-<html
-  lang="de"
-  xml:lang="de"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:th="http://www.thymeleaf.org"
->
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
   <head>
     <link
       rel="shortcut icon"
@@ -31,8 +27,13 @@
       href="//fonts.googleapis.com/css?family=Kumbh+Sans"
     />
   </head>
-
   <body>
-    <p th:each="candidate : ${candidateList}" th:text = "${candidate.toString()}"></p>
+    <h1>Gremien-Overview</h1>
+    <div th:each ="gremium : ${gremienList}">
+      <p><a th:href="@{/admin/gremien/__${gremium.abbr}__}" th:text="|${gremium.name} [${gremium.abbr}]|"></a> | <a th:href="'/admin/gremien/' + ${gremium.abbr} + '/edit'">Edit</a></p>
+    </div>
+    <a th:href=@{/admin/gremien/new}>New Gremium</a><br/>
+    <a th:href=@{/admin}>Back to admin area</a><br/>
+    <a th:href=@{/logout}>Logout</a>
   </body>
 </html>

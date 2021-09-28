@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="text/html; charset=utf-8" />
+    <title th:text="#{title} + ' | ' + #{org}"></title>
+    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
+
+<body>
+    <div class="profile-img-container">
+        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
+    </div>
+    <div>
+        <p th:text="|Name: ${candidate.firstname} ${candidate.lastname}|"></p>
+        <p th:text="|Age: ${candidate.age}|"></p>
+        <p th:text="|Course: ${candidate.course}|"></p>
+        <p th:text="|Semester: ${candidate.semester}|"></p>
+        <p th:text="|Bio: ${candidate.bio}|"></p>
+    </div>
+    <a th:href="@{/user/info/edit}">Edit Profile</a><br />
+    <a th:href=@{/user}>Back to user area</a><br/>
+    <a th:href=@{/logout}>Logout</a>
+</body>
+
+</html>

@@ -1,40 +1,34 @@
 package de.astahsrm.gremiomat.api;
 
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.gremium.GremiumService;
-import javassist.NotFoundException;
+import de.astahsrm.gremiomat.photo.Photo;
+import de.astahsrm.gremiomat.photo.PhotoService;
 
 @RestController
 @RequestMapping("/api/v1")
 public class GremiOMatRestController {
 
     @Autowired
-    private GremiumService gremiumService;
+    private PhotoService photoService;
 
-    @GetMapping(value = "/candidates", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getCandidatesWithAnswers() {
-        // TODO Add candidate list with answers as return value
-        return null;
-    }
-
-    @GetMapping(value = "/candidates/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getCandidate(@PathVariable("id") long id) {
-        // TODO Add candidate response with answers as return value
-        return null;
-    };
-
-    @GetMapping(value = "/gremium/{abbr}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Candidate> getGremiumCandidates(@PathVariable("abbr") String abbr) throws NotFoundException {
-        return gremiumService.getGremiumCandidatesByGremiumAbbr(abbr);
+    @GetMapping(value = "/photo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> getFoto(@PathVariable("id") long id) {
+        Optional<Photo> pOpt = photoService.getPhotoById(id);
+        if (pOpt.isPresent()) {
+            Photo photo = pOpt.get();
+            return ResponseEntity.ok().header("Content-Type", photo.getMimeType())
+                    .body(photo.getBytes());
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
