@@ -37,7 +37,7 @@ public class GremiumServiceImpl implements GremiumService {
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             for (Candidate cand : gremium.getJoinedCandidates()) {
-                Optional<Candidate> cOptional = candidateService.getCandidateById(cand.getEmail());
+                Optional<Candidate> cOptional = candidateService.getCandidateById(cand.getId());
                 if (cOptional.isPresent()) {
                     Candidate candidate = cOptional.get();
                     candidate.delGremium(gremium);

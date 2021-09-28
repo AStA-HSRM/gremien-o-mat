@@ -58,7 +58,7 @@ public class CSVServiceImpl implements CSVService {
                 String[] entry;
                 while ((entry = reader.readNext()) != null) {
                     Candidate candidate = new Candidate();
-                    Optional<Candidate> candidateOptional = candidateService.getCandidateById(entry[2]);
+                    Optional<Candidate> candidateOptional = candidateService.getCandidateByEmail(entry[2]);
                     if (candidateOptional.isPresent()) {
                         candidate = candidateOptional.get();
                         candidate.addGremium(gremium);

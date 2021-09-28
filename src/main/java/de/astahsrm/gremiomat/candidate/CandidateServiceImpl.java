@@ -26,13 +26,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public Optional<Candidate> getCandidateById(String candidateEmail) {
-        return candidateRepository.findById(candidateEmail);
+    public Optional<Candidate> getCandidateById(long id) {
+        return candidateRepository.findById(id);
     }
 
     @Override
-    public void delCandidate(String candidateEmail) {
-        Optional<Candidate> cOptional = getCandidateById(candidateEmail);
+    public void delCandidate(long id) {
+        Optional<Candidate> cOptional = getCandidateById(id);
         if (cOptional.isPresent()) {
             Candidate c = cOptional.get();
             for (Gremium g : c.getGremien()) {
@@ -44,25 +44,36 @@ public class CandidateServiceImpl implements CandidateService {
                 }
             }
         }
-        candidateRepository.deleteById(candidateEmail);
+        candidateRepository.deleteById(id);
     }
 
     @Override
     public List<Candidate> getAllCandidatesSortedByName() {
-        return candidateRepository.findAll(Sort.by(Direction.DESC, "lastname").and(Sort.by(Direction.DESC, "firstname")));
+        return candidateRepository
+                .findAll(Sort.by(Direction.DESC, "lastname").and(Sort.by(Direction.DESC, "firstname")));
     }
 
     @Override
-    public Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, String candidateEmail){
-        Optional<Candidate> candidateOptional = getCandidateById(candidateEmail);
-        if(candidateOptional.isPresent()) {
+    public Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, long id) {
+        Optional<Candidate> candidateOptional = getCandidateById(id);
+        if (candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
             for (CandidateAnswer ele : candidate.getAnswers()) {
-                if(ele.getQuery().getText().equals(queryTxt)) {
+                if (ele.getQuery().getText().equals(queryTxt)) {
                     return Optional.of(ele);
                 }
             }
             return Optional.empty();
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Candidate> getCandidateByEmail(String email) {
+        for (Candidate c : candidateRepository.findAll()) {
+            if (c.getEmail().equals(email)) {
+                return Optional.of(c);
+            }
         }
         return Optional.empty();
     }
