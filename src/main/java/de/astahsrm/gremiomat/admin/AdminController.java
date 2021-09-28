@@ -24,8 +24,8 @@ import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumForm;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.query.EditQueryForm;
 import de.astahsrm.gremiomat.query.Query;
+import de.astahsrm.gremiomat.query.QueryFormAdmin;
 import de.astahsrm.gremiomat.query.QueryService;
 import javassist.NotFoundException;
 
@@ -47,14 +47,14 @@ public class AdminController {
 
     @GetMapping
     public String getAdminPage() {
-        return "mgmt/admin/admin";
+        return "admin/admin";
     }
 
     @GetMapping("/csv-user-upload")
     public String getUserCSVPage(Model m) {
         m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("head2", "CSV User Upload");
-        return "mgmt/admin/csv-upload";
+        return "admin/csv-upload";
     }
 
     @PostMapping("/csv-user-upload")
@@ -68,7 +68,7 @@ public class AdminController {
     public String getQueryCSVPage(Model m) {
         m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("head2", "CSV Query Upload");
-        return "mgmt/admin/csv-upload";
+        return "admin/csv-upload";
     }
 
     @PostMapping("/csv-query-upload")
@@ -78,22 +78,16 @@ public class AdminController {
         return "redirect:/admin/gremien/" + abbr;
     }
 
-    @GetMapping("/candidates")
-    public String getUsers(Model m) {
-        m.addAttribute("candidateList", candidateService.getAllCandidatesSortedByName());
-        return "mgmt/admin/user-overview";
-    }
-
     @GetMapping("/gremien")
     public String getGremienOverview(Model m) {
         m.addAttribute("gremienList", gremiumService.getAllGremiumsSortedByName());
-        return "mgmt/admin/gremien-overview";
+        return "admin/gremien-overview";
     }
 
     @GetMapping("/gremien/new")
     public String getNewGremiumEditPage(Model m) {
         m.addAttribute("form", new GremiumForm());
-        return "mgmt/admin/gremium-edit";
+        return "admin/gremium-edit";
     }
 
     @PostMapping("/gremien/new")
@@ -115,7 +109,7 @@ public class AdminController {
         Optional<Gremium> gOpt = gremiumService.getGremiumByAbbr(abbr);
         if (gOpt.isPresent()) {
             m.addAttribute("gremium", gOpt.get());
-            return "mgmt/gremium-overview";
+            return "admin/gremium-info";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
@@ -131,7 +125,7 @@ public class AdminController {
             form.setDescription(g.getDescription());
             m.addAttribute("form", form);
             m.addAttribute("gremium", g);
-            return "mgmt/admin/gremium-edit";
+            return "admin/gremium-edit";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
@@ -160,7 +154,7 @@ public class AdminController {
             Gremium gremium = gremiumOptional.get();
             if (queryIndex < gremium.getContainedQueries().size()) {
                 Query query = gremium.getContainedQueries().get(queryIndex);
-                EditQueryForm form = new EditQueryForm();
+                QueryFormAdmin form = new QueryFormAdmin();
                 form.setQueryTxt(query.getText());
                 form.setGremien(query.getGremien());
                 form.setId(query.getId());
@@ -168,7 +162,7 @@ public class AdminController {
                 m.addAttribute("form", form);
                 m.addAttribute("query", query);
                 m.addAttribute("role", "ADMIN");
-                return "mgmt/query-edit";
+                return "admin/query-edit";
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
@@ -176,10 +170,10 @@ public class AdminController {
     }
 
     @PostMapping(value = "/gremien/{abbr}/queries/{queryIndex}/edit", params = "save")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, EditQueryForm form, BindingResult res, Model m) {
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, QueryFormAdmin form, BindingResult res, Model m) {
         if(res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
-            return "mgmt/query-edit";
+            return "admin/query-edit";
         } else {
             Optional<Query> qOpt = queryService.getQueryById(form.getId());
             if(qOpt.isPresent()) {
