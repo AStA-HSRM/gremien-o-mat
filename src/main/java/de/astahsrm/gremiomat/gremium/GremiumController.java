@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateAnswer;
 import de.astahsrm.gremiomat.query.Query;
-import de.astahsrm.gremiomat.query.SimpleQueryForm;
+import de.astahsrm.gremiomat.query.QueryFormSimple;
 import de.astahsrm.gremiomat.query.QueryService;
 
 @Controller
@@ -69,7 +69,7 @@ public class GremiumController {
                 m.addAttribute("queryListSize", gremium.getContainedQueries().size());
                 m.addAttribute("query", gremium.getContainedQueries().get(queryIndex));
                 m.addAttribute("queryIndex", queryIndex);
-                m.addAttribute("queryForm", new SimpleQueryForm());
+                m.addAttribute("queryForm", new QueryFormSimple());
                 m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size()
                         || queryIndex == gremium.getContainedQueries().size() - 1);
                 return "gremien/query";
@@ -81,7 +81,7 @@ public class GremiumController {
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "next-query")
     public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute SimpleQueryForm form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
@@ -97,7 +97,7 @@ public class GremiumController {
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "prev-query")
     public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute SimpleQueryForm form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
@@ -113,7 +113,7 @@ public class GremiumController {
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "results")
     public String resultsPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute SimpleQueryForm form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
@@ -146,8 +146,8 @@ public class GremiumController {
                      * are equal.
                      */
                     for (CandidateAnswer ans : candidate.getAnswers()) {
-                        if (ans.getQuestion().equals(entry.getKey())) {
-                            if (entry.getValue() == ans.getChoice()) {
+                        if (ans.getQuery().equals(entry.getKey())) {
+                            if (entry.getValue() == ans.getOpinion()) {
                                 answersInCommon++;
                             }
                             break;

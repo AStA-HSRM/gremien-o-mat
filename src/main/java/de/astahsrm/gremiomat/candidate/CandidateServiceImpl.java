@@ -58,7 +58,7 @@ public class CandidateServiceImpl implements CandidateService {
         if(candidateOptional.isPresent()) {
             Candidate candidate = candidateOptional.get();
             for (CandidateAnswer ele : candidate.getAnswers()) {
-                if(ele.getQuestion().getText().equals(queryTxt)) {
+                if(ele.getQuery().getText().equals(queryTxt)) {
                     return Optional.of(ele);
                 }
             }

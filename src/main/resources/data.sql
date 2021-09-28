@@ -20,7 +20,7 @@ INSERT INTO candidate (version, firstname, lastname, email) VALUES
 (0,'Tracy L','Stack','10@mail.de'),
 (0,'Linda J','Alvarado','11@mail.de');
 
-INSERT INTO candidate_answer (id, version, question_id, choice, reason) VALUES
+INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-31,0,-1,0,'Weil ich der erste Kandidat bin!'),
   (-32,0,-2,0,'Weil ich der erste Kandidat bin!'),
   (-33,0,-3,0,'Weil ich der erste Kandidat bin!'),
