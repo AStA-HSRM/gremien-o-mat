@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.user;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
@@ -14,13 +15,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.CandidateAnswerForm;
+import de.astahsrm.gremiomat.candidate.CandidateForm;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
+import de.astahsrm.gremiomat.photo.Photo;
+import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
@@ -39,26 +45,98 @@ public class UserController {
     @Autowired
     private MgmtUserService mgmtUserService;
 
+    @Autowired
+    private PhotoService photoService;
+
     @GetMapping
     public String getUserPage() {
         return "user/user";
     }
 
     @GetMapping("/info")
-    public String getUserInfoPage(Principal loggedInUser, Model m) {
+    public String getUserInfo(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        if (userDetails.getPhoto() != null) {
+            m.addAttribute("photoId", userDetails.getPhoto().getId());
+        }
         m.addAttribute("candidate", userDetails);
         return "user/user-info";
     }
 
     @GetMapping("/info/edit")
-    public String getUserInfoEditPage(Principal loggedInUser, Model m) {
-        m.addAttribute("form", new Candidate());
+    public String getUserInfoEdit(Principal loggedInUser, Model m) {
+        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        CandidateForm form = new CandidateForm();
+        form.setFirstname(userDetails.getFirstname());
+        form.setLastname(userDetails.getLastname());
+        form.setAge(userDetails.getAge());
+        form.setCourse(userDetails.getCourse());
+        form.setSemester(userDetails.getSemester());
+        form.setBio(userDetails.getBio());
+        m.addAttribute("form", form);
+        if (userDetails.getPhoto() != null) {
+            m.addAttribute("photoId", userDetails.getPhoto().getId());
+        }
         return "user/user-info-edit";
     }
 
+    @PostMapping("/info/edit")
+    public String postUserInfoEditWithImage(Principal loggedInUser, @ModelAttribute CandidateForm form,
+            BindingResult res, Model m) {
+        if (res.hasErrors()) {
+            return "user/user-info-edit";
+        }
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        c.setFirstname(form.getFirstname());
+        c.setLastname(form.getLastname());
+        c.setAge(form.getAge());
+        c.setSemester(form.getSemester());
+        c.setCourse(form.getCourse());
+        c.setBio(form.getBio());
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setCandidateDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+        return "redirect:/user/info";
+    }
+
+    @GetMapping("/info/upload")
+    public String getUserInfoUpload(Principal loggedInUser, Model m) {
+        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        if (userDetails.getPhoto() != null) {
+            m.addAttribute("photoId", userDetails.getPhoto().getId());
+        }
+        return "user/user-info-upload";
+    }
+
+    @PostMapping("/info/upload")
+    public String uploadImage(Principal loggedInUser, @RequestParam("photo") MultipartFile file, Model m)
+            throws IOException {
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        Photo photo = new Photo();
+        photo.setFilename(file.getOriginalFilename());
+        photo.setMimeType(file.getContentType());
+        photo.setBytes(file.getBytes());
+        if (photo.getBytes().length >= 17) {
+            c.setPhoto(photoService.save(photo));
+        }
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setCandidateDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+        return "redirect:/user/info/edit";
+    }
+
     @GetMapping("/answers")
-    public String getUserAnswersPage(Principal loggedInUser, Model m) {
+    public String getUserAnswers(Principal loggedInUser, Model m) {
         HashMap<Query, CandidateAnswer> queryAnswerMap = new HashMap<>();
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
         for (Gremium g : userDetails.getGremien()) {
@@ -77,7 +155,7 @@ public class UserController {
     }
 
     @GetMapping("answers/{queryId}/edit")
-    public String getGremiumQueryEditPage(@PathVariable int queryId, Model m, Principal loggedInUser) {
+    public String getGremiumQueryEdit(@PathVariable int queryId, Model m, Principal loggedInUser) {
         Optional<Query> qOpt = queryService.getQueryById(queryId);
         if (qOpt.isPresent()) {
             Query query = qOpt.get();
@@ -85,7 +163,7 @@ public class UserController {
             form.setQuery(query);
             Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
             Optional<CandidateAnswer> ansOpt = candidateService.getCandidateAnswerByQueryTxt(query.getText(),
-                    userDetails.getEmail());
+                    userDetails.getId());
             if (ansOpt.isPresent()) {
                 CandidateAnswer ans = ansOpt.get();
                 form.setAnswerId(ans.getId());
@@ -101,13 +179,13 @@ public class UserController {
     }
 
     @PostMapping("answers/{queryId}/edit")
-    public String postGremiumAnswerEditPage(@ModelAttribute CandidateAnswerForm form, @PathVariable int queryId,
+    public String postGremiumAnswerEdit(@ModelAttribute CandidateAnswerForm form, @PathVariable int queryId,
             BindingResult res, Principal loggedInUser, Model m) {
         if (res.hasErrors()) {
             return "user/answer-edit";
         }
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        Optional<Candidate> cOpt = candidateService.getCandidateById(userDetails.getEmail());
+        Optional<Candidate> cOpt = candidateService.getCandidateById(userDetails.getId());
         if (cOpt.isPresent()) {
             Candidate c = cOpt.get();
             boolean ansExists = false;
@@ -136,7 +214,7 @@ public class UserController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
             }
             return "redirect:/user/answers";
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateService.CANDIDATE_NOT_FOUND);
         }
     }
