@@ -40,7 +40,7 @@
         id="queryTxt"
       ></textarea>
       <br />
-      <div th:each ="grem : ${allGremien}" multiple>
+      <div th:each ="grem : ${allGremien}">
         <input type="checkbox" th:value = "${grem}" th:text = "${grem.name}" th:field = "*{gremien}"></option>
       </div>
       <button type="submit" name="save">Save</button>
