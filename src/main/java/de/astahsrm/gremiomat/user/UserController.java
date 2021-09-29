@@ -20,10 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.candidate.CandidateAnswer;
-import de.astahsrm.gremiomat.candidate.CandidateAnswerForm;
 import de.astahsrm.gremiomat.candidate.CandidateForm;
 import de.astahsrm.gremiomat.candidate.CandidateService;
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerForm;
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
@@ -43,6 +44,9 @@ public class UserController {
     private CandidateService candidateService;
 
     @Autowired
+    private CandidateAnswerService candidateAnswerService;
+
+    @Autowired
     private MgmtUserService mgmtUserService;
 
     @Autowired
@@ -56,6 +60,9 @@ public class UserController {
     @GetMapping("/info")
     public String getUserInfo(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        if (userDetails.getPhoto() != null) {
+            m.addAttribute("photoId", userDetails.getPhoto().getId());
+        }
         m.addAttribute("candidate", userDetails);
         return "user/user-info";
     }
@@ -121,6 +128,23 @@ public class UserController {
         if (photo.getBytes().length >= 17) {
             c.setPhoto(photoService.save(photo));
         }
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+        return "redirect:/user/info/edit";
+    }
+
+    @GetMapping("/info/upload/del")
+    public String getUserInfoUploadDel(Principal loggedInUser, Model m) {
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
+        Photo p = c.getPhoto();
+        c.setPhoto(null);
+        photoService.delPhoto(p);
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
         if (uOpt.isPresent()) {
             MgmtUser u = uOpt.get();
@@ -200,7 +224,7 @@ public class UserController {
                 ca.setOpinion(form.getOpinion());
                 ca.setQuery(form.getQuery());
                 ca.setReason(form.getReason());
-                c.addNewAnswer(ca);
+                c.addNewAnswer(candidateAnswerService.saveAnswer(ca));
             }
             Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
             if (uOpt.isPresent()) {
