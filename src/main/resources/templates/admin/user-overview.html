@@ -14,7 +14,21 @@
 </head>
 
 <body>
-    <p th:each="candidate : ${candidateList}" th:text="${candidate.toString()}"></p>
+    <table>
+        <tr>
+            <th id="uid" th:text="#{username}"></th>
+            <th id="firstname" th:text="#{firstname}"></th>
+            <th id="lastname" th:text="#{lastname}"></th>
+        </tr>
+        <th:block th:each="user : ${allUsers}">
+            <tr>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.details.firstname}"></td>
+                <td th:text="${user.details.lastname}"></td>
+                <td><a th:href="@{/admin/users/__${user.username}__}" th:text="#{edit.user}"></a></td>
+            </tr>
+        </th:block>
+    </table>
 </body>
 
 </html>
