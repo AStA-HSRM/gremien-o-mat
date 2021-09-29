@@ -10,8 +10,7 @@ INSERT INTO query (id, version, text) VALUES
 INSERT INTO candidate (id, version, firstname, lastname, email) VALUES
 (-20,0,'Darth','Vader','1@mail.de'),
 (-21,0,'Kim','Kardashian','2@mail.de'),
-(-22,0,'Robert','McClanahan','3@mail.de'),
-(-23,0,'Virginia','Davis','4@mail.de');
+(-22,0,'Robert','McClanahan','3@mail.de');
 
 INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-31,0,-1,1,'Weil ich der erste Kandidat bin!'),
@@ -32,15 +31,15 @@ INSERT INTO mgmt_user (version, username, password, role, details_id) VALUES
 (0,'admin','{noop}admin', 'ADMIN', NULL);
 
 INSERT INTO candidate_answers (answers_id, candidate_id) VALUES
-(-31,-21),
-(-32,-21),
-(-33,-21),
-(-34,-22),
-(-35,-22),
-(-36,-22),
-(-37,-23),
-(-38,-23),
-(-39,-23);
+(-31,-20),
+(-32,-20),
+(-33,-20),
+(-34,-21),
+(-35,-21),
+(-36,-21),
+(-37,-22),
+(-38,-22),
+(-39,-22);
 
 INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
 ('dtg',-20),
