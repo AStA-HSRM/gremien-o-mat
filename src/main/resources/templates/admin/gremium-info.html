@@ -2,44 +2,33 @@
 
 <!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
 <html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      th:href="@{/assets/favicon/favicon.ico}"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta content="text/html; charset=utf-8" />
     <title th:text="#{title} + ' | ' + #{org}"></title>
     <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Poppins"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Kumbh+Sans"
-    />
-  </head>
-  <body>
-    <h1 th:text = "|${gremium.name} [${gremium.abbr}]|"></h1>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
+
+<body>
+    <h1 th:text="|${gremium.name} [${gremium.abbr}]|"></h1>
     <p th:text="${gremium.description}"></p>
     <a th:href="'/admin/gremien/' + ${gremium.abbr} + '/edit'">Edit Gremium</a>
     <h2>Candidates</h2>
-    <ul th:if = "${gremium.containedQueries.size()} > 0" th:each = "ele, status : ${gremium.joinedCandidates}">
-        <li><a th:text = "|${ele.firstname} ${ele.lastname}|" th:href="@{/admin/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__}"></a> | <a th:href="@{/admin/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__/edit}">Edit</a></li>
+    <ul th:if="${gremium.containedQueries.size()} > 0" th:each="ele, status : ${gremium.joinedCandidates}">
+        <li>
+            <a th:text="|${ele.firstname} ${ele.lastname}|" th:href="@{/admin/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__}"></a> | <a th:href="@{/admin/gremien/__${gremium.abbr}__/candidates/__${status.count-1}__/edit}">Edit</a></li>
     </ul>
     <h2>Queries</h2>
-    <ul th:if = "${gremium.containedQueries.size()} > 0" th:each = "ele, status : ${gremium.containedQueries}">
-        <li><span th:text ="${ele.text}"></span> | <a th:href="@{/admin/gremien/__${gremium.abbr}__/queries/__${status.count-1}__/edit}">Edit</a></li>
+    <ul th:if="${gremium.containedQueries.size()} > 0" th:each="ele, status : ${gremium.containedQueries}">
+        <li><span th:text="${ele.text}"></span> | <a th:href="@{/admin/gremien/__${gremium.abbr}__/queries/__${gremium.containedQueries.get(status.count-1).getId()}__/edit}">Edit</a></li>
     </ul>
     <a th:href=@{/admin}>Back to admin area</a><br/>
     <a th:href=@{/logout}>Logout</a>
-  </body>
+</body>
+
 </html>
