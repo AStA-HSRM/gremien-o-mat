@@ -1,10 +1,11 @@
 package de.astahsrm.gremiomat.candidate;
 
 public class CandidateForm {
-    private String firstname;
-    private String lastname;
+
     private int age;
     private int semester;
+    private String firstname;
+    private String lastname;
     private String course;
     private String bio;
 
