@@ -218,4 +218,8 @@ public class Candidate {
         this.photo = photo;
     }
 
+    public void delAnswer(CandidateAnswer ca) {
+        this.answers.remove(ca);
+    }
+
 }
