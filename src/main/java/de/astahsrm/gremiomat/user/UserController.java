@@ -56,9 +56,6 @@ public class UserController {
     @GetMapping("/info")
     public String getUserInfo(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        if (userDetails.getPhoto() != null) {
-            m.addAttribute("photoId", userDetails.getPhoto().getId());
-        }
         m.addAttribute("candidate", userDetails);
         return "user/user-info";
     }
