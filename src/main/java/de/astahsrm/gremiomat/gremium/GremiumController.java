@@ -19,7 +19,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.candidate.CandidateAnswer;
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryFormSimple;
 import de.astahsrm.gremiomat.query.QueryService;

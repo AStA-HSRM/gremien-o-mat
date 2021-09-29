@@ -16,6 +16,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.photo.Photo;
 
