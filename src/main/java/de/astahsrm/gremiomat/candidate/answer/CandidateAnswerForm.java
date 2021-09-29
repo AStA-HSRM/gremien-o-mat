@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.candidate;
+package de.astahsrm.gremiomat.candidate.answer;
 
 import de.astahsrm.gremiomat.query.Query;
 

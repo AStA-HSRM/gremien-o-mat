@@ -1,7 +1,8 @@
-package de.astahsrm.gremiomat.candidate;
+package de.astahsrm.gremiomat.candidate.answer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
@@ -16,7 +17,7 @@ import de.astahsrm.gremiomat.query.Query;
 public class CandidateAnswer {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Version
