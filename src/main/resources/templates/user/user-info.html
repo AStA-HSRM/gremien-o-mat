@@ -16,7 +16,7 @@
 
 <body>
     <div class="profile-img-container">
-        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
+        <img class="profile-img" th:src="${candidate.photo} ? @{/api/v1/photo/__${candidate.photo.id}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" />
     </div>
     <div>
         <p th:text="|Name: ${candidate.firstname} ${candidate.lastname}|"></p>
@@ -25,7 +25,8 @@
         <p th:text="|Semester: ${candidate.semester}|"></p>
         <p th:text="|Bio: ${candidate.bio}|"></p>
     </div>
-    <a th:href="@{/user/info/edit}">Edit Profile</a><br />
+    <a sec:authorize="hasRole('USER')" th:href="@{/user/info/edit}">Edit Profile</a><br />
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users/__${username}__/edit}">Edit Profile</a><br />
     <a th:href=@{/user}>Back to user area</a><br/>
     <a th:href=@{/logout}>Logout</a>
 </body>
