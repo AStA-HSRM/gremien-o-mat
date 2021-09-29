@@ -8,4 +8,6 @@ public interface PhotoService {
 
     public Optional<Photo> getPhotoById(long id);
 
+    public void delPhoto(Photo photo);
+
 }

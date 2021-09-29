@@ -21,4 +21,9 @@ public class PhotoServiceImpl implements PhotoService {
         return photoRepository.findById(id);
     }
 
+    @Override
+    public void delPhoto(Photo photo) {
+        photoRepository.delete(photo);
+    }
+
 }
