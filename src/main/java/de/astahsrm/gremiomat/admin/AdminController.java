@@ -159,32 +159,28 @@ public class AdminController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @GetMapping("/gremien/{abbr}/queries/{queryIndex}/edit")
-    public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, Model m,
+    @GetMapping("/gremien/{abbr}/queries/{id}/edit")
+    public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, Model m,
             Principal loggedInUser) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            if (queryIndex < gremium.getContainedQueries().size()) {
-                Query query = gremium.getContainedQueries().get(queryIndex);
-                QueryFormAdmin form = new QueryFormAdmin();
-                form.setQueryTxt(query.getText());
-                form.setGremien(query.getGremien());
-                form.setId(query.getId());
-                m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
-                m.addAttribute("form", form);
-                m.addAttribute("query", query);
-                m.addAttribute("role", "ADMIN");
-                return "admin/query-edit";
-            }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
+        Optional<Query> qOpt = queryService.getQueryById(id);
+        if (qOpt.isPresent()) {
+            Query query = qOpt.get();
+            QueryFormAdmin form = new QueryFormAdmin();
+            form.setQueryTxt(query.getText());
+            form.setGremien(query.getGremien());
+            form.setId(query.getId());
+            m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+            m.addAttribute("form", form);
+            m.addAttribute("query", query);
+            m.addAttribute("role", "ADMIN");
+            return "admin/query-edit";
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
     }
 
-    @PostMapping(value = "/gremien/{abbr}/queries/{queryIndex}/edit", params = "save")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex,
-            QueryFormAdmin form, BindingResult res, Model m) {
+    @PostMapping(value = "/gremien/{abbr}/queries/{id}/edit", params = "save")
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, QueryFormAdmin form,
+            BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
             return "admin/query-edit";
@@ -201,10 +197,10 @@ public class AdminController {
             return "error";
         }
     }
-
-    @PostMapping(value = "/gremien/{abbr}/queries/{queryIndex}/edit", params = "del")
-    public String postDelGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex) {
-        queryService.delQueryByIndexAndGremium(queryIndex, abbr);
+    
+    @PostMapping(value = "/gremien/{abbr}/queries/{id}/edit", params = "del")
+    public String postDelGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id) {
+        queryService.delQueryById(id);
         return "redirect:/admin/gremien/" + abbr;
     }
 
