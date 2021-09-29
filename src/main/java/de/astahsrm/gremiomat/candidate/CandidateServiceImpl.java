@@ -3,11 +3,14 @@ package de.astahsrm.gremiomat.candidate;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
 
@@ -31,20 +34,13 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public void delCandidate(long id) {
+    public void delCandidateById(long id) {
         Optional<Candidate> cOptional = getCandidateById(id);
         if (cOptional.isPresent()) {
-            Candidate c = cOptional.get();
-            for (Gremium g : c.getGremien()) {
-                Optional<Gremium> gOptional = gremiumService.getGremiumByAbbr(g.getAbbr());
-                if (gOptional.isPresent()) {
-                    Gremium gremium = gOptional.get();
-                    gremium.delCandidate(c);
-                    gremiumService.saveGremium(gremium);
-                }
-            }
+            candidateRepository.delete(cOptional.get());
+        } else {
+            throw new EntityNotFoundException();
         }
-        candidateRepository.deleteById(id);
     }
 
     @Override
@@ -76,5 +72,18 @@ public class CandidateServiceImpl implements CandidateService {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void delCandidate(Candidate c) {
+        for (Gremium g : c.getGremien()) {
+            Optional<Gremium> gOptional = gremiumService.getGremiumByAbbr(g.getAbbr());
+            if (gOptional.isPresent()) {
+                Gremium gremium = gOptional.get();
+                gremium.delCandidate(c);
+                gremiumService.saveGremium(gremium);
+            }
+        }
+        candidateRepository.delete(c);
     }
 }
