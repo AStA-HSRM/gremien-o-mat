@@ -18,11 +18,10 @@ public class MgmtUserDetailsService implements UserDetailsService {
         MgmtUser user;
         Optional<MgmtUser> userOptional = mgmtUserRepository.findById(username);
         
-        if (!userOptional.isPresent()) {
+        if (!userOptional.isPresent() || userOptional.get().isLocked()) {
              return null;
         }
         user = userOptional.get();
-
         return User.withUsername(username).password(user.getPassword()).roles(user.getRole()).build();
     }
 }
