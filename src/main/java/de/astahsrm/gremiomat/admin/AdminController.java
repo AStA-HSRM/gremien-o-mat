@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.candidate.CandidateFormAdmin;
+import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumForm;
@@ -26,6 +30,8 @@ import de.astahsrm.gremiomat.gremium.GremiumService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryFormAdmin;
 import de.astahsrm.gremiomat.query.QueryService;
+import de.astahsrm.gremiomat.security.MgmtUser;
+import de.astahsrm.gremiomat.security.MgmtUserService;
 import javassist.NotFoundException;
 
 @Controller
@@ -36,10 +42,16 @@ public class AdminController {
     private CSVService csvService;
 
     @Autowired
+    private CandidateService candidateService;
+
+    @Autowired
     private GremiumService gremiumService;
 
     @Autowired
     private QueryService queryService;
+
+    @Autowired
+    private MgmtUserService mgmtUserService;
 
     @GetMapping
     public String getAdminPage() {
@@ -88,7 +100,7 @@ public class AdminController {
 
     @PostMapping("/gremien/new")
     public String postNewUserGremiumPage(GremiumForm form, BindingResult res, Model m) {
-        if(res.hasErrors()) {
+        if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
             return "error";
         }
@@ -128,7 +140,7 @@ public class AdminController {
 
     @PostMapping("/gremien/{abbr}/edit")
     public String postGremiumEditPage(GremiumForm form, BindingResult res, Model m) {
-        if(res.hasErrors()) {
+        if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
             return "error";
         }
@@ -166,13 +178,14 @@ public class AdminController {
     }
 
     @PostMapping(value = "/gremien/{abbr}/queries/{queryIndex}/edit", params = "save")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex, QueryFormAdmin form, BindingResult res, Model m) {
-        if(res.hasErrors()) {
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable int queryIndex,
+            QueryFormAdmin form, BindingResult res, Model m) {
+        if (res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
             return "admin/query-edit";
         } else {
             Optional<Query> qOpt = queryService.getQueryById(form.getId());
-            if(qOpt.isPresent()) {
+            if (qOpt.isPresent()) {
                 Query q = qOpt.get();
                 q.setGremien(form.getGremien());
                 q.setText(form.getQueryTxt());
@@ -191,8 +204,9 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String getUserOverview() {
-        return "";
+    public String getUserOverview(Model m) {
+        m.addAttribute("allUsers", mgmtUserService.getAllUsersSortedByUsername());
+        return "admin/user-overview";
     }
 
     @GetMapping("/users/new")
@@ -206,18 +220,57 @@ public class AdminController {
     }
 
     @GetMapping("/users/{username}")
-    public String getUserInfoPage(@PathVariable String username) {
-        return "";
+    public String getUserInfoPage(@PathVariable String username, Model m) {
+        m.addAttribute("candidate", mgmtUserService.getCandidateDetailsOfUser(username));
+        m.addAttribute("username", username);
+        return "user/user-info";
     }
 
     @GetMapping("/users/{username}/edit")
-    public String getUserEditPage(@PathVariable String username) {
-        return "";
+    public String getUserEditPage(@PathVariable String username, Model m) {
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
+        CandidateFormAdmin form = new CandidateFormAdmin();
+        form.setAge(c.getAge());
+        form.setBio(c.getBio());
+        form.setCourse(c.getCourse());
+        form.setEmail(c.getEmail());
+        form.setFirstname(c.getFirstname());
+        form.setGremien(c.getGremien());
+        form.setLastname(c.getLastname());
+        form.setSemester(c.getSemester());
+        if (c.getPhoto() != null) {
+            m.addAttribute("photoId", c.getPhoto().getId());
+        }
+        m.addAttribute("username", username);
+        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute("form", form);
+        return "user/user-info-edit";
     }
 
     @PostMapping("/users/{username}/edit")
-    public String postUserEditPage(@PathVariable String username) {
-        return "redirect:/admin/users/" + username;
+    public String postUserEditPage(@PathVariable String username, @ModelAttribute CandidateFormAdmin form,
+            BindingResult res, Model m) {
+        if (res.hasErrors()) {
+            return "user/user-info-edit";
+        }
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
+        c.setFirstname(form.getFirstname());
+        c.setLastname(form.getLastname());
+        c.setAge(form.getAge());
+        c.setSemester(form.getSemester());
+        c.setCourse(form.getCourse());
+        c.setBio(form.getBio());
+        c.setEmail(form.getEmail());
+        c.setGremien(form.getGremien());
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+        return "redirect:/admin/users";
     }
 
 }
