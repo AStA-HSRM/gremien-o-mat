@@ -1,34 +1,56 @@
 <!DOCTYPE html>
 
-<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
-<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <title th:text="#{title} + ' | ' + #{org}"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title th:text="#{title} + ' | ' + #{org}"></title>
-    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+    <meta content="text/html; charset=utf-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/style.css}" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
 </head>
 
 <body>
-    <h1 th:text="'Willkommen zum ' + #{title}"></h1>
-    <p th:text="#{home.info}"></p>
-    <p th:text="#{home.disclaimer}"></p>
+    <div class="container h-100 mt-5">
+        <div class="row mb-5">
+            <div class="col-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page" th:text="#{nav.home}"></li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-6 text-end">
+                <a class="btn btn-outline-secondary btn-sm" th:href=@{/login} th:text="#{login}"></a>
+            </div>
+        </div>
+        <div class="row pt-3">
+            <div class="col-12 text-center">
+                <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100">
+            </div>
+        </div>
+        <div class="row pt-5">
+            <div class="col-12 text-center">
+                <h1 th:text="'Willkommen zum ' + #{title}"></h1>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-lg-8 text-justify">
+                <p th:text="#{home.info}"></p>
+                <p th:text="#{home.disclaimer}"></p>
+            </div>
+        </div>
+        <div class="row justify-content-md-center mt-4">
+            <div class="col-12 text-center">
+                <a class="btn btn-primary" th:href=@{/gremien} th:text="#{btn.gremien}"></a>
+            </div>
+        </div>
+    </div>
 
-    <!-- BEGIN PLACEHOLDER TEXT -->
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis erat ut risus aliquam lacinia quis non erat. Praesent rhoncus vitae enim ac pretium. Duis eros mi, congue nec metus in, faucibus tempus elit. Quisque vitae ultricies lacus, id euismod
-        sem. Sed elit neque, efficitur sed nibh id, accumsan facilisis neque. Morbi euismod maximus erat. Donec eget scelerisque libero. In suscipit pellentesque justo vel suscipit. Mauris venenatis, lectus sit amet pretium feugiat, nulla nibh scelerisque
-        erat, id vulputate arcu dui et purus. Aenean a massa dictum, molestie mauris condimentum, ultricies massa. Suspendisse lorem tortor, sagittis sit amet consequat sit amet, sagittis eu lectus. Morbi sagittis dui in neque eleifend, posuere mollis
-        est rutrum. Quisque consequat porttitor mollis. Duis id iaculis justo. Phasellus a molestie ligula.
-    </p>
-    <!-- END PLACEHOLDER TEXT -->
-    <a th:href=@{/gremien}>Gremien</a>
-    <br>
-    <a th:href=@{/login}>Login</a>
+
 </body>
 
 </html>
