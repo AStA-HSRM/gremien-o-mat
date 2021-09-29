@@ -146,8 +146,13 @@ public class Gremium {
     }
 
     public void addQuery(Query query) {
-        if (!this.containedQueries.contains(query))
+        if (!this.containedQueries.contains(query)) {
             this.containedQueries.add(query);
+        }
+    }
+
+    public void delQuery(Query q) {
+        this.containedQueries.remove(q);
     }
 
 }
