@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
-<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
-<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
@@ -20,60 +19,85 @@
             <tr>
                 <td>
                     <div class="profile-img-container">
-                        <a th:href="@{/user/info/upload}"><img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" /></a>
+                        <img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" />
                     </div>
+                    <th:block sec:authorize="hasRole('USER')">
+                        <a th:href="@{/user/info/upload}" th:text="#{img.change}"></a>
+                        <a th:href="@{/user/info/upload/del}" th:text="#{img.del}"></a>
+                    </th:block>
+                    <th:block sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin/users/__${username}__/upload}" th:text="#{img.change}"></a>
+                        <a th:href="@{/admin/users/__${username}__/upload/del}" th:text="#{img.del}"></a>
+                    </th:block>
                 </td>
+
             </tr>
             <tr th:if="${#fields.hasErrors('firstname')}" th:each="err : ${#fields.errors('firstname')}">
                 <td th:text="${err}" class="error"></td>
             </tr>
+            <tr sec:authorize="hasRole('ADMIN')">
+                <td th:text="|#{email} : |"></td>
+                <td><input type="text" id="email" th:field="*{email}" /></td>
+            </tr>
             <tr>
-                <td>Firstname:</td>
+                <td th:text="|#{firstname} : |"></td>
                 <td><input type="text" id="firstname" th:field="*{firstname}" /></td>
             </tr>
             <tr th:if="${#fields.hasErrors('lastname')}" th:each="err : ${#fields.errors('lastname')}">
                 <td th:text="${err}" class="error"></td>
             </tr>
             <tr>
-                <td>Lastname:</td>
+                <td th:text="|#{lastname} : |"></td>
                 <td><input type="text" id="lastname" th:field="*{lastname}"></td>
             </tr>
             <tr th:if="${#fields.hasErrors('age')}" th:each="err : ${#fields.errors('age')}">
                 <td th:text="${err}" class="error"></td>
             </tr>
             <tr>
-                <td>Age:</td>
+                <td th:text="|#{age} : |"></td>
                 <td><input type="text" id="age" th:field="*{age}"></td>
             </tr>
             <tr th:if="${#fields.hasErrors('semester')}" th:each="err : ${#fields.errors('semester')}">
                 <td th:text="${err}" class="error"></td>
             </tr>
             <tr>
-                <td>Semester:</td>
+                <td th:text="|#{semester} : |"></td>
                 <td><input type="text" id="semester" th:field="*{semester}"></td>
             </tr>
             <tr th:if="${#fields.hasErrors('course')}" th:each="err : ${#fields.errors('course')}">
                 <td th:text="${err}" class="error"></td>
             </tr>
             <tr>
-                <td>Course:</td>
+                <td th:text="|#{course} : |"></td>
                 <td><input type="text" id="course" th:field="*{course}"></td>
             </tr>
             <tr th:if="${#fields.hasErrors('bio')}" th:each="err : ${#fields.errors('bio')}">
                 <td th:text="${err}" class="error"></td>
             </tr>
             <tr>
-                <td>Bio:</td>
+                <td th:text="|#{bio} : |"></td>
                 <td><textarea id="bio" th:field="*{bio}"></textarea></td>
             </tr>
+            <tr sec:authorize="hasRole('ADMIN')">
+                <td>
+                    <th:block th:each="grem : ${allGremien}">
+                        <input type="checkbox" th:value="${grem}" th:text="${grem.abbr}" th:field="*{gremien}">
+                    </th:block>
+                </td>
+            </tr>
             <tr>
-                <td><input type="submit" value="Save" name="save" /></td>
+                <td>
+                    <input type="submit" value="Save" name="save" />
+                    <input sec:authorize="hasRole('ADMIN')" type="submit" value="Password Reset" name="pwReset" />
+                    <input sec:authorize="hasRole('ADMIN')" type="submit" value="Delete" name="del" />
+                </td>
             </tr>
         </table>
     </form>
-    <a th:href=@{/user}>Back to user area</a>
+    <a sec:authorize="hasRole('USER')" th:href=@{/user} th:text="#{back.user}"></a>
+    <a sec:authorize="hasRole('ADMIN')" th:href=@{/admin} th:text="#{back.admin}"></a>
     <br>
-    <a th:href=@{/logout}>Logout</a>
+    <a th:href=@{/logout} th:text="#{logout}"></a>
 </body>
 
 </html>
