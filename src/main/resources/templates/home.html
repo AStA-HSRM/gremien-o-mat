@@ -2,54 +2,33 @@
 
 <!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
 <html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      th:href="@{/assets/favicon/favicon.ico}"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta content="text/html; charset=utf-8" />
     <title th:text="#{title} + ' | ' + #{org}"></title>
     <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Poppins"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Kumbh+Sans"
-    />
-  </head>
-  <body>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
+
+<body>
     <h1 th:text="'Willkommen zum ' + #{title}"></h1>
     <p th:text="#{home.info}"></p>
     <p th:text="#{home.disclaimer}"></p>
 
     <!-- BEGIN PLACEHOLDER TEXT -->
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis erat
-      ut risus aliquam lacinia quis non erat. Praesent rhoncus vitae enim ac
-      pretium. Duis eros mi, congue nec metus in, faucibus tempus elit. Quisque
-      vitae ultricies lacus, id euismod sem. Sed elit neque, efficitur sed nibh
-      id, accumsan facilisis neque. Morbi euismod maximus erat. Donec eget
-      scelerisque libero. In suscipit pellentesque justo vel suscipit. Mauris
-      venenatis, lectus sit amet pretium feugiat, nulla nibh scelerisque erat,
-      id vulputate arcu dui et purus. Aenean a massa dictum, molestie mauris
-      condimentum, ultricies massa. Suspendisse lorem tortor, sagittis sit amet
-      consequat sit amet, sagittis eu lectus. Morbi sagittis dui in neque
-      eleifend, posuere mollis est rutrum. Quisque consequat porttitor mollis.
-      Duis id iaculis justo. Phasellus a molestie ligula.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis erat ut risus aliquam lacinia quis non erat. Praesent rhoncus vitae enim ac pretium. Duis eros mi, congue nec metus in, faucibus tempus elit. Quisque vitae ultricies lacus, id euismod
+        sem. Sed elit neque, efficitur sed nibh id, accumsan facilisis neque. Morbi euismod maximus erat. Donec eget scelerisque libero. In suscipit pellentesque justo vel suscipit. Mauris venenatis, lectus sit amet pretium feugiat, nulla nibh scelerisque
+        erat, id vulputate arcu dui et purus. Aenean a massa dictum, molestie mauris condimentum, ultricies massa. Suspendisse lorem tortor, sagittis sit amet consequat sit amet, sagittis eu lectus. Morbi sagittis dui in neque eleifend, posuere mollis
+        est rutrum. Quisque consequat porttitor mollis. Duis id iaculis justo. Phasellus a molestie ligula.
     </p>
     <!-- END PLACEHOLDER TEXT -->
     <a th:href=@{/gremien}>Gremien</a>
     <br>
     <a th:href=@{/login}>Login</a>
-  </body>
+</body>
+
 </html>
