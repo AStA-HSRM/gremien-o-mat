@@ -27,6 +27,8 @@ import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumForm;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.photo.Photo;
+import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryFormAdmin;
 import de.astahsrm.gremiomat.query.QueryService;
@@ -52,6 +54,9 @@ public class AdminController {
 
     @Autowired
     private MgmtUserService mgmtUserService;
+
+    @Autowired
+    private PhotoService photoService;
 
     @GetMapping
     public String getAdminPage() {
@@ -209,6 +214,12 @@ public class AdminController {
         return "admin/user-overview";
     }
 
+    @GetMapping("/users/lock")
+    public String lockUser(Model m) {
+        mgmtUserService.lockAllUsers();
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("/users/new")
     public String getNewUserEditPage() {
         return "";
@@ -247,7 +258,13 @@ public class AdminController {
         return "user/user-info-edit";
     }
 
-    @PostMapping("/users/{username}/edit")
+    @PostMapping(value = "/users/{username}/edit", params = "del")
+    public String postUserEditDel(@PathVariable String username, Model m) {
+        mgmtUserService.delUserById(username);
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping(value = "/users/{username}/edit", params = "save")
     public String postUserEditPage(@PathVariable String username, @ModelAttribute CandidateFormAdmin form,
             BindingResult res, Model m) {
         if (res.hasErrors()) {
@@ -270,7 +287,55 @@ public class AdminController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/admin/users";
+        return "redirect:/admin/users/" + username;
+    }
+
+    @GetMapping("/users/{username}/upload/del")
+    public String getUserInfoUploadDel(@PathVariable String username, Model m) {
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
+        Photo p = c.getPhoto();
+        c.setPhoto(null);
+        photoService.delPhoto(p);
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+        return "redirect:/admin/users/" + username + "/edit";
+    }
+
+    @GetMapping("/users/{username}/upload")
+    public String getUserInfoUpload(@PathVariable String username, Model m) {
+        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(username);
+        if (userDetails.getPhoto() != null) {
+            m.addAttribute("photoId", userDetails.getPhoto().getId());
+        }
+        return "user/user-info-upload";
+    }
+
+    @PostMapping("/users/{username}/upload")
+    public String uploadImage(@PathVariable String username, @RequestParam("photo") MultipartFile file, Model m)
+            throws IOException {
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
+        Photo photo = new Photo();
+        photo.setFilename(file.getOriginalFilename());
+        photo.setMimeType(file.getContentType());
+        photo.setBytes(file.getBytes());
+        if (photo.getBytes().length >= 17) {
+            c.setPhoto(photoService.save(photo));
+        }
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+        return "redirect:/admin/users/" + username + "/edit";
     }
 
 }
