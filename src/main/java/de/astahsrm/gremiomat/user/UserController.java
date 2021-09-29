@@ -96,7 +96,7 @@ public class UserController {
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
         if (uOpt.isPresent()) {
             MgmtUser u = uOpt.get();
-            u.setCandidateDetails(candidateService.saveCandidate(c));
+            u.setDetails(candidateService.saveCandidate(c));
             mgmtUserService.saveUser(u);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
@@ -127,7 +127,7 @@ public class UserController {
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
         if (uOpt.isPresent()) {
             MgmtUser u = uOpt.get();
-            u.setCandidateDetails(candidateService.saveCandidate(c));
+            u.setDetails(candidateService.saveCandidate(c));
             mgmtUserService.saveUser(u);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
@@ -208,7 +208,7 @@ public class UserController {
             Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
             if (uOpt.isPresent()) {
                 MgmtUser u = uOpt.get();
-                u.setCandidateDetails(candidateService.saveCandidate(c));
+                u.setDetails(candidateService.saveCandidate(c));
                 mgmtUserService.saveUser(u);
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);

@@ -21,7 +21,7 @@ public class MgmtUser {
     @NotBlank 
     private String role;
     @OneToOne
-    private Candidate candidateDetails;
+    private Candidate details;
 
     public MgmtUser() {
     }
@@ -31,7 +31,7 @@ public class MgmtUser {
         this.username = username;
         this.password = password;
         this.role = SecurityConfig.USER;
-        this.candidateDetails = candidateDetails;
+        this.details = candidateDetails;
     }
 
     public MgmtUser(@NotBlank String username, @NotBlank String password) {
@@ -39,15 +39,15 @@ public class MgmtUser {
         this.username = username;
         this.password = password;
         this.role = SecurityConfig.ADMIN;
-        this.candidateDetails = null;
+        this.details = null;
     }
 
-    public Candidate getCandidateDetails() {
-        return candidateDetails;
+    public Candidate getDetails() {
+        return details;
     }
 
-    public void setCandidateDetails(Candidate candidateDetails) {
-        this.candidateDetails = candidateDetails;
+    public void setDetails(Candidate candidateDetails) {
+        this.details = candidateDetails;
     }
 
     public String getUsername() {

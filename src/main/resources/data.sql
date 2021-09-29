@@ -27,7 +27,7 @@ INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-311,0,-2,-1,'Weil ich der vierte Kandidat bin!'),
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
 
-INSERT INTO mgmt_user (version, username, password, role, candidate_details_id) VALUES
+INSERT INTO mgmt_user (version, username, password, role, details_id) VALUES
 (0,'user','{noop}user','USER',-20),
 (0,'admin','{noop}admin', 'ADMIN', NULL);
 
