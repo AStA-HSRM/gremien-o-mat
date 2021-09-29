@@ -27,7 +27,7 @@
                 </td>
             </tr>
             <tr>
-                <td th:switch="${entry.value.opinion}">
+                <td th:if="${entry.value} ne null" th:switch="${entry.value.opinion}">
                     <em th:case="'-1'">Stimme nicht zu</em>
                     <em th:case="'0'">Neutral</em>
                     <em th:case="'1'">Stimme zu</em>
