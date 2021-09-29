@@ -17,4 +17,10 @@ public interface MgmtUserService {
     public MgmtUser saveUser(MgmtUser u);
 
     public List<MgmtUser> getAllUsersSortedByUsername();
+
+    public void delUser(MgmtUser username);
+
+    public void delUserById(String username);
+
+    public void lockAllUsers();
 }
