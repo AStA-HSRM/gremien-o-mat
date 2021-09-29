@@ -1,10 +1,11 @@
 package de.astahsrm.gremiomat.security;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
-import  javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
@@ -14,14 +15,16 @@ public class MgmtUser {
     @Version
     private long version;
     @Id
-    @NotBlank 
+    @NotBlank
     private String username;
-    @NotBlank 
+    @NotBlank
     private String password;
-    @NotBlank 
+    @NotBlank
     private String role;
     @OneToOne
     private Candidate details;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isLocked;
 
     public MgmtUser() {
     }
@@ -80,5 +83,13 @@ public class MgmtUser {
 
     public void setVersion(long version) {
         this.version = version;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean isLocked) {
+        this.isLocked = isLocked;
     }
 }
