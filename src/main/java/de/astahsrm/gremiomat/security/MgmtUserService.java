@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.security;
 
+import java.util.List;
 import java.util.Optional;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
@@ -14,4 +15,6 @@ public interface MgmtUserService {
     public Optional<MgmtUser> getUserById(String name);
 
     public MgmtUser saveUser(MgmtUser u);
+
+    public List<MgmtUser> getAllUsersSortedByUsername();
 }
