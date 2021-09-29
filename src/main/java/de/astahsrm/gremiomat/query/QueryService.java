@@ -8,5 +8,5 @@ public interface QueryService {
     public Optional<Query> getQueryById(long queryId);
     public Optional<Query> getQueryByTxt(String queryTxt);
     public void delQueryById(long queryId);
-    public void delQueryByIndexAndGremium(int queryIndex, String abbr);
+    public void delQuery(Query q);
 }
