@@ -89,7 +89,7 @@
                 <td>
                     <input type="submit" value="Save" name="save" />
                     <input sec:authorize="hasRole('ADMIN')" type="submit" value="Password Reset" name="pwReset" />
-                    <input sec:authorize="hasRole('ADMIN')" type="submit" value="Delete" name="del" />
+                    <input sec:authorize="hasRole('ADMIN')" type="submit" value="Delete User" name="del" onclick="return confirm('Are you sure?')" />
                 </td>
             </tr>
         </table>
