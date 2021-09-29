@@ -8,7 +8,6 @@ public class CandidateFormAdmin {
 
     private int age;
     private int semester;
-    private long id;
     private String firstname;
     private String lastname;
     private String email;
@@ -79,13 +78,4 @@ public class CandidateFormAdmin {
     public void setGremien(List<Gremium> gremien) {
         this.gremien = gremien;
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
 }
