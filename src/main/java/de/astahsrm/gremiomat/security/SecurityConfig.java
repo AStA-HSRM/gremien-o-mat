@@ -18,8 +18,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String ADMIN = "ADMIN";
     public static final String USER = "USER";
 
-    // TODO antmatchers for access and requests
-
     @Autowired
     private MgmtUserDetailsService mgmtUserDetailsService;
 
@@ -28,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http.authorizeRequests().antMatchers("/assets/**", "/css/**", "/favicon/**", "/img/**").permitAll()
                 .antMatchers("/gremien/**","/gremien**").permitAll()
+                .antMatchers("/api/**","/api**").permitAll()
                 .antMatchers("/user/**", "/user**").authenticated()
                 .antMatchers("/admin/**", "/admin**").hasAnyRole(ADMIN)
                 .and()
