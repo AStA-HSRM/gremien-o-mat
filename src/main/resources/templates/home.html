@@ -18,7 +18,7 @@
 
 <body>
     <main>
-        <div class="container mt-5">
+        <div class="container py-4 px-4">
             <div class="row mb-5">
                 <div class="col-6">
                     <nav aria-label="breadcrumb">
@@ -36,37 +36,43 @@
                     <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100">
                 </div>
             </div>
+            <!-- Title -->
             <div class="row pt-5">
                 <div class="col-12 text-center">
                     <h1 th:text="'Willkommen zum ' + #{title}"></h1>
                 </div>
             </div>
-            <div class="row justify-content-center mt-3">
-                <div class="col-12 col-lg-8 text-justify">
-                    <p th:text="#{home.info}"></p>
+            <!-- Disclaimer -->
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 text-center mb-4">
+                    <p class="text-secondary disclaimer" th:text="#{home.disclaimer}"></p>
                 </div>
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8 text-center">
-                    <p class="text-secondary disclaimer" th:text="#{home.disclaimer}"></p>
+                    <h4 th:text="#{home.gremien.cta}"></h4>
                 </div>
             </div>
-            <div class="row justify-content-center mb-4">
+            <div class="row justify-content-center mb-3">
                 <div class="col-12 col-lg-8 text-center">
-                    <p th:text="#{home.cta}"></p>
+                    <p>
+                        <span th:text="#{home.info}"></span>
+                        <br />
+                        <span th:text="#{home.cta}"></span>
+                    </p>
                 </div>
             </div>
             <th:block th:each="gremium : ${gremien}">
-                <div class="row justify-content-md-center mt-3" th:if="${gremien.size()} gt 0">
+                <div class="row justify-content-md-center mb-3" th:if="${gremien.size()} gt 0">
                     <div class="col-12 text-center">
-                        <a class="btn btn-secondary custom-btn-w" th:href=@{/__${gremium.abbr}__} th:text="${gremium.name}"></a>
+                        <a class="btn btn-primary custom-btn-w" th:href=@{/__${gremium.abbr}__} th:text="${gremium.name}"></a>
                     </div>
                 </div>
             </th:block>
             <div class="row justify-content-md-center mt-3" th:if="${fsr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle custom-btn-w" type="button" id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fsr}">
+                        <button class="btn btn-primary dropdown-toggle custom-btn-w" type="button" id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fsr}">
                     </button>
                         <ul class="dropdown-menu custom-btn-w" aria-labelledby="fsrDropdownMenuButton">
                             <th:block th:each="gremium : ${fsr}">
@@ -81,7 +87,7 @@
             <div class="row justify-content-md-center mt-3 mb-3" th:if="${fbr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle custom-btn-w" type="button" id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fbr}">
+                        <button class="btn btn-primary dropdown-toggle custom-btn-w" type="button" id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fbr}">
                     </button>
                         <ul class="dropdown-menu custom-btn-w" aria-labelledby="fbrDropdownMenuButton">
                             <th:block th:each="gremium : ${fbr}">
@@ -95,19 +101,19 @@
             </div>
         </div>
     </main>
-    <footer class="bg-light">
+    <footer class="bg-light mt-5">
         <div class="container">
-            <div class="row py-3 text-secondary">
-                <div class="col-4 pt-1 text-start text-sm">
+            <div class="row text-secondary pt-4 pb-2">
+                <div class="col-12 col-lg-4 pt-1 text-center text-lg-start text-sm mt-2">
                     <a class="text-decoration-none text-secondary" href="https://www.asta-hsrm.de/" th:text="#{org}"></a>
                 </div>
-                <div class="col-4 text-center">
+                <div class="col-12 col-lg-4 text-center py-2">
                     <a href="https://twitter.com/asta_hsrm" target="_blank" class="fa fa-twitter mx-2"></a>
                     <a href="https://www.facebook.com/AStA.HSRM.Wi/" target="_blank" class="fa fa-facebook mx-2"></a>
                     <a href="https://www.youtube.com/channel/UCtLU1LPRCcyutwuvf9ELLkA" target="_blank" class="fa fa-youtube mx-2"></a>
                     <a href="https://www.instagram.com/asta_hsrm" target="_blank" class="fa fa-instagram mx-2"></a>
                 </div>
-                <div class="col-4 pt-1 text-end text-sm">
+                <div class="col-12 col-lg-4 pt-1 text-center text-lg-end text-sm mt-2">
                     <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/impressum" th:text="#{footer.contact}"></a> |
                     <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/datenschutz" th:text="#{footer.data}"></a> |
                     <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/asta/buero/" th:text="#{footer.office}"></a>
