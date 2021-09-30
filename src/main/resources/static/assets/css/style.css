@@ -63,13 +63,23 @@ footer {
   border-radius: 50%;
   background: white;
   color: #6C757D;
-  -webkit-transition: color .15s ease-in-out, background-color .15s;
-  transition: color .15s ease-in-out, background-color .15s;
+  -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out;
 }
 
 .fa:hover {
   color: white;
   background: #BE1E2D;
+}
+
+.card-body {
+  padding: 1rem 0 0 1rem;
+  -webkit-transition: background-color .15s ease-in-out;
+  transition: background-color .15s ease-in-out;
+}
+
+.card-body:hover {
+  background: #f7f7f7;
 }
 
 .custom-btn-w {
@@ -84,5 +94,11 @@ footer {
 
 .text-sm {
   font-size: small;
+}
+
+.thumbnail-profile-img {
+  width: 3.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 /*# sourceMappingURL=style.css.map */

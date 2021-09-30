@@ -54,12 +54,21 @@ footer {
     border-radius: 50%;
     background: white;
     color: $text-color-secondary;
-    transition: color .15s ease-in-out, background-color .15s;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out;
 }
 
 .fa:hover {
     color: white;
     background: $color-primary;
+}
+
+.card-body {
+    padding: 1rem 0 0 1rem;
+    transition: background-color .15s ease-in-out;
+}
+
+.card-body:hover {
+    background: hsl(0, 0%, 97%);
 }
 
 .custom-btn-w {
@@ -74,4 +83,10 @@ footer {
 
 .text-sm {
     font-size: small;
+}
+
+.thumbnail-profile-img {
+    width: 3.5rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, .125);
 }
