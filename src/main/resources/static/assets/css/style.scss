@@ -1,4 +1,5 @@
 $color-primary:#BE1E2D;
+$color-primary-hover:#ED1C24;
 $text-color-secondary: #6C757D;
 * {
     font-family: 'Roboto';
@@ -14,6 +15,32 @@ main {
     flex: 1;
 }
 
+.btn-gremium {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+    background-color: $color-primary;
+    border-color: transparent;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn-gremium:hover {
+    background-color: $color-primary-hover;
+    border-color: $color-primary;
+    color: white;
+}
+
 footer {
     flex-shrink: 0;
 }
@@ -27,6 +54,7 @@ footer {
     border-radius: 50%;
     background: white;
     color: $text-color-secondary;
+    transition: color .15s ease-in-out, background-color .15s;
 }
 
 .fa:hover {

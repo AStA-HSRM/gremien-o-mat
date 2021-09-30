@@ -65,14 +65,14 @@
             <th:block th:each="gremium : ${gremien}">
                 <div class="row justify-content-md-center mb-3" th:if="${gremien.size()} gt 0">
                     <div class="col-12 text-center">
-                        <a class="btn btn-primary custom-btn-w" th:href=@{/__${gremium.abbr}__} th:text="${gremium.name}"></a>
+                        <a class="btn btn-outline-primary bg-color-primary custom-btn-w" th:href=@{/__${gremium.abbr}__} th:text="${gremium.name}"></a>
                     </div>
                 </div>
             </th:block>
             <div class="row justify-content-md-center mt-3" th:if="${fsr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle custom-btn-w" type="button" id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fsr}">
+                        <button class="btn btn-outline-primary dropdown-toggle custom-btn-w" type="button" id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fsr}">
                     </button>
                         <ul class="dropdown-menu custom-btn-w" aria-labelledby="fsrDropdownMenuButton">
                             <th:block th:each="gremium : ${fsr}">
@@ -87,7 +87,7 @@
             <div class="row justify-content-md-center mt-3 mb-3" th:if="${fbr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle custom-btn-w" type="button" id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fbr}">
+                        <button class="btn btn-outline-primary dropdown-toggle custom-btn-w" type="button" id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fbr}">
                     </button>
                         <ul class="dropdown-menu custom-btn-w" aria-labelledby="fbrDropdownMenuButton">
                             <th:block th:each="gremium : ${fbr}">
