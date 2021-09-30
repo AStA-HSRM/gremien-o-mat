@@ -1,7 +1,49 @@
+$color-primary:#BE1E2D;
+$text-color-secondary: #6C757D;
 * {
     font-family: 'Roboto';
 }
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+.fa {
+    padding: 1vh;
+    font-size: 1rem;
+    width: 2.2rem;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+    background: white;
+    color: $text-color-secondary;
+}
+
+.fa:hover {
+    color: white;
+    background: $color-primary;
+}
+
 .custom-btn-w {
     width: 15rem;
+}
+
+.disclaimer {
+    font-size: small;
+    font-weight: lighter;
+    font-style: italic;
+}
+
+.text-sm {
+    font-size: small;
 }
