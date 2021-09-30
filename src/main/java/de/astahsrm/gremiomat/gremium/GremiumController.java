@@ -1,6 +1,8 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,12 +27,11 @@ import de.astahsrm.gremiomat.query.QueryFormSimple;
 import de.astahsrm.gremiomat.query.QueryService;
 
 @Controller
-@RequestMapping("/gremien")
+@RequestMapping("/")
 @SessionAttributes("userAnswers")
 public class GremiumController {
 
     private static final String USER_ANSWERS = "userAnswers";
-    private static final String REDIRECT_GREMIEN = "redirect:/gremien/";
 
     @Autowired
     private GremiumService gremiumService;
@@ -44,8 +45,24 @@ public class GremiumController {
 
     @GetMapping
     public String getGremien(Model m) {
-        m.addAttribute("gremien", gremiumService.getAllGremiumsSortedByName());
-        return "gremien/overview";
+        List<Gremium> fsrGremien = new ArrayList<>();
+        List<Gremium> fbrGremien = new ArrayList<>();
+        List<Gremium> gremien = new ArrayList<>();
+        for (Gremium gremium : gremiumService.getAllGremiumsSortedByName()) {
+            if(gremium.getAbbr().contains("fbr")) {
+                fbrGremien.add(gremium);
+            }
+            else if(gremium.getAbbr().contains("fsr")) {
+                fsrGremien.add(gremium);
+            }
+            else {
+                gremien.add(gremium);
+            }
+        }
+        m.addAttribute("gremien", gremien);
+        m.addAttribute("fsr", fsrGremien);
+        m.addAttribute("fbr", fbrGremien);
+        return "home";
     }
 
     @GetMapping("/{abbr}")
@@ -88,7 +105,7 @@ public class GremiumController {
             if (gremium.getContainedQueries().size() > queryIndex) {
                 userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
-                return REDIRECT_GREMIEN + abbr + "/queries/" + Integer.toString(queryIndex + 1);
+                return "redirect:/" + abbr + "/queries/" + Integer.toString(queryIndex + 1);
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
@@ -104,7 +121,7 @@ public class GremiumController {
             if (gremium.getContainedQueries().size() > queryIndex) {
                 userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
-                return REDIRECT_GREMIEN + abbr + "/queries/" + Integer.toString(queryIndex - 1);
+                return "redirect:/" + abbr + "/queries/" + Integer.toString(queryIndex - 1);
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
@@ -120,7 +137,7 @@ public class GremiumController {
             if (gremium.getContainedQueries().size() > queryIndex) {
                 userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
-                return REDIRECT_GREMIEN + abbr + "/queries/results";
+                return "redirect:/" + abbr + "/queries/results";
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
@@ -166,7 +183,7 @@ public class GremiumController {
     @PostMapping("/{abbr}/results")
     public String getResults(SessionStatus status) {
         status.setComplete();
-        return "redirect:/gremien";
+        return "redirect:/";
     }
 
 }

@@ -43,14 +43,43 @@
                 <p th:text="#{home.disclaimer}"></p>
             </div>
         </div>
-        <div class="row justify-content-md-center mt-4">
+        <th:block th:each="gremium : ${gremien}">
+            <div class="row justify-content-md-center mt-3" th:if="${gremien.size()} gt 0">
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary custom-btn-w" th:href=@{/__${gremium.abbr}__} th:text="${gremium.name}"></a>
+                </div>
+            </div>
+        </th:block>
+        <div class="row justify-content-md-center mt-3" th:if="${fsr.size()} gt 0">
             <div class="col-12 text-center">
-                <a class="btn btn-primary" th:href=@{/gremien} th:text="#{btn.gremien}"></a>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle custom-btn-w" type="button" id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                      Fachschaftsräte
+                    </button>
+                    <ul class="dropdown-menu custom-btn-w" aria-labelledby="fsrDropdownMenuButton">
+                        <th:block th:each="gremium : ${fsr}">
+                            <li><a class="dropdown-item" th:href="@{/__${gremium.abbr}__}" th:text="${gremium.name}"></a></li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-center mt-3" th:if="${fbr.size()} gt 0">
+            <div class="col-12 text-center">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle custom-btn-w" type="button" id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Fachbereichsräte
+                    </button>
+                    <ul class="dropdown-menu custom-btn-w" aria-labelledby="fbrDropdownMenuButton">
+                        <th:block th:each="gremium : ${fbr}">
+                            <li><a class="dropdown-item" th:href="@{/__${gremium.abbr}__}" th:text="${gremium.name}"></a></li>
+                        </th:block>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 </body>
 
 </html>
