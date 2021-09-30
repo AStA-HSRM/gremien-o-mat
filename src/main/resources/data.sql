@@ -1,5 +1,11 @@
 INSERT INTO gremium (version, name, abbr, description) VALUES
   (0, 'Das Test Gremium', 'dtg', 'Das erste Test Gremium der Welt!'),
+  (0, 'Fachschaftsrat ING', 'fsr-ing', 'Dies ist ein Fachschaftsrat.'),
+  (0, 'Fachbereichssrat ING', 'fbr-ing', 'Dies ist ein Fachbereichssrat.'),
+  (0, 'Fachschaftsrat UDE', 'fsr-ude', 'Dies ist ein Fachschaftsrat.'),
+  (0, 'Fachbereichssrat UDE', 'fbr-ude', 'Dies ist ein Fachbereichssrat.'),
+  (0, 'Fachschaftsrat B', 'fsr-b', 'Dies ist ein Fachschaftsrat.'),
+  (0, 'Fachbereichssrat B', 'fbr-b', 'Dies ist ein Fachbereichssrat.'),
   (0, 'CSV Query Upload Test','cqut', 'Ein Gremium zum Testen der Query-CSV Upload Funktionen.');
 
 INSERT INTO query (id, version, text) VALUES
