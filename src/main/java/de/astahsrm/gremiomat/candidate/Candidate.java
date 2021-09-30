@@ -65,7 +65,6 @@ public class Candidate {
         this.lastname = "";
         this.email = "";
         this.bio = "";
-        this.photo = new Photo();
         this.answers = new ArrayList<>();
         this.gremien = new ArrayList<>();
     }

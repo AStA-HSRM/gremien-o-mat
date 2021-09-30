@@ -16,7 +16,7 @@
 
 <body>
     <div class="profile-img-container">
-        <img class="profile-img" th:src="${photoId} ? @{/api/v1/photo/__${photoId}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" />
+        <img class="profile-img" th:src="${candidate.getPhoto() != null} ? @{/api/v1/photo/__${candidate.id}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" />
     </div>
     <div>
         <p th:text="|Name: ${candidate.firstname} ${candidate.lastname}|"></p>

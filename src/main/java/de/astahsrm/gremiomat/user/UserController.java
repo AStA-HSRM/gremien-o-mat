@@ -78,9 +78,7 @@ public class UserController {
         form.setSemester(userDetails.getSemester());
         form.setBio(userDetails.getBio());
         m.addAttribute("form", form);
-        if (userDetails.getPhoto() != null) {
-            m.addAttribute("photoId", userDetails.getPhoto().getId());
-        }
+        m.addAttribute("candidate", userDetails);
         return "user/user-info-edit";
     }
 
