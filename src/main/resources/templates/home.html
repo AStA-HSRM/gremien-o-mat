@@ -22,7 +22,7 @@
         <div class="container py-4 px-4">
             <div class="row mb-5">
                 <!-- Breadcrumbs -->
-                <div class="col-6">
+                <div class="col-10">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active" aria-current="page" th:text="#{nav.home}"></li>
@@ -30,7 +30,7 @@
                     </nav>
                 </div>
                 <!-- Login Button -->
-                <div class="col-6 text-end">
+                <div class="col-2 text-end">
                     <a class="btn btn-outline-secondary btn-sm" th:href=@{/login} th:text="#{login}"></a>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                 </div>
             </th:block>
             <!-- FSR Dropdown Button -->
-            <div class="row justify-content-md-center mt-3" th:if="${fsr.size()} gt 0">
+            <div class="row justify-content-center mt-3" th:if="${fsr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle custom-btn-w" type="button" id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fsr}">
@@ -92,7 +92,7 @@
                 </div>
             </div>
             <!-- FBR Dropdown Button -->
-            <div class="row justify-content-md-center mt-3 mb-3" th:if="${fbr.size()} gt 0">
+            <div class="row justify-content-center mt-3 mb-3" th:if="${fbr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle custom-btn-w" type="button" id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{btn.fbr}">
