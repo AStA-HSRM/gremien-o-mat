@@ -3,12 +3,19 @@ $color-primary-hover:#ED1C24;
 $text-color-secondary: #6C757D;
 * {
     font-family: 'Roboto';
+    scrollbar-width: thin;
 }
 
 body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    background-image: url(../img/LogoBW.svg);
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    background-size: 40em;
+    background-position: left 10% top 50%;
+    z-index: -1;
 }
 
 main {
@@ -62,12 +69,11 @@ footer {
     background: $color-primary;
 }
 
-.candidate-card-padding{
+.candidate-card-padding {
     .card-body {
         transition: background-color .15s ease-in-out;
         padding: 1rem 0 0 1rem;
     }
-    
     .card-body:hover {
         background: hsl(0, 0%, 97%);
     }

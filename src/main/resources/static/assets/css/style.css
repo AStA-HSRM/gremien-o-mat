@@ -1,5 +1,6 @@
 * {
   font-family: 'Roboto';
+  scrollbar-width: thin;
 }
 
 body {
@@ -11,6 +12,12 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  background-image: url(../img/LogoBW.svg);
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  background-size: 40em;
+  background-position: left 10% top 50%;
+  z-index: -1;
 }
 
 main {
