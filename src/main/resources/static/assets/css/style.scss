@@ -62,13 +62,15 @@ footer {
     background: $color-primary;
 }
 
-.card-body {
-    padding: 1rem 0 0 1rem;
-    transition: background-color .15s ease-in-out;
-}
-
-.card-body:hover {
-    background: hsl(0, 0%, 97%);
+.candidate-card-padding{
+    .card-body {
+        transition: background-color .15s ease-in-out;
+        padding: 1rem 0 0 1rem;
+    }
+    
+    .card-body:hover {
+        background: hsl(0, 0%, 97%);
+    }
 }
 
 .custom-btn-w {
@@ -81,8 +83,18 @@ footer {
     font-style: italic;
 }
 
+.profile-img {
+    width: 13rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, .125);
+}
+
 .text-sm {
     font-size: small;
+}
+
+.text-align-justify {
+    text-align: justify;
 }
 
 .thumbnail-profile-img {

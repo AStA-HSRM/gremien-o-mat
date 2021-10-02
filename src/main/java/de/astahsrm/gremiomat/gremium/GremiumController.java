@@ -21,6 +21,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryFormSimple;
@@ -49,13 +50,11 @@ public class GremiumController {
         List<Gremium> fbrGremien = new ArrayList<>();
         List<Gremium> gremien = new ArrayList<>();
         for (Gremium gremium : gremiumService.getAllGremiumsSortedByName()) {
-            if(gremium.getAbbr().contains("fbr")) {
+            if (gremium.getAbbr().contains("fbr")) {
                 fbrGremien.add(gremium);
-            }
-            else if(gremium.getAbbr().contains("fsr")) {
+            } else if (gremium.getAbbr().contains("fsr")) {
                 fsrGremien.add(gremium);
-            }
-            else {
+            } else {
                 gremien.add(gremium);
             }
         }
@@ -186,4 +185,20 @@ public class GremiumController {
         return "redirect:/";
     }
 
+    @GetMapping("/{abbr}/candidates/{id}")
+    public String getCandidate(@PathVariable String abbr, @PathVariable long id, Model m) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            for (Candidate c : gremium.getJoinedCandidates()) {
+                if (c.getId() == id) {
+                    m.addAttribute("candidate", c);
+                    m.addAttribute("gremium", gremium);
+                    return "gremien/candidate";
+                }
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateService.CANDIDATE_NOT_FOUND);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+    }
 }

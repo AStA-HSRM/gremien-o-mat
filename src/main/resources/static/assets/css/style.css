@@ -72,13 +72,13 @@ footer {
   background: #BE1E2D;
 }
 
-.card-body {
-  padding: 1rem 0 0 1rem;
+.candidate-card-padding .card-body {
   -webkit-transition: background-color .15s ease-in-out;
   transition: background-color .15s ease-in-out;
+  padding: 1rem 0 0 1rem;
 }
 
-.card-body:hover {
+.candidate-card-padding .card-body:hover {
   background: #f7f7f7;
 }
 
@@ -92,8 +92,18 @@ footer {
   font-style: italic;
 }
 
+.profile-img {
+  width: 13rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
 .text-sm {
   font-size: small;
+}
+
+.text-align-justify {
+  text-align: justify;
 }
 
 .thumbnail-profile-img {
