@@ -26,39 +26,37 @@ main {
           flex: 1;
 }
 
-.btn-gremium {
-  display: inline-block;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #fff;
-  background-color: #BE1E2D;
-  border-color: transparent;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-      user-select: none;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  border-radius: .25rem;
-  -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-}
-
-.btn-gremium:hover {
-  background-color: #ED1C24;
-  border-color: #BE1E2D;
-  color: white;
-}
-
 footer {
   -ms-flex-negative: 0;
       flex-shrink: 0;
+}
+
+.bg-query {
+  background-color: #eeeeee;
+}
+
+.candidate-card-padding .card-body {
+  -webkit-transition: background-color .15s ease-in-out;
+  transition: background-color .15s ease-in-out;
+  padding: 1rem 0 0 1rem;
+}
+
+.candidate-card-padding .card-body:hover {
+  background: #f7f7f7;
+}
+
+.custom-btn-w {
+  width: 15rem;
+}
+
+.custom-btn-sm-w {
+  width: 10rem;
+}
+
+.disclaimer {
+  font-size: small;
+  font-weight: lighter;
+  font-style: italic;
 }
 
 .fa {
@@ -76,27 +74,7 @@ footer {
 
 .fa:hover {
   color: white;
-  background: #BE1E2D;
-}
-
-.candidate-card-padding .card-body {
-  -webkit-transition: background-color .15s ease-in-out;
-  transition: background-color .15s ease-in-out;
-  padding: 1rem 0 0 1rem;
-}
-
-.candidate-card-padding .card-body:hover {
-  background: #f7f7f7;
-}
-
-.custom-btn-w {
-  width: 15rem;
-}
-
-.disclaimer {
-  font-size: small;
-  font-weight: lighter;
-  font-style: italic;
+  background: #ED1C24;
 }
 
 .profile-img {

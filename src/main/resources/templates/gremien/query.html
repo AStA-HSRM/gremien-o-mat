@@ -1,39 +1,109 @@
 <!DOCTYPE html>
 
-<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#ffffff">
     <meta content="text/html; charset=utf-8" />
-    <title th:text="#{title} + ' | ' + #{org}"></title>
-    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto" type="text/css" />
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}" type="text/css" />
+    <link rel="icon" th:href="@{/assets/img/Logo.svg}">
+    <link rel="mask-icon" th:href="@{/assets/img/Logo.svg}" color="#000000">
+    <title th:text="|${gremium.abbr.toUpperCase()} · #{title}|"></title>
 </head>
 
 <body>
-    <h2 th:text="${query.text}"></h2>
-    <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/__${queryIndex}__}" th:object="${queryForm}">
-        <input type="radio" id="ok" th:field="*{opinion}" value="1" />
-        <label for="ok">Stimme zu</label><br />
-        <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
-        <label for="neutral">Neutral</label><br />
-        <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
-        <label for="not-ok">Stimme nicht zu</label>
-        <br />
-        <br />
-        <button th:if="${queryIndex} gt 0 and ${queryIndex-1} ge 0" type="submit" name="prev-query">
-        Vorherige Frage
-      </button>
-        <button th:if="${isQueriesAnswered}" type="submit" name="results">
-      Zum Ergebnis
-      </button>
-        <button th:if="${queryIndex} lt ${queryListSize} and ${queryIndex+1} lt ${queryListSize}" type="submit" name="next-query">
-        Nächste Frage
-      </button>
-    </form>
+    <!-- Main Content -->
+    <main>
+        <!-- Breadcrumbs -->
+        <div class="container py-4 px-5 mb-5">
+            <div class="row pb-5">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a class="text-decoration-none" th:href="@{/}" th:text="#{nav.home}"></a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a class="text-decoration-none" th:href="@{/__${gremium.abbr}__}" th:text="${gremium.name}"></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:text="#{nav.queries}"></li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="bg-light rounded border mx-5 mt-5 query-text">
+                <div class="row pt-5 pb-5 justify-content-center">
+                    <div class="col-12 col-lg-8 text-center">
+                        <h2 th:text="${query.text}"></h2>
+                    </div>
+                </div>
+                <!-- Answer Buttons -->
+                <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/__${queryIndex}__}" th:object="${queryForm}">
+                    <div class="row justify-content-sm-center pb-5">
+                        <div class="col-12 col-lg-3 text-center text-lg-end my-1">
+                            <input th:field="*{opinion}" type="radio" class="btn-check" id="ok" autocomplete="off" value="1">
+                            <label class="btn btn-outline-primary custom-btn-w" for="ok" th:text="#{answer.agree}"></label>
+                        </div>
+                        <div class="col-12 col-lg-3 text-center my-1">
+                            <input th:field="*{opinion}" type="radio" class="btn-check" id="neutral" autocomplete="off" value="0">
+                            <label class="btn btn-outline-primary custom-btn-w" for="neutral" th:text="#{answer.neutral}"></label>
+                        </div>
+                        <div class="col-12 col-lg-3 col text-center text-lg-start my-1">
+                            <input th:field="*{opinion}" type="radio" class="btn-check" id="not-ok" autocomplete="off" value="-1">
+                            <label class="btn btn-outline-primary custom-btn-w" for="not-ok" th:text="#{answer.disagree}"></label>
+                        </div>
+                    </div>
+            </div>
+            <div class="row justify-content-center pt-5">
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-outline-secondary custom-btn-sm-w" th:disabled="${queryIndex-1} lt 0" name="prev-query">
+                        Vorherige Frage
+                      </button>
+                    <button type="submit" class="btn btn-success custom-btn-sm-w" th:disabled="${!isQueriesAnswered}" name="results">
+                      Zum Ergebnis
+                      </button>
+                    <button type="submit" class="btn btn-outline-secondary custom-btn-sm-w" th:disabled="${queryIndex+1} ge ${queryListSize}" name="next-query">
+                        Nächste Frage
+                      </button>
+                </div>
+                </form>
+            </div>
+
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-light mt-4">
+        <div class="container">
+            <div class="row text-secondary pt-4 pb-2">
+                <!-- Link to AStA page -->
+                <div class="col-12 col-lg-4 pt-1 text-center text-lg-start text-sm mt-2">
+                    <a class="text-decoration-none text-secondary" href="https://www.asta-hsrm.de/" th:text="#{org}"></a>
+                </div>
+                <!-- Link to socials -->
+                <div class="col-12 col-lg-4 text-center py-2">
+                    <a href="https://twitter.com/asta_hsrm" target="_blank" class="fa fa-twitter mx-2"></a>
+                    <a href="https://www.facebook.com/AStA.HSRM.Wi/" target="_blank" class="fa fa-facebook mx-2"></a>
+                    <a href="https://www.youtube.com/channel/UCtLU1LPRCcyutwuvf9ELLkA" target="_blank" class="fa fa-youtube mx-2"></a>
+                    <a href="https://www.instagram.com/asta_hsrm" target="_blank" class="fa fa-instagram mx-2"></a>
+                </div>
+                <!-- Link to legal stuff -->
+                <div class="col-12 col-lg-4 pt-1 text-center text-lg-end text-sm mt-2">
+                    <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/impressum" th:text="#{footer.contact}"></a> |
+                    <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/datenschutz" th:text="#{footer.data}"></a> |
+                    <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/asta/buero/" th:text="#{footer.office}"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
 </html>
