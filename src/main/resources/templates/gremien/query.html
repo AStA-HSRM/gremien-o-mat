@@ -1,69 +1,39 @@
 <!DOCTYPE html>
 
-<html
-  lang="de"
-  xml:lang="de"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:th="http://www.thymeleaf.org"
->
-  <head>
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      th:href="@{/assets/favicon/favicon.ico}"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/favicon/favicon.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta content="text/html; charset=utf-8" />
     <title th:text="#{title} + ' | ' + #{org}"></title>
     <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Poppins"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Kumbh+Sans"
-    />
-  </head>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Poppins" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Kumbh+Sans" />
+</head>
 
-  <body>
+<body>
     <h2 th:text="${query.text}"></h2>
-    <form th:method="POST" th:action="@{/gremien/__${queryIndex}__}" th:object="${queryForm}">
-      <input type="radio" id="ok" th:field="*{opinion}" value="1" />
-      <label for="ok">Stimme zu</label><br />
-      <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
-      <label for="neutral">Neutral</label><br />
-      <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
-      <label for="not-ok">Stimme nicht zu</label>
-      <br />
-      <br />
-      <button
-        th:if="${queryIndex} gt 0 and ${queryIndex-1} ge 0"
-        type="submit"
-        name="prev-query"
-      >
+    <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/__${queryIndex}__}" th:object="${queryForm}">
+        <input type="radio" id="ok" th:field="*{opinion}" value="1" />
+        <label for="ok">Stimme zu</label><br />
+        <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
+        <label for="neutral">Neutral</label><br />
+        <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
+        <label for="not-ok">Stimme nicht zu</label>
+        <br />
+        <br />
+        <button th:if="${queryIndex} gt 0 and ${queryIndex-1} ge 0" type="submit" name="prev-query">
         Vorherige Frage
       </button>
-      <button
-      th:if="${isQueriesAnswered}"
-      type="submit"
-      name="results"
-    >
+        <button th:if="${isQueriesAnswered}" type="submit" name="results">
       Zum Ergebnis
       </button>
-      <button
-        th:if="${queryIndex} lt ${queryListSize} and ${queryIndex+1} lt ${queryListSize}"
-        type="submit"
-        name="next-query"
-      >
+        <button th:if="${queryIndex} lt ${queryListSize} and ${queryIndex+1} lt ${queryListSize}" type="submit" name="next-query">
         Nächste Frage
       </button>
     </form>
-  </body>
+</body>
+
 </html>
