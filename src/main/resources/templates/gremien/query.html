@@ -65,7 +65,7 @@
                     <button type="submit" class="btn btn-outline-secondary custom-btn-sm-w" th:disabled="${queryIndex-1} lt 0" name="prev-query">
                         Vorherige Frage
                       </button>
-                    <button type="submit" class="btn btn-success custom-btn-sm-w" th:disabled="${!isQueriesAnswered}" name="results">
+                    <button type="submit" class="btn btn-outline-success custom-btn-sm-w" th:disabled="${!isQueriesAnswered}" name="results">
                       Zum Ergebnis
                       </button>
                     <button type="submit" class="btn btn-outline-secondary custom-btn-sm-w" th:disabled="${queryIndex+1} ge ${queryListSize}" name="next-query">
