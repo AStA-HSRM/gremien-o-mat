@@ -48,31 +48,31 @@
                     <div class="row justify-content-sm-center pb-lg-5 pb-4">
                         <div class="col-12 col-lg-3 text-center text-lg-end my-1">
                             <input th:field="*{opinion}" type="radio" class="btn-check" id="ok" autocomplete="off" value="1">
-                            <label class="btn btn-outline-secondary custom-btn-w" for="ok" th:text="#{answer.agree}"></label>
+                            <label class="btn btn-outline-dark custom-btn-w" for="ok" th:text="#{answer.agree}"></label>
                         </div>
                         <div class="col-12 col-lg-3 text-center my-1">
                             <input th:field="*{opinion}" type="radio" class="btn-check" id="neutral" autocomplete="off" value="0">
-                            <label class="btn btn-outline-secondary custom-btn-w" for="neutral" th:text="#{answer.neutral}"></label>
+                            <label class="btn btn-outline-dark custom-btn-w" for="neutral" th:text="#{answer.neutral}"></label>
                         </div>
                         <div class="col-12 col-lg-3 col text-center text-lg-start my-1">
                             <input th:field="*{opinion}" type="radio" class="btn-check" id="not-ok" autocomplete="off" value="-1">
-                            <label class="btn btn-outline-secondary custom-btn-w" for="not-ok" th:text="#{answer.disagree}"></label>
+                            <label class="btn btn-outline-dark custom-btn-w" for="not-ok" th:text="#{answer.disagree}"></label>
                         </div>
                     </div>
             </div>
             <div class="row justify-content-center pt-4 pt-lg-3">
                 <div class="col-6 col-lg-2 text-end my-2">
-                    <button type="submit" class="btn btn-outline-danger custom-btn-sm-w" th:disabled="${queryIndex-1} lt 0" name="prev-query">
+                    <button type="submit" class="btn btn-outline-secondary custom-btn-sm-w" th:disabled="${queryIndex-1} lt 0" name="prev-query">
                         Vorherige Frage
                       </button>
                 </div>
                 <div class="col-6 col-lg-2 col text-start my-2">
-                    <button type="submit" class="btn btn-outline-danger custom-btn-sm-w" th:disabled="${queryIndex+1} ge ${queryListSize}" name="next-query">
+                    <button type="submit" class="btn btn-outline-secondary custom-btn-sm-w" th:disabled="${queryIndex+1} ge ${queryListSize}" name="next-query">
                         Nächste Frage
                       </button>
                 </div>
                 <div class="col-12 text-center my-2">
-                    <button type="submit" class="btn btn-outline-success custom-btn-sm-w" th:disabled="${!isQueriesAnswered}" name="results">
+                    <button type="submit" class="btn btn-danger custom-btn-sm-w" th:disabled="${!isQueriesAnswered}" name="results">
                       Zum Ergebnis
                       </button>
                 </div>
