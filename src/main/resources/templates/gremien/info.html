@@ -26,7 +26,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a class="text-decoration-none" th:href="@{/}" th:text="#{nav.home}"></a>
+                                <a class="text-decoration-none link-danger" th:href="@{/}" th:text="#{nav.home}"></a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page" th:text="${gremium.name}"></li>
                         </ol>
@@ -47,7 +47,7 @@
             <!-- Queries Button -->
             <div class="row justify-content-center mb-4">
                 <div class="col-12 text-center">
-                    <a class="btn btn-primary bg-color-primary custom-btn-w" th:href="@{/__${gremium.abbr}__/queries/0}" th:text="#{btn.queries}"></a>
+                    <a class="btn btn-danger bg-color-danger custom-btn-w" th:href="@{/__${gremium.abbr}__/queries/0}" th:text="#{btn.queries}"></a>
                 </div>
             </div>
             <!-- Candidate Heading -->
@@ -61,13 +61,13 @@
                 <div class="row justify-content-center mb-2">
                     <div class="col-lg-4 col-12">
                         <a class="text-decoration-none text-black" th:href="@{/__${gremium.abbr}__/candidates/__${c.id}__}">
-                            <div class="card candidate-card-padding">
+                            <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-2">
+                                        <div class="col-12 col-lg-2 text-center text-lg-start">
                                             <img class="thumbnail-profile-img" th:src="${c.getPhoto() != null} ? @{/api/v1/photo/__${c.id}__} : @{/assets/img/placeholder.jpg}" alt="Profile picture" />
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-12 col-lg-10 text-center text-lg-start">
                                             <p class="pt-2">
                                                 <span class="card-text text-" th:text="${c.age le 0} ? |${c.firstname} ${c.lastname}| : |${c.firstname} ${c.lastname}, ${c.age}|"></span><br />
                                                 <span class="text-secondary" th:text="${c.semester le 0 || c.course eq ''} ? #{candidate.student} : |${c.semester}. Semester, ${c.course}|"></span>
