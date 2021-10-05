@@ -171,18 +171,13 @@ public class GremiumController {
                     }
                 }
                 percentage = (answersInCommon / userAnswers.size()) * 100;
-                compatibility.put(candidate, percentage);
+                compatibility.put(candidate, Math.round(percentage * 100.0) / 100.0);
+                m.addAttribute("gremium", gremium);
             }
             m.addAttribute("comp", compatibility);
             return "gremien/results";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
-    }
-
-    @PostMapping("/{abbr}/results")
-    public String getResults(SessionStatus status) {
-        status.setComplete();
-        return "redirect:/";
     }
 
     @GetMapping("/{abbr}/candidates/{id}")

@@ -27,18 +27,16 @@ footer {
     flex-shrink: 0;
 }
 
+.bar {
+    height: 0.5em;
+}
+
 .bg-query {
     background-color: $color-query-bg;
 }
 
-.candidate-card-padding {
-    .card-body {
-        transition: background-color .15s ease-in-out;
-        padding: 1rem 0 0 1rem;
-    }
-    .card-body:hover {
-        background: hsl(0, 0%, 97%);
-    }
+.card-body:hover {
+    background: hsl(0, 0%, 97%);
 }
 
 .custom-btn-w {

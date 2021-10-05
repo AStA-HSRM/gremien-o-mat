@@ -31,17 +31,15 @@ footer {
       flex-shrink: 0;
 }
 
+.bar {
+  height: 0.5em;
+}
+
 .bg-query {
   background-color: #eeeeee;
 }
 
-.candidate-card-padding .card-body {
-  -webkit-transition: background-color .15s ease-in-out;
-  transition: background-color .15s ease-in-out;
-  padding: 1rem 0 0 1rem;
-}
-
-.candidate-card-padding .card-body:hover {
+.card-body:hover {
   background: #f7f7f7;
 }
 
