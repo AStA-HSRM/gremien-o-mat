@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
@@ -31,7 +32,13 @@ import de.astahsrm.gremiomat.query.QueryService;
 @SessionAttributes("userAnswers")
 public class GremiumController {
 
+    enum QueryNav {
+        NEXT, RESULTS, PREV, SKIP
+    }
+
     private static final String USER_ANSWERS = "userAnswers";
+
+    private static final String GREMIUM = "gremium";
 
     @Autowired
     private GremiumService gremiumService;
@@ -67,7 +74,7 @@ public class GremiumController {
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
-            m.addAttribute("gremium", gremiumOptional.get());
+            m.addAttribute(GREMIUM, gremiumOptional.get());
             return "gremien/info";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
@@ -80,11 +87,24 @@ public class GremiumController {
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             if (gremium.getContainedQueries().size() > queryIndex) {
-                m.addAttribute("gremium", gremium);
+                QueryFormSimple form = new QueryFormSimple();
+                Query query = gremium.getContainedQueries().get(queryIndex);
+                if (userAnswers.size() > 0) {
+                    for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
+                        if (entry.getKey().equals(query)) {
+                            form.setOpinion(entry.getValue());
+                            break;
+                        }
+                    }
+                }
+                if (form.getOpinion() == 0) {
+                    form.setOpinion(42);
+                }
+                m.addAttribute(GREMIUM, gremium);
                 m.addAttribute("queryListSize", gremium.getContainedQueries().size());
-                m.addAttribute("query", gremium.getContainedQueries().get(queryIndex));
+                m.addAttribute("query", query);
                 m.addAttribute("queryIndex", queryIndex);
-                m.addAttribute("queryForm", new QueryFormSimple());
+                m.addAttribute("queryForm", form);
                 m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size()
                         || queryIndex == gremium.getContainedQueries().size() - 1);
                 return "gremien/query";
@@ -94,52 +114,59 @@ public class GremiumController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "next-query")
-    public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
+            Model m, QueryFormSimple form) {
+        String redirect = "redirect:/" + abbr + "/queries/";
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            if (gremium.getContainedQueries().size() > queryIndex) {
-                userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
+            if (gremium.getContainedQueries().size() > queryIndex && queryIndex >= 0) {
+                Query q = gremium.getContainedQueries().get(queryIndex);
+                if (nav == QueryNav.SKIP) {
+                    userAnswers.put(q, 42);
+                    m.addAttribute(USER_ANSWERS, userAnswers);
+                    return redirect + Integer.toString(queryIndex + 1);
+                }
+                userAnswers.put(q, form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
-                return "redirect:/" + abbr + "/queries/" + Integer.toString(queryIndex + 1);
+                switch (nav) {
+                    case NEXT:
+                        return redirect + Integer.toString(queryIndex + 1);
+                    case PREV:
+                        return redirect + Integer.toString(queryIndex - 1);
+                    case RESULTS:
+                        return redirect + "results";
+                    default:
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                }
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "prev-query")
+    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "next")
+    public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
+            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+        return handleQueryNav(QueryNav.NEXT, userAnswers, abbr, queryIndex, m, form);
+    }
+
+    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "prev")
     public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
             @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            if (gremium.getContainedQueries().size() > queryIndex) {
-                userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
-                m.addAttribute(USER_ANSWERS, userAnswers);
-                return "redirect:/" + abbr + "/queries/" + Integer.toString(queryIndex - 1);
-            }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+        return handleQueryNav(QueryNav.PREV, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "results")
     public String resultsPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
             @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            if (gremium.getContainedQueries().size() > queryIndex) {
-                userAnswers.put(gremium.getContainedQueries().get(queryIndex), form.getOpinion());
-                m.addAttribute(USER_ANSWERS, userAnswers);
-                return "redirect:/" + abbr + "/queries/results";
-            }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+        return handleQueryNav(QueryNav.RESULTS, userAnswers, abbr, queryIndex, m, form);
+    }
+
+    @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "skip")
+    public String skipQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
+            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+        return handleQueryNav(QueryNav.SKIP, userAnswers, abbr, queryIndex, m, form);
     }
 
     @GetMapping("/{abbr}/queries/results")
@@ -149,6 +176,7 @@ public class GremiumController {
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             HashMap<Candidate, Double> compatibility = new HashMap<>();
+            int skipped = 0;
             // Goes through every candidate in gremium
             for (Candidate candidate : gremium.getJoinedCandidates()) {
                 double percentage = 0;
@@ -171,12 +199,24 @@ public class GremiumController {
                 }
                 percentage = (answersInCommon / userAnswers.size()) * 100;
                 compatibility.put(candidate, Math.round(percentage * 100.0) / 100.0);
-                m.addAttribute("gremium", gremium);
+                m.addAttribute(GREMIUM, gremium);
+            }
+            for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
+                if(entry.getValue() == 42) {
+                    skipped++;
+                }
             }
             m.addAttribute("comp", compatibility);
+            m.addAttribute("skippedAnswers", skipped);
             return "gremien/results";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+    }
+
+    @PostMapping("/{abbr}/queries/results")
+    public String postResults(SessionStatus status) {
+        status.setComplete();
+        return "redirect:/";
     }
 
     @GetMapping("/{abbr}/candidates/{id}")
@@ -187,7 +227,7 @@ public class GremiumController {
             for (Candidate c : gremium.getJoinedCandidates()) {
                 if (c.getId() == id) {
                     m.addAttribute("candidate", c);
-                    m.addAttribute("gremium", gremium);
+                    m.addAttribute(GREMIUM, gremium);
                     return "gremien/candidate";
                 }
             }

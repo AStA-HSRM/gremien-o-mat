@@ -34,9 +34,7 @@
                             <li class="breadcrumb-item">
                                 <a class="text-decoration-none link-danger" th:href="@{/__${gremium.abbr}__/queries/0}" th:text="#{nav.queries}"></a>
                             </li>
-                            <li class="breadcrumb-item active link-danger" aria-current="page">
-                                Results
-                            </li>
+                            <li class="breadcrumb-item active link-danger" aria-current="page" th:text="#{nav.results}"></li>
                         </ol>
                     </nav>
                 </div>
@@ -44,7 +42,8 @@
             <!-- Title -->
             <div class="row mb-5 pt-2">
                 <div class="col-12 text-center">
-                    <h1>Übereinstimmung</h1>
+                    <h1 th:text="#{results.title}"></h1>
+                    <p th:text="|${skippedAnswers} #{from} ${gremium.containedQueries.size()} #{queries} #{skipped}|"></p>
                 </div>
             </div>
             <th:block th:each="c : ${gremium.joinedCandidates}">
@@ -77,7 +76,9 @@
         </div>
         <div class="row justify-content-center mb-4">
             <div class="col-12 text-center">
-                <a class="btn btn-danger bg-color-danger custom-btn-w" th:href="@{/}" th:text="#{back.home}"></a>
+                <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/results}">
+                    <button type="submit" class="btn btn-danger bg-color-danger custom-btn-w" th:text="#{back.home}"></button>
+                </form>
             </div>
         </div>
     </main>
