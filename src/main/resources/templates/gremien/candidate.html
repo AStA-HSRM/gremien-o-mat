@@ -26,10 +26,10 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a class="text-decoration-none" th:href="@{/}" th:text="#{nav.home}"></a>
+                                <a class="text-decoration-none link-danger" th:href="@{/}" th:text="#{nav.home}"></a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a class="text-decoration-none" th:href="@{/__${gremium.abbr}__}" th:text="${gremium.name}"></a>
+                                <a class="text-decoration-none link-danger" th:href="@{/__${gremium.abbr}__}" th:text="${gremium.name}"></a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page" th:text="|${candidate.firstname} ${candidate.lastname}|">
                             </li>
