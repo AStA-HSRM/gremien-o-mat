@@ -53,22 +53,7 @@ public class UserController {
     private PhotoService photoService;
 
     @GetMapping
-    public String getUserPage() {
-        return "user/user";
-    }
-
-    @GetMapping("/info")
     public String getUserInfo(Principal loggedInUser, Model m) {
-        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        if (userDetails.getPhoto() != null) {
-            m.addAttribute("photoId", userDetails.getPhoto().getId());
-        }
-        m.addAttribute("candidate", userDetails);
-        return "user/user-info";
-    }
-
-    @GetMapping("/info/edit")
-    public String getUserInfoEdit(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
         CandidateForm form = new CandidateForm();
         form.setFirstname(userDetails.getFirstname());
@@ -103,16 +88,7 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/user/info";
-    }
-
-    @GetMapping("/info/upload")
-    public String getUserInfoUpload(Principal loggedInUser, Model m) {
-        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        if (userDetails.getPhoto() != null) {
-            m.addAttribute("photoId", userDetails.getPhoto().getId());
-        }
-        return "user/user-info-upload";
+        return "redirect:/user";
     }
 
     @PostMapping("/info/upload")
@@ -134,7 +110,7 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/user/info/edit";
+        return "redirect:/user";
     }
 
     @GetMapping("/info/upload/del")
@@ -151,7 +127,7 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/user/info/edit";
+        return "redirect:/user";
     }
 
     @GetMapping("/answers")
