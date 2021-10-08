@@ -22,14 +22,9 @@
     <main>
         <div class="d-flex flex-column vh-85 justify-content-center align-items-center p-2">
             <div class="container card p-5" style="max-width: 450px;">
-                <div class="row justify-content-center">
+                <div class="row justify-content-center mb-3">
                     <div class="col-12 text-center">
                         <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100">
-                    </div>
-                </div>
-                <div class="row justify-content-center py-3">
-                    <div class="col-12 text-center">
-                        <h3 th:text="#{login}"></h3>
                     </div>
                 </div>
                 <form th:method="POST" th:action="@{/login}">
