@@ -75,7 +75,7 @@ public class GremiumController {
         return "login";
     }
 
-    //TODO Handle password resets
+    //TODO Handle password resets!
     @GetMapping("/password-reset")
     public String getReset() {
         return "redirect:/";
