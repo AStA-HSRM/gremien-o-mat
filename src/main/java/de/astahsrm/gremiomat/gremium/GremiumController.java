@@ -75,6 +75,12 @@ public class GremiumController {
         return "login";
     }
 
+    //TODO Handle password resets
+    @GetMapping("/password-reset")
+    public String getReset() {
+        return "redirect:/";
+    }
+
     @GetMapping("/{abbr}")
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
