@@ -70,6 +70,11 @@ public class GremiumController {
         return "home";
     }
 
+    @GetMapping("/login")
+    public String getLogin() {
+        return "login";
+    }
+
     @GetMapping("/{abbr}")
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
