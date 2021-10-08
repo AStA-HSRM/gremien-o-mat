@@ -23,12 +23,11 @@
         <!-- Breadcrumbs -->
         <div class="container py-4 px-4 mb-5">
             <div class="row mb-5">
-                <div class="col-6">
+                <div class="col-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a class="text-decoration-none link-danger" th:href="@{/user}"
-                                    th:text="#{nav.user}"></a>
+                                <a class="text-decoration-none link-danger" th:href="@{/}" th:text="#{nav.home}"></a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page"
                                 th:text="|${candidate.firstname} ${candidate.lastname}|">
@@ -37,7 +36,7 @@
                     </nav>
                 </div>
                 <!-- Edit Profile Button -->
-                <div class="col-6 text-end">
+                <div class="col-8 text-end">
                     <a class="btn btn-primary btn-sm my-1" data-bs-toggle="offcanvas" href="#offcanvas" role="button"
                         aria-controls="offcanvas" th:text="#{edit.profile}">
                     </a>
