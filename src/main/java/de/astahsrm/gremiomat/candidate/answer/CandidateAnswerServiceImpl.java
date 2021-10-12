@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.candidate.answer;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,11 @@ public class CandidateAnswerServiceImpl implements CandidateAnswerService {
             }
         }
         candidateAnswerRepository.delete(ca);
+    }
+
+    @Override
+    public Optional<CandidateAnswer> getAnswerById(long id) {
+        return candidateAnswerRepository.findById(id);
     }
 
 }
