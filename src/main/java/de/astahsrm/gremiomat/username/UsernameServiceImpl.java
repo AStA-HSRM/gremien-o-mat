@@ -1,10 +1,12 @@
 package de.astahsrm.gremiomat.username;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.security.MgmtUserService;
 
+@Service
 public class UsernameServiceImpl implements UsernameService {
 
     @Autowired
