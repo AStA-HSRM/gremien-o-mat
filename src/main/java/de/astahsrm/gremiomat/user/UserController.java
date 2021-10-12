@@ -2,7 +2,6 @@ package de.astahsrm.gremiomat.user;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,8 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerForm;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
-import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
-import de.astahsrm.gremiomat.query.Query;
-import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
 
@@ -37,8 +33,7 @@ import de.astahsrm.gremiomat.security.MgmtUserService;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private QueryService queryService;
+    private static final String REDIRECT_USER = "redirect:/user";
 
     @Autowired
     private CandidateService candidateService;
@@ -88,7 +83,7 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/user";
+        return REDIRECT_USER;
     }
 
     @PostMapping("/info/upload")
@@ -110,7 +105,7 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/user";
+        return REDIRECT_USER;
     }
 
     @GetMapping("/info/upload/del")
@@ -127,54 +122,28 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
-        return "redirect:/user";
+        return REDIRECT_USER;
     }
 
-    @GetMapping("/answers")
-    public String getUserAnswers(Principal loggedInUser, Model m) {
-        HashMap<Query, CandidateAnswer> queryAnswerMap = new HashMap<>();
-        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        for (Gremium g : userDetails.getGremien()) {
-            for (Query q : g.getContainedQueries()) {
-                queryAnswerMap.put(q, null);
-                for (CandidateAnswer ans : userDetails.getAnswers()) {
-                    if (ans.getQuery().equals(q)) {
-                        queryAnswerMap.put(q, ans);
-                        break;
-                    }
-                }
-            }
-        }
-        m.addAttribute("queryAnswerMap", queryAnswerMap);
-        return "user/answer-overview";
-    }
-
-    @GetMapping("answers/{queryId}/edit")
-    public String getGremiumQueryEdit(@PathVariable int queryId, Model m, Principal loggedInUser) {
-        Optional<Query> qOpt = queryService.getQueryById(queryId);
-        if (qOpt.isPresent()) {
-            Query query = qOpt.get();
+    @GetMapping("answers/{answerId}/edit")
+    public String getAnswerEdit(@PathVariable long answerId, Model m) {
+        Optional<CandidateAnswer> aOpt = candidateAnswerService.getAnswerById(answerId);
+        if (aOpt.isPresent()) {
+            CandidateAnswer ca = aOpt.get();
             CandidateAnswerForm form = new CandidateAnswerForm();
-            form.setQuery(query);
-            Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-            Optional<CandidateAnswer> ansOpt = candidateService.getCandidateAnswerByQueryTxt(query.getText(),
-                    userDetails.getId());
-            if (ansOpt.isPresent()) {
-                CandidateAnswer ans = ansOpt.get();
-                form.setAnswerId(ans.getId());
-                form.setOpinion(ans.getOpinion());
-                form.setReason(ans.getReason());
-            }
+            form.setQuery(ca.getQuery());
+            form.setAnswerId(ca.getId());
+            form.setOpinion(ca.getOpinion());
+            form.setReason(ca.getReason());
             m.addAttribute("form", form);
-            m.addAttribute("query", query);
-            m.addAttribute("role", "USER");
+            m.addAttribute("query", ca.getQuery());
             return "user/answer-edit";
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateAnswerService.ANSWER_NOT_FOUND);
     }
 
-    @PostMapping("answers/{queryId}/edit")
-    public String postGremiumAnswerEdit(@ModelAttribute CandidateAnswerForm form, @PathVariable int queryId,
+    @PostMapping("answers/{answerId}/edit")
+    public String postAnswerEdit(@ModelAttribute CandidateAnswerForm form, @PathVariable long answerId,
             BindingResult res, Principal loggedInUser, Model m) {
         if (res.hasErrors()) {
             return "user/answer-edit";
@@ -208,7 +177,7 @@ public class UserController {
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
             }
-            return "redirect:/user/answers";
+            return REDIRECT_USER;
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateService.CANDIDATE_NOT_FOUND);
         }

@@ -40,8 +40,6 @@
                     <a class="btn btn-primary btn-sm my-1" data-bs-toggle="offcanvas" href="#offcanvas" role="button"
                         aria-controls="offcanvas" th:text="#{edit.profile}">
                     </a>
-                    <a class="btn btn-primary btn-sm mx-lg-2 my-1" th:href=@{/user/answers}
-                        th:text="#{edit.answers}"></a>
                     <a class="btn btn-outline-secondary btn-sm my-1" th:href=@{/logout} th:text="#{logout}"></a>
                 </div>
             </div>
@@ -101,12 +99,20 @@
                                 <div th:id="|answer-${status.count}|" class="accordion-collapse collapse"
                                     th:attr="aria-labelledby=|query-${status.count}|" data-bs-parent="#answers">
                                     <div class="accordion-body">
-                                        <th:block th:switch="${a.opinion}">
-                                            <strong th:case="'-1'" th:text="#{answer.disagree}"></strong>
-                                            <strong th:case="'0'" th:text="#{answer.neutral}"></strong>
-                                            <strong th:case="'1'" th:text="#{answer.agree}"></strong>
-                                        </th:block>
-                                        <span th:text="|: ${a.reason}|"></span>
+                                        <div class="row">
+                                            <div class="col-auto text-start pt-2">
+                                                <th:block th:switch="${a.opinion}">
+                                                    <strong th:case="'-1'" th:text="#{answer.disagree}"></strong>
+                                                    <strong th:case="'0'" th:text="#{answer.neutral}"></strong>
+                                                    <strong th:case="'1'" th:text="#{answer.agree}"></strong>
+                                                </th:block>
+                                                <span th:text="|: ${a.reason}|"></span>
+                                            </div>
+                                            <div class="col text-center text-lg-end mt-1">
+                                                <a class="btn btn-sm btn-primary text-end" th:href="@{/user/answers/__${a.id}__/edit}" th:text="#{edit}">
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -163,8 +169,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                             th:text="#{edit.cancel}"></button>
-                        <a class="btn btn-danger" th:href=@{/user/info/upload/del}
-                            th:text="#{edit.photo.delete}"></a>
+                        <a class="btn btn-danger" th:href=@{/user/info/upload/del} th:text="#{edit.photo.delete}"></a>
                         <button type="submit" class="btn btn-primary" th:text="#{edit.photo.save}"></button>
                     </div>
                 </form>

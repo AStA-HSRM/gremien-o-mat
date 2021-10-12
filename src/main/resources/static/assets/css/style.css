@@ -84,6 +84,7 @@ footer {
 
 .after {
   background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
 }
 
 .overlay-text {
