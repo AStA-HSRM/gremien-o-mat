@@ -20,49 +20,56 @@
 <body>
     <!-- Main Content -->
     <main>
-        <div class="d-flex flex-column justify-content-center align-items-center p-2" style="height: 85vh;">
-            <div class="container card p-5" style="max-width: 750px;">
-                <div class="row justify-content-center mb-3">
-                    <div class="col-12 text-center">
-                        <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100" class="mb-4">
-                        <h3 th:text="${query.text}"></h3>
+        <div class="d-flex flex-column align-items-center p-2">
+            <div class="container card pt-3 pb-5 px-4 mt-5" style="max-width: 800px;">
+                <div class="row mt-2 mb-4">
+                    <div class="col-12 text-end">
+                        <th:block th:each="g : ${query.gremien}">
+                            <span class="badge bg-light text-secondary" th:text="${g.name}"></span>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="row my-4 justify-content-center">
+                    <div class="col-10 text-justify">
+                        <h3><span th:text="${query.text}"></span></h3>
                     </div>
                 </div>
                 <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
-                    <input type="hidden" th:field="*{answerId}" />
-                    <input type="hidden" th:field="*{query}" value="${query}" />
-                    <table>
-                        <tr>
-                            <td colspan="2">
-                                <th:block th:each="gremium : ${query.gremien}">
-                                    <span th:text="|[${gremium.abbr}]|"></span>
-                                </th:block>
-                            </td>
-                        </tr>
-                        <tr th:if="${#fields.hasErrors('opinion')}" th:each="err : ${#fields.errors('opinion')}">
-                            <td th:text="${err}" class="error"></td>
-                        </tr>
-                        <tr>
-                            <td>Opinion:</td>
-                            <td><input type="radio" id="ok" th:field="*{opinion}" value="1" />
-                                <label for="ok">Stimme zu</label><br />
-                                <input type="radio" id="neutral" th:field="*{opinion}" value="0" />
-                                <label for="neutral">Neutral</label><br />
-                                <input type="radio" id="not-ok" th:field="*{opinion}" value="-1" />
-                                <label for="not-ok">Stimme nicht zu</label>
-                            </td>
-                        </tr>
-                        <tr th:if="${#fields.hasErrors('reason')}" th:each="err : ${#fields.errors('reason')}">
-                            <td th:text="${err}" class="error"></td>
-                        </tr>
-                        <tr>
-                            <td>Reason:</td>
-                            <td><textarea th:field="*{reason}" id="reason"></textarea><br /></td>
-                        </tr>
-                        <tr>
-                            <td><button type="submit" name="save">Save</button></td>
-                        </tr>
-                    </table>
+                    <div class="row justify-content-sm-center pb-4">
+                        <div class="col-12 d-grid col-lg-3 col text-center text-lg-end my-1">
+                            <input th:field="*{opinion}" type="radio" class="btn-check" id="not-ok" autocomplete="off"
+                                value="-1">
+                            <label class="btn btn-outline-dark" for="not-ok" th:text="#{answer.disagree}"></label>
+                        </div>
+                        <div class="col-12 d-grid col-lg-3 text-center my-1">
+                            <input th:field="*{opinion}" type="radio" class="btn-check" id="neutral" autocomplete="off"
+                                value="0">
+                            <label class="btn btn-outline-dark" for="neutral" th:text="#{answer.neutral}"></label>
+                        </div>
+                        <div class="col-12 d-grid col-lg-3 text-center text-lg-start my-1">
+                            <input th:field="*{opinion}" type="radio" class="btn-check" id="ok" autocomplete="off"
+                                value="1">
+                            <label class="btn btn-outline-dark" for="ok" th:text="#{answer.agree}"></label>
+                        </div>
+                        <input th:field="*{opinion}" type="hidden" id="default" value="42">
+                        <input type="hidden" th:field="*{answerId}" />
+                        <input type="hidden" th:field="*{query}" value="${query}" />
+                    </div>
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-10">
+                            <label for="reason" class="mb-1" th:text="#{candidate.reason}"></label>
+                            <textarea th:field="*{reason}" type="text" class="form-control" id="reason"
+                                th:placeholder="#{placeholder.reason}" style="height: 12rem;"></textarea>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="d-grid col-12 col-lg-4 my-1">
+                            <a class="btn btn-secondary" th:text="#{edit.cancel}" th:href="@{/user}"></a>
+                        </div>
+                        <div class="d-grid col-12 col-lg-4 my-1">
+                            <button class="btn btn-primary" type="submit" th:text="#{edit.save}"></button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
