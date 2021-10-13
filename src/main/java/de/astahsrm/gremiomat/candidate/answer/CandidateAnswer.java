@@ -7,9 +7,10 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 
 import de.astahsrm.gremiomat.query.Query;
 
@@ -27,7 +28,8 @@ public class CandidateAnswer {
     @OneToOne
     private Query query;
 
-    @PositiveOrZero
+    @Min(-1)
+    @Max(2)
     private int opinion;
 
     @Lob

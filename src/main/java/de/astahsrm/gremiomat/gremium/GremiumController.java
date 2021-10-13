@@ -111,7 +111,7 @@ public class GremiumController {
                     }
                 }
                 if (form.getOpinion() == 0) {
-                    form.setOpinion(42);
+                    form.setOpinion(2);
                 }
                 m.addAttribute(GREMIUM, gremium);
                 m.addAttribute("queryListSize", gremium.getContainedQueries().size());
@@ -136,7 +136,7 @@ public class GremiumController {
             if (gremium.getContainedQueries().size() > queryIndex && queryIndex >= 0) {
                 Query q = gremium.getContainedQueries().get(queryIndex);
                 if (nav == QueryNav.SKIP) {
-                    userAnswers.put(q, 42);
+                    userAnswers.put(q, 2);
                     m.addAttribute(USER_ANSWERS, userAnswers);
                     return redirect + Integer.toString(queryIndex + 1);
                 }
@@ -215,7 +215,7 @@ public class GremiumController {
                 m.addAttribute(GREMIUM, gremium);
             }
             for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
-                if(entry.getValue() == 42) {
+                if(entry.getValue() == 2) {
                     skipped++;
                 }
             }
