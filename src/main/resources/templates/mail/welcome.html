@@ -29,16 +29,16 @@
             <!-- Title -->
             <div class="row pt-5">
                 <div class="col-12 text-center mb-3">
-                    <h1 th:text="'Willkommen zum ' + #{title}"></h1>
+                    <h1 th:text="#{mail.welcome.title}"></h1>
                 </div>
             </div>
             <div class="row justify-content-center mb-3">
                 <div class="col-12 col-lg-5 text-justify">
                     <p>
-                        <span th:text="#{mail.info}"></span>
+                        <span th:text="#{mail.welcome.info}"></span>
                     </p>
                     <p>
-                        <span th:text="#{mail.signature}"></span>
+                        <span th:text="#{mail.welcome.signature}"></span>
                     </p>
                 </div>
             </div>
