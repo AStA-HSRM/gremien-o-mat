@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#ffffff">
+    <meta content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto" type="text/css" />
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}" type="text/css" />
+    <link rel="icon" th:href="@{/assets/img/Logo.svg}">
+    <link rel="mask-icon" th:href="@{/assets/img/Logo.svg}" color="#000000">
+    <title th:text="#{title}"></title>
+</head>
+
+<body>
+    <!-- Main Content -->
+    <main>
+        <div class="d-flex flex-column align-items-center p-2">
+            <div class="container card pt-3 pb-5 px-4 mt-5" style="max-width: 800px;">
+                    <div class="row justify-content-center">
+                        <div class="d-grid col-12 col-lg-4 my-1">
+                            <a class="btn btn-secondary" th:text="#{edit.cancel}" th:href="@{/user}"></a>
+                        </div>
+                        <div class="d-grid col-12 col-lg-4 my-1">
+                            <button class="btn btn-primary" type="submit" th:text="#{edit.save}"></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-light mt-5">
+        <div class="container">
+            <div class="row text-secondary pt-4 pb-2">
+                <!-- Link to AStA page -->
+                <div class="col-12 col-lg-4 pt-1 text-center text-lg-start text-sm mt-2">
+                    <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/"
+                        th:text="#{org}"></a>
+                </div>
+                <!-- Link to socials -->
+                <div class="col-12 col-lg-4 text-center py-2">
+                    <a href="https://twitter.com/asta_hsrm" target="_blank" class="fa fa-twitter mx-2"></a>
+                    <a href="https://www.facebook.com/AStA.HSRM.Wi/" target="_blank" class="fa fa-facebook mx-2"></a>
+                    <a href="https://www.youtube.com/channel/UCtLU1LPRCcyutwuvf9ELLkA" target="_blank"
+                        class="fa fa-youtube mx-2"></a>
+                    <a href="https://www.instagram.com/asta_hsrm" target="_blank" class="fa fa-instagram mx-2"></a>
+                </div>
+                <!-- Link to legal stuff -->
+                <div class="col-12 col-lg-4 pt-1 text-center text-lg-end text-sm mt-2">
+                    <a class="text-decoration-none text-secondary" target="_blank"
+                        href="https://www.asta-hsrm.de/impressum" th:text="#{footer.contact}"></a> |
+                    <a class="text-decoration-none text-secondary" target="_blank"
+                        href="https://www.asta-hsrm.de/datenschutz" th:text="#{footer.data}"></a> |
+                    <a class="text-decoration-none text-secondary" target="_blank"
+                        href="https://www.asta-hsrm.de/asta/buero/" th:text="#{footer.office}"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
