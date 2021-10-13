@@ -86,7 +86,7 @@
             <!-- Answers -->
             <div class="row justify-content-center" th:if="${candidate.answers != null}">
                 <div class="col-12 col-lg-6">
-                    <h4 class="mb-4 text-center">Meine Standpunkte</h4>
+                    <h4 class="mb-4 text-center" th:text="#{candidate.answers}"></h4>
                     <div class="accordion" id="answers">
                         <th:block th:each="a, status : ${candidate.answers}">
                             <div class="accordion-item">
