@@ -1,11 +1,18 @@
 package de.astahsrm.gremiomat.candidate.answer;
 
+import javax.validation.constraints.NotNull;
+
 import de.astahsrm.gremiomat.query.Query;
 
 public class CandidateAnswerForm {
+    @NotNull
     private long answerId;
+
     private Query query;
+    
+    @NotNull
     private int opinion;
+    
     private String reason;
 
     public long getAnswerId() {

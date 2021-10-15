@@ -2,14 +2,31 @@ package de.astahsrm.gremiomat.candidate;
 
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 import de.astahsrm.gremiomat.gremium.Gremium;
 
 public class CandidateFormAdmin {
 
+    @NotEmpty
+    @Min(16)
+    @Max(120)
     private int age;
+
+    @NotEmpty
     private int semester;
+
+    @NotBlank
     private String firstname;
+
+    @NotBlank
     private String lastname;
+
+    @Email
     private String email;
     private String course;
     private String bio;
