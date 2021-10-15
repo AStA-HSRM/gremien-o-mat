@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
-
+import org.springframework.stereotype.Service;
+@Service
 public class PasswordServiceImpl implements PasswordService {
     public String generatePassword() {
         String upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true);

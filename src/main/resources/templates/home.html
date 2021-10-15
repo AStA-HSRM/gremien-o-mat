@@ -20,7 +20,7 @@
     <!-- Main Content -->
     <main>
         <div class="container py-4 px-4">
-            <div class="row mb-5">
+            <div class="row mb-5 justify-content-between">
                 <!-- Breadcrumbs -->
                 <div class="col-10">
                     <nav aria-label="breadcrumb">
@@ -28,10 +28,6 @@
                             <li class="breadcrumb-item active" aria-current="page" th:text="#{nav.home}"></li>
                         </ol>
                     </nav>
-                </div>
-                <!-- Login Button -->
-                <div class="col-2 text-end">
-                    <a class="btn btn-outline-secondary btn-sm" th:href=@{/login} th:text="#{login}"></a>
                 </div>
             </div>
             <!-- Logo -->
@@ -115,7 +111,7 @@
             <div class="row text-secondary pt-4 pb-2">
                 <!-- Link to AStA page -->
                 <div class="col-12 col-lg-4 pt-1 text-center text-lg-start text-sm mt-2">
-                    <a class="text-decoration-none text-secondary" href="https://www.asta-hsrm.de/" th:text="#{org}"></a>
+                    <a class="text-decoration-none text-secondary" target="_blank" href="https://www.asta-hsrm.de/" th:text="#{org}"></a>
                 </div>
                 <!-- Link to socials -->
                 <div class="col-12 col-lg-4 text-center py-2">

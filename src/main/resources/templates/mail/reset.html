@@ -20,62 +20,41 @@
 <body>
     <!-- Main Content -->
     <main>
-        <div class="d-flex flex-column align-items-center p-2">
-            <div class="container card pt-3 pb-5 px-4 mt-5" style="max-width: 800px;">
-                <div class="row mt-2 mb-4">
-                    <div class="col-12 text-end">
-                        <th:block th:each="g : ${query.gremien}">
-                            <span class="badge bg-light text-secondary" th:text="${g.name}"></span>
-                        </th:block>
-                    </div>
+        <div class="container-fluid px-5 pt-4">
+            <div class="row">
+                <div class="col-12 text-center pt-5">
+                    <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100">
                 </div>
-                <div class="row my-4 justify-content-center">
-                    <div class="col-10 text-justify">
-                        <h3><span th:text="${query.text}"></span></h3>
-                    </div>
+            </div>
+            <!-- Title -->
+            <div class="row pt-4">
+                <div class="col-12 text-center mb-3">
+                    <h3 th:text="#{mail.reset.title}"></h3>
                 </div>
-                <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
-                    <div class="row justify-content-sm-center pb-4">
-                        <div class="col-12 d-grid col-lg-3 col text-center text-lg-end my-1">
-                            <input th:field="*{opinion}" type="radio" class="btn-check" id="not-ok" autocomplete="off"
-                                value="-1">
-                            <label class="btn btn-outline-dark" for="not-ok" th:text="#{answer.disagree}"></label>
-                        </div>
-                        <div class="col-12 d-grid col-lg-3 text-center my-1">
-                            <input th:field="*{opinion}" type="radio" class="btn-check" id="neutral" autocomplete="off"
-                                value="0">
-                            <label class="btn btn-outline-dark" for="neutral" th:text="#{answer.neutral}"></label>
-                        </div>
-                        <div class="col-12 d-grid col-lg-3 text-center text-lg-start my-1">
-                            <input th:field="*{opinion}" type="radio" class="btn-check" id="ok" autocomplete="off"
-                                value="1">
-                            <label class="btn btn-outline-dark" for="ok" th:text="#{answer.agree}"></label>
-                        </div>
-                        <input th:field="*{opinion}" type="hidden" id="default" value="42">
-                        <input type="hidden" th:field="*{answerId}" />
-                        <input type="hidden" th:field="*{query}" value="${query}" />
-                    </div>
-                    <div class="row justify-content-center mb-4">
-                        <div class="col-10">
-                            <label for="reason" class="mb-1" th:text="#{candidate.reason}"></label>
-                            <textarea th:field="*{reason}" type="text" class="form-control" id="reason"
-                                th:placeholder="#{placeholder.reason}" style="height: 12rem;"></textarea>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="d-grid col-12 col-lg-4 my-1">
-                            <a class="btn btn-secondary" th:text="#{edit.cancel}" th:href="@{/user}"></a>
-                        </div>
-                        <div class="d-grid col-12 col-lg-4 my-1">
-                            <button class="btn btn-primary" type="submit" th:text="#{edit.save}"></button>
-                        </div>
-                    </div>
-                </form>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-12 col-lg-3 text-justify">
+                    <p>
+                        <span th:text="#{mail.reset.info}"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-10 col-lg-2 d-grid text-center">
+                    <a class="btn btn-primary" th:href="@{password-reset/__${token}__}" th:text="#{password.reset}"></a>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 col-lg-5 text-center">
+                    <p>
+                        <span th:text="#{mail.reset.signature}"></span>
+                    </p>
+                </div>
             </div>
         </div>
     </main>
     <!-- Footer -->
-    <footer class="bg-light mt-5">
+    <footer class="bg-light">
         <div class="container">
             <div class="row text-secondary pt-4 pb-2">
                 <!-- Link to AStA page -->

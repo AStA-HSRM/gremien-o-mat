@@ -25,19 +25,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.authorizeRequests().antMatchers("/assets/**", "/css/**", "/favicon/**", "/img/**").permitAll()
-                .antMatchers("/gremien/**","/gremien**").permitAll()
-                .antMatchers("/api/**","/api**").permitAll()
-                .antMatchers("/user/**", "/user**").authenticated()
-                .antMatchers("/admin/**", "/admin**").hasAnyRole(ADMIN)
-                .and()
-                .formLogin()
-                .defaultSuccessUrl("/mgmt")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .permitAll();
+            .antMatchers("/gremien/**","/gremien**").permitAll()
+            .antMatchers("/api/**","/api**").permitAll()
+            .antMatchers("/user/**", "/user**").authenticated()
+            .antMatchers("/admin/**", "/admin**").hasAnyRole(ADMIN)
+
+            .and()
+            .formLogin()
+            .loginPage("/login")
+            .defaultSuccessUrl("/mgmt")
+            .loginProcessingUrl("/login")
+            .failureUrl("/login?error=true")
+            .permitAll()
+
+            .and()
+            .logout()
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/")
+            .deleteCookies("JSESSIONID")
+            .permitAll()
+
+            .and()
+            .rememberMe().key("uniqueAndSecret");
     }
 
     @Override

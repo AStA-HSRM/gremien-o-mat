@@ -27,6 +27,7 @@ import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumForm;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.password.PasswordService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
@@ -34,6 +35,8 @@ import de.astahsrm.gremiomat.query.QueryFormAdmin;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.security.SecurityConfig;
+import de.astahsrm.gremiomat.username.UsernameService;
 import javassist.NotFoundException;
 
 @Controller
@@ -57,6 +60,12 @@ public class AdminController {
 
     @Autowired
     private PhotoService photoService;
+
+    @Autowired
+    private UsernameService usernameService;
+
+    @Autowired
+    private PasswordService passwordService;
 
     @GetMapping
     public String getAdminPage() {
@@ -197,7 +206,7 @@ public class AdminController {
             return "error";
         }
     }
-    
+
     @PostMapping(value = "/gremien/{abbr}/queries/{id}/edit", params = "del")
     public String postDelGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id) {
         queryService.delQueryById(id);
@@ -210,19 +219,55 @@ public class AdminController {
         return "admin/user-overview";
     }
 
-    @GetMapping("/users/lock")
-    public String lockUser(Model m) {
-        mgmtUserService.lockAllUsers();
-        return "redirect:/admin/users";
-    }
-
     @GetMapping("/users/new")
-    public String getNewUserEditPage() {
-        return "";
+    public String getUserNew(Principal loggedInUser, Model m) {
+        Candidate c = new Candidate();
+        CandidateFormAdmin form = new CandidateFormAdmin();
+        form.setAge(c.getAge());
+        form.setBio(c.getBio());
+        form.setCourse(c.getCourse());
+        form.setEmail(c.getEmail());
+        form.setFirstname(c.getFirstname());
+        form.setGremien(c.getGremien());
+        form.setLastname(c.getLastname());
+        form.setSemester(c.getSemester());
+        m.addAttribute("username", loggedInUser.getName());
+        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute("form", form);
+        return "admin/user-edit";
     }
 
     @PostMapping("/users/new")
-    public String postNewUserEditPage() {
+    public String postNewUser(@ModelAttribute CandidateFormAdmin form, BindingResult res, Model m) {
+        if (res.hasErrors()) {
+            return "admin/user-edit";
+        }
+        Candidate c = new Candidate();
+        c.setFirstname(form.getFirstname());
+        c.setLastname(form.getLastname());
+        c.setAge(form.getAge());
+        c.setSemester(form.getSemester());
+        c.setCourse(form.getCourse());
+        c.setBio(form.getBio());
+        c.setEmail(form.getEmail());
+        c.setGremien(form.getGremien());
+        if (!candidateService.getCandidateByEmail(c.getEmail()).isEmpty()) {
+            MgmtUser u = new MgmtUser();
+            u.setUsername(usernameService.generateUsername(c));
+            u.setPassword(passwordService.generatePassword());
+            u.setRole(SecurityConfig.USER);
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+            // TODO Send Welcome Mail after User is saved.
+            return "redirect:/admin/users/";
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");
+        }
+    }
+
+    @GetMapping("/users/lock")
+    public String lockUser(Model m) {
+        mgmtUserService.lockAllUsers();
         return "redirect:/admin/users";
     }
 
@@ -251,7 +296,7 @@ public class AdminController {
         m.addAttribute("username", username);
         m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("form", form);
-        return "user/user-info-edit";
+        return "admin/user-edit";
     }
 
     @PostMapping(value = "/users/{username}/edit", params = "del")
@@ -264,7 +309,7 @@ public class AdminController {
     public String postUserEditPage(@PathVariable String username, @ModelAttribute CandidateFormAdmin form,
             BindingResult res, Model m) {
         if (res.hasErrors()) {
-            return "user/user-info-edit";
+            return "admin/user-edit";
         }
         Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
         c.setFirstname(form.getFirstname());

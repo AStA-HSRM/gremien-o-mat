@@ -16,7 +16,7 @@
 <body>
     <table>
         <tr>
-            <a th:href="@{/admin/users/lock}"  onclick="return confirm('Are you sure?')">Lock all Users</a>
+            <p><a th:href="@{/admin/users/lock}"  onclick="return confirm('Are you sure?')">Lock all Users</a>  <a th:href="@{/admin/users/new}">Create new User</a></p>
         </tr>
         <tr>
             <th id="uid" th:text="#{username}"></th>
