@@ -74,6 +74,9 @@ public class GremiumController {
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
+            if (m.getAttribute(USER_ANSWERS) != null) {
+                m.addAttribute(USER_ANSWERS, new HashMap<Query, Integer>());
+            }
             m.addAttribute(GREMIUM, gremiumOptional.get());
             return "gremien/info";
         }
