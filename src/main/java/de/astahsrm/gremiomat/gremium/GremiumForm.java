@@ -1,8 +1,15 @@
 package de.astahsrm.gremiomat.gremium;
 
+import javax.validation.constraints.NotBlank;
+
 public class GremiumForm {
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String abbr;
+    
     private String description;
 
     public String getName() {
