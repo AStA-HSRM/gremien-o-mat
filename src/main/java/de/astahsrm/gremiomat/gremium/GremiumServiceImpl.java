@@ -1,5 +1,7 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,5 +85,26 @@ public class GremiumServiceImpl implements GremiumService {
     public void addQueryToGremium(Query query, Gremium gremium) {
         gremium.addQuery(query);
         gremiumRepository.save(gremium);
+    }
+
+    @Override
+    public HashMap<String, Object> getGremienNavMap() {
+        HashMap<String, Object> m = new HashMap<>();
+        List<Gremium> fsrGremien = new ArrayList<>();
+        List<Gremium> fbrGremien = new ArrayList<>();
+        List<Gremium> rest = new ArrayList<>();
+        for (Gremium gremium : getAllGremiumsSortedByName()) {
+            if (gremium.getAbbr().contains("fbr")) {
+                fbrGremien.add(gremium);
+            } else if (gremium.getAbbr().contains("fsr")) {
+                fsrGremien.add(gremium);
+            } else {
+                rest.add(gremium);
+            }
+        }
+        m.put("rest", rest);
+        m.put("fsr", fsrGremien);
+        m.put("fbr", fbrGremien);
+        return m;
     }
 }

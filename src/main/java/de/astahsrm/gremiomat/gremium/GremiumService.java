@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,4 +26,6 @@ public interface GremiumService {
     public List<Candidate> getGremiumCandidatesByGremiumAbbr(String abbr) throws NotFoundException;
 
     public void addQueryToGremium(Query saveQuery, Gremium gremium);
+
+    public HashMap<String, Object> getGremienNavMap();
 }
