@@ -79,6 +79,7 @@ public class GremiumController {
                 m.addAttribute(USER_ANSWERS, new HashMap<Query, Integer>());
             }
             m.addAttribute(GREMIUM, gremiumOptional.get());
+            m.addAllAttributes(gremiumService.getGremienNavMap());
             return "gremien/info";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
