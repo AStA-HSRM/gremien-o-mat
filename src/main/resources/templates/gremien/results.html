@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/nav.html"></th:block>
     <!-- Main Content -->
     <main class="mt-5">
-        <div class="container py-4 px-5 mb-5">
+        <div class="container py-4 px-5 my-5">
             <!-- Title -->
             <div class="row mb-5 pt-2">
                 <div class="col-12 text-center">
@@ -20,30 +20,30 @@
                     </p>
                 </div>
             </div>
-            <th:block th:each="c : ${gremium.joinedCandidates}">
+            <th:block th:each="entry : ${comp.entrySet()}">
                 <div class="row justify-content-center mb-2">
                     <div class="col-12 col-lg-8">
                         <a class="text-decoration-none text-black"
-                            th:href="@{/__${gremium.abbr}__/candidates/__${c.id}__}">
+                            th:href="@{/__${gremium.abbr}__/candidates/__${entry.key.id}__}">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-12 col-lg-1 text-center text-lg-end">
                                             <img class="thumbnail-profile-img"
-                                                th:src="${c.getPhoto() != null} ? @{/api/v1/photo/__${c.id}__} : @{/assets/img/placeholder.jpg}"
+                                                th:src="${entry.key.getPhoto() != null} ? @{/api/v1/photo/__${entry.key.id}__} : @{/assets/img/placeholder.jpg}"
                                                 alt="Profile picture" />
                                         </div>
                                         <div class="col-12 col-lg-5 text-center text-lg-start pt-2">
                                             <span class="card-text text-"
-                                                th:text="${c.age le 0} ? |${c.firstname} ${c.lastname}| : |${c.firstname} ${c.lastname}, ${c.age}|"></span><br />
+                                                th:text="${entry.key.age le 0} ? |${entry.key.firstname} ${entry.key.lastname}| : |${entry.key.firstname} ${entry.key.lastname}, ${entry.key.age}|"></span><br />
                                             <span class="text-secondary"
-                                                th:text="${c.semester le 0 || c.course eq ''} ? #{candidate.student} : |${c.semester}. Semester, ${c.course}|"></span>
+                                                th:text="${entry.key.semester le 0 || entry.key.course eq ''} ? #{candidate.student} : |${entry.key.semester}. Semester, ${entry.key.course}|"></span>
                                         </div>
                                         <div class="col-12 col-lg-6 text-center px-4 pt-3">
-                                            <span class="text-sm text-secondary" th:text="|${comp.get(c)} %|"></span>
+                                            <span class="text-sm text-secondary" th:text="|${entry.value} %|"></span>
                                             <div class="alert-secondary rounded bar-container p-1">
                                                 <div class="bg-danger bar rounded-1"
-                                                    th:style="|width: ${comp.get(c)}%|"></div>
+                                                    th:style="|width: ${entry.value}%|"></div>
                                             </div>
                                         </div>
                                     </div>

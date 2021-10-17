@@ -1,8 +1,10 @@
 package de.astahsrm.gremiomat.gremium;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -212,7 +214,10 @@ public class GremiumController {
                     skipped++;
                 }
             }
-            m.addAttribute("comp", compatibility);
+            LinkedHashMap<Candidate, Double> sortedByComp = compatibility.entrySet().stream()
+                    .sorted((Map.Entry.<Candidate, Double>comparingByValue().reversed())).collect(Collectors
+                            .toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            m.addAttribute("comp", sortedByComp);
             m.addAttribute("skippedAnswers", skipped);
             m.addAllAttributes(gremiumService.getGremienNavMap());
             return "gremien/results";
