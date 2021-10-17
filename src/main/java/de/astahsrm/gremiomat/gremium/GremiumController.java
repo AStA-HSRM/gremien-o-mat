@@ -33,6 +33,8 @@ import de.astahsrm.gremiomat.query.QueryService;
 @SessionAttributes("userAnswers")
 public class GremiumController {
 
+    private static final String REDIRECT_HOME = "redirect:/";
+
     enum QueryNav {
         NEXT, RESULTS, PREV, SKIP
     }
@@ -80,7 +82,7 @@ public class GremiumController {
     //TODO Handle password resets!
     @GetMapping("/password-reset")
     public String getReset() {
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     @GetMapping("/{abbr}")
@@ -129,7 +131,7 @@ public class GremiumController {
 
     private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
             Model m, QueryFormSimple form) {
-        String redirect = "redirect:/" + abbr + "/queries/";
+        String redirect = REDIRECT_HOME + abbr + "/queries/";
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
@@ -229,7 +231,7 @@ public class GremiumController {
     @PostMapping("/{abbr}/queries/results")
     public String postResults(SessionStatus status) {
         status.setComplete();
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     @GetMapping("/{abbr}/candidates/{id}")
