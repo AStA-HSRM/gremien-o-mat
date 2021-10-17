@@ -1,8 +1,6 @@
 package de.astahsrm.gremiomat.gremium;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,13 +31,15 @@ import de.astahsrm.gremiomat.query.QueryService;
 @SessionAttributes("userAnswers")
 public class GremiumController {
 
-    enum QueryNav {
-        NEXT, RESULTS, PREV, SKIP
-    }
+    private static final String REDIRECT_HOME = "redirect:/";
 
     private static final String USER_ANSWERS = "userAnswers";
 
     private static final String GREMIUM = "gremium";
+
+    enum QueryNav {
+        NEXT, RESULTS, PREV, SKIP
+    }
 
     @Autowired
     private GremiumService gremiumService;
@@ -53,34 +53,22 @@ public class GremiumController {
 
     @GetMapping
     public String getGremien(Model m) {
-        List<Gremium> fsrGremien = new ArrayList<>();
-        List<Gremium> fbrGremien = new ArrayList<>();
-        List<Gremium> gremien = new ArrayList<>();
-        for (Gremium gremium : gremiumService.getAllGremiumsSortedByName()) {
-            if (gremium.getAbbr().contains("fbr")) {
-                fbrGremien.add(gremium);
-            } else if (gremium.getAbbr().contains("fsr")) {
-                fsrGremien.add(gremium);
-            } else {
-                gremien.add(gremium);
-            }
-        }
-        m.addAttribute("gremien", gremien);
-        m.addAttribute("fsr", fsrGremien);
-        m.addAttribute("fbr", fbrGremien);
+        m.addAllAttributes(gremiumService.getGremienNavMap());
         return "home";
     }
 
     @GetMapping("/login")
     public String getLogin(@RequestParam(required = false) boolean error, Model m) {
+        m.addAllAttributes(gremiumService.getGremienNavMap());
         m.addAttribute("error", error);
         return "login";
     }
 
-    //TODO Handle password resets!
+    // TODO Handle password resets!
     @GetMapping("/password-reset")
-    public String getReset() {
-        return "redirect:/";
+    public String getReset(Model m) {
+        m.addAllAttributes(gremiumService.getGremienNavMap());
+        return REDIRECT_HOME;
     }
 
     @GetMapping("/{abbr}")
@@ -123,6 +111,7 @@ public class GremiumController {
                 m.addAttribute("queryForm", form);
                 m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size()
                         || queryIndex == gremium.getContainedQueries().size() - 1);
+                m.addAllAttributes(gremiumService.getGremienNavMap());
                 return "gremien/query";
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
@@ -132,7 +121,7 @@ public class GremiumController {
 
     private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
             Model m, QueryFormSimple form) {
-        String redirect = "redirect:/" + abbr + "/queries/";
+        String redirect = REDIRECT_HOME + abbr + "/queries/";
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
@@ -218,12 +207,13 @@ public class GremiumController {
                 m.addAttribute(GREMIUM, gremium);
             }
             for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
-                if(entry.getValue() == 2) {
+                if (entry.getValue() == 2) {
                     skipped++;
                 }
             }
             m.addAttribute("comp", compatibility);
             m.addAttribute("skippedAnswers", skipped);
+            m.addAllAttributes(gremiumService.getGremienNavMap());
             return "gremien/results";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
@@ -232,7 +222,7 @@ public class GremiumController {
     @PostMapping("/{abbr}/queries/results")
     public String postResults(SessionStatus status) {
         status.setComplete();
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     @GetMapping("/{abbr}/candidates/{id}")
@@ -244,6 +234,7 @@ public class GremiumController {
                 if (c.getId() == id) {
                     m.addAttribute("candidate", c);
                     m.addAttribute(GREMIUM, gremium);
+                    m.addAllAttributes(gremiumService.getGremienNavMap());
                     return "gremien/candidate";
                 }
             }
