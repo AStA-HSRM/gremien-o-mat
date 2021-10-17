@@ -1,0 +1,25 @@
+/* custom.scss */
+
+/* import the necessary Bootstrap files */
+
+@import "./bootstrap/scss/functions";
+@import "./bootstrap/scss/variables";
+
+/* -------begin customization-------- */
+
+/* $theme-colors: (
+    "primary": yellow,
+    "secondary": yellow,
+    "success": yellow,
+    "info": yellow,
+    "warning": yellow,
+    "danger": yellow,
+    "light": yellow,
+    "dark": black,
+); */
+
+/* -------end customization-------- */
+
+/* finally, import Bootstrap to set the changes! */
+
+@import "./bootstrap/scss/bootstrap";
