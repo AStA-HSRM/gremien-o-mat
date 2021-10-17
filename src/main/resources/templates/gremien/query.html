@@ -10,74 +10,83 @@
 <body>
     <th:block th:insert="fragments/nav.html"></th:block>
     <!-- Main Content -->
-    <main class="mt-5">
-        <div class="container py-4 px-lg-5 px-1 mb-lg-5">
-            <!-- Title -->
-            <div class="bg-light rounded border mx-2 mx-lg-5 mt-lg-5 query-text">
-                <div class="row py-lg-5 mb-3 pt-4 px-3 justify-content-center">
-                    <div class="col-12 col-lg-8 text-center">
-                        <h2 th:text="${query.text}"></h2>
-                    </div>
+    <main class="pt-5">
+        <div class="container-fluid mt-5 bg-dark mb-3 rounded-3 pb-4 pt-3" style="max-width: 1000px;">
+            <!-- Logo-->
+            <div class="row mb-5 mt-4">
+                <div class="col-12 text-center">
+                    <img th:src="@{/assets/img/LogoW.svg}" alt="AStA Logo" width="100">
                 </div>
+            </div>
+            <!-- Title -->
+            <div class="row pb-5 px-lg-3 px-1 justify-content-center">
+                <div class="col-12 col-lg-8 text-center">
+                    <h3 class="text-light" th:text="${query.text}"></h3>
+                </div>
+            </div>
+            <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/__${queryIndex}__}"
+                th:object="${queryForm}">
                 <!-- Answer Buttons -->
-                <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/__${queryIndex}__}"
-                    th:object="${queryForm}">
-                    <div class="row justify-content-sm-center pb-lg-5 pb-4">
-                        <div class="col-12 col-lg-3 col text-center text-lg-end my-1">
+                <div class="row justify-content-sm-center">
+                    <div class="col-12 col-lg-3 text-center my-2 text-lg-end">
+                        <div class="d-grid">
                             <input th:field="*{opinion}" type="radio" class="btn-check" id="not-ok" autocomplete="off"
                                 value="-1">
-                            <label class="btn btn-outline-dark custom-btn-w" for="not-ok"
-                                th:text="#{answer.disagree}"></label>
+                            <label class="btn btn-outline-light" for="not-ok" th:text="#{answer.disagree}"></label>
                         </div>
-                        <div class="col-12 col-lg-3 text-center my-1">
+                    </div>
+                    <div class="col-12 col-lg-3 text-center my-2">
+                        <div class="d-grid">
                             <input th:field="*{opinion}" type="radio" class="btn-check" id="neutral" autocomplete="off"
                                 value="0">
-                            <label class="btn btn-outline-dark custom-btn-w" for="neutral"
-                                th:text="#{answer.neutral}"></label>
+                            <label class="btn btn-outline-light" for="neutral" th:text="#{answer.neutral}"></label>
                         </div>
-                        <div class="col-12 col-lg-3 text-center text-lg-start my-1">
+                    </div>
+                    <div class="col-12 col-lg-3 text-center text-lg-start my-2">
+                        <div class="d-grid">
                             <input th:field="*{opinion}" type="radio" class="btn-check" id="ok" autocomplete="off"
                                 value="1">
-                            <label class="btn btn-outline-dark custom-btn-w" for="ok" th:text="#{answer.agree}"></label>
-                        </div>
-                        <input th:field="*{opinion}" type="hidden" id="default" value="2">
-                    </div>
-            </div>
-            <!-- Navigation buttons -->
-            <div class="px-2">
-                <div class="row justify-content-center pt-4 pt-lg-3">
-                    <div class="col-6 col-lg-2 text-end my-2">
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-outline-secondary" th:disabled="${queryIndex-1} lt 0"
-                                name="prev" th:text="#{query.prev}"></button>
+                            <label class="btn btn-outline-light" for="ok" th:text="#{answer.agree}"></label>
                         </div>
                     </div>
-                    <div class="col-6 col-lg-2 text-start my-2">
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-outline-secondary"
-                                th:disabled="${queryIndex+1} ge ${queryListSize}" name="next"
-                                th:text="#{query.next}"></button>
-                        </div>
+                    <input th:field="*{opinion}" type="hidden" id="default" value="2">
+                </div>
+        </div>
+        <!-- Navigation buttons -->
+        <div class="container-fluid" style="max-width: 700px;">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-4 text-center my-1">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-sm btn-secondary" th:disabled="${queryIndex-1} lt 0"
+                            name="prev" th:text="#{query.prev}"></button>
                     </div>
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-lg-4 text-center my-2">
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary" th:disabled="${!isQueriesAnswered}"
-                                name="results" th:text="#{btn.results}"></button>
-                        </div>
+                <div class="col-12 col-lg-4 text-center my-1">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-sm"
+                            th:classappend="${queryIndex+1} ge ${queryListSize} ? 'btn-primary' : 'btn-secondary'"
+                            name="skip"
+                            th:text="${queryIndex+1} ge ${queryListSize} ? #{query.skip.results} : #{query.skip}"></button>
                     </div>
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-lg-4 text-center my-2">
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-outline-secondary" name="skip"
-                                th:disabled="${queryIndex+1} ge ${queryListSize}" th:text="#{query.skip}"></button>
-                        </div>
+                <div class="col-12 col-lg-4 text-center my-1">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-sm btn-secondary"
+                            th:disabled="${queryIndex+1} ge ${queryListSize}" name="next"
+                            th:text="#{query.next}"></button>
                     </div>
                 </div>
             </div>
-            </form>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-4 text-center my-1">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-sm btn-primary" th:disabled="${!isQueriesAnswered}"
+                            name="results" th:text="#{btn.results}"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
         </div>
     </main>
     <th:block th:insert="fragments/footer.html"></th:block>

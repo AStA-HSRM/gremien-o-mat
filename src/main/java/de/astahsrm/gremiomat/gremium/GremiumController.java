@@ -133,7 +133,11 @@ public class GremiumController {
                 if (nav == QueryNav.SKIP) {
                     userAnswers.put(q, 2);
                     m.addAttribute(USER_ANSWERS, userAnswers);
-                    return redirect + Integer.toString(queryIndex + 1);
+                    if (queryIndex + 1 < gremium.getContainedQueries().size()) {
+                        return redirect + Integer.toString(queryIndex + 1);
+                    } else {
+                        return redirect + "results";
+                    }
                 }
                 userAnswers.put(q, form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
