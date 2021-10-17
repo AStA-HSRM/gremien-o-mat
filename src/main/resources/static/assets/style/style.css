@@ -44,14 +44,6 @@ footer {
   height: 0.5em;
 }
 
-.bg-color-primary {
-  background-color: #BE1E2D;
-}
-
-.bg-dark-red {
-  background-color: #A61D37;
-}
-
 .card-body:hover {
   background: #f7f7f7;
 }
