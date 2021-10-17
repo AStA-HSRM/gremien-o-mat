@@ -11,9 +11,9 @@
     <th:block th:insert="fragments/nav.html"></th:block>
     <!-- Main Content -->
     <main class="mt-5">
-        <div class="container py-4 px-5 my-5">
+        <div class="container py-4 px-lg-5 px-2 mt-5 mb-3">
             <!-- Title -->
-            <div class="row mb-5 pt-2">
+            <div class="row mb-3 pt-2">
                 <div class="col-12 text-center">
                     <h1 th:text="#{results.title}"></h1>
                     <p th:text="|${skippedAnswers} #{from} ${gremium.containedQueries.size()} #{queries} #{skipped}|">
@@ -28,18 +28,18 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 col-lg-1 text-center text-lg-end">
+                                        <div class="col-12 col-lg-2 pt-1 pb-2 pb-lg-0 text-center">
                                             <img class="thumbnail-profile-img"
                                                 th:src="${entry.key.getPhoto() != null} ? @{/api/v1/photo/__${entry.key.id}__} : @{/assets/img/placeholder.jpg}"
                                                 alt="Profile picture" />
                                         </div>
-                                        <div class="col-12 col-lg-5 text-center text-lg-start pt-2">
+                                        <div class="col-12 col-lg-5 col-md-12 text-center text-lg-start px-0">
                                             <span class="card-text text-"
                                                 th:text="${entry.key.age le 0} ? |${entry.key.firstname} ${entry.key.lastname}| : |${entry.key.firstname} ${entry.key.lastname}, ${entry.key.age}|"></span><br />
                                             <span class="text-secondary"
                                                 th:text="${entry.key.semester le 0 || entry.key.course eq ''} ? #{candidate.student} : |${entry.key.semester}. Semester, ${entry.key.course}|"></span>
                                         </div>
-                                        <div class="col-12 col-lg-6 text-center px-4 pt-3">
+                                        <div class="col-12 col-lg-5 text-center px-4 pt-2">
                                             <span class="text-sm text-secondary" th:text="|${entry.value} %|"></span>
                                             <div class="alert-secondary rounded bar-container p-1">
                                                 <div class="bg-primary bar rounded-1"
