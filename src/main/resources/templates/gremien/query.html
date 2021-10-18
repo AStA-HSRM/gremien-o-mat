@@ -64,7 +64,7 @@
                 <div class="col-12 col-lg-4 text-center my-1">
                     <div class="d-grid">
                         <button type="submit" class="btn btn-sm"
-                            th:classappend="${queryIndex+1} ge ${queryListSize} ? 'btn-dark' : 'btn-secondary'"
+                            th:classappend="${queryIndex+1} ge ${queryListSize} ? 'btn-primary' : 'btn-secondary'"
                             name="skip"
                             th:text="${queryIndex+1} ge ${queryListSize} ? #{query.skip.results} : #{query.skip}"></button>
                     </div>
