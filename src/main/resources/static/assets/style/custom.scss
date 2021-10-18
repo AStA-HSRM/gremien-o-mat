@@ -10,13 +10,13 @@
 /* -------begin customization-------- */
 
 // Then add them to your custom theme-colors map, together with any additional colors you might need
-$primary: #BE1E2D;
-$secondary: #6C757D;
+$primary: #be1e2d;
+$secondary: #6c757d;
 $success: #198754;
-$info: #0DCAF0;
-$warning: #FFC107;
-$danger: #ED1C24;
-$light: #F8F9FA;
+$info: #0dcaf0;
+$warning: #ffc107;
+$danger: #ed1c24;
+$light: #f8f9fa;
 $dark: #212529;
 
 $theme-colors: (
@@ -31,14 +31,16 @@ $theme-colors: (
 );
 
 $utilities: map-merge(
-  $utilities,
-  (
-    "background-color": map-merge(
-      map-get($utilities, "background-color"),
-      (
-        values: $theme-colors)
-      ),
-    ),
+    $utilities,
+    (
+        "background-color":
+            map-merge(
+                map-get($utilities, "background-color"),
+                (
+                    values: $theme-colors,
+                )
+            ),
+    )
 );
 
 /* -------end customization-------- */
@@ -83,6 +85,11 @@ footer {
     flex-shrink: 0;
 }
 
+.after {
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+}
+
 .bar {
     height: 0.5em;
 }
@@ -103,6 +110,18 @@ footer {
     font-size: small;
     font-weight: lighter;
     font-style: italic;
+}
+
+.error-title {
+    h1 {
+        font-family: monospace;
+        font-weight: 1000;
+        letter-spacing: 0.1rem;
+    }
+    p {
+        font-family: monospace;
+        font-weight: 1000;
+    }
 }
 
 .fa {
@@ -129,11 +148,6 @@ footer {
     height: 13rem;
 }
 
-.after {
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-}
-
 .overlay-text {
     color: white;
     font-size: 1.2rem;
@@ -156,7 +170,7 @@ footer {
     height: 100%;
     display: block;
     opacity: 0;
-    color: #FFF;
+    color: #fff;
 }
 
 .image-container:hover .after {

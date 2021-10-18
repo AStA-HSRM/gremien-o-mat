@@ -1,9 +1,41 @@
 <!DOCTYPE html>
-<html>
+
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragments/head.html"></th:block>
+    <title th:text="#{title}"></title>
+</head>
+
 <body>
-<h1>Sorry :(</h1>
-<h2>The requested resource couldn't be found.</h2>
-<p>404 Not Found</p>
-<a href="/">Home</a>
+    <th:block th:insert="fragments/nav.html"></th:block>
+    <!-- Main Content -->
+    <main>
+        <div class="d-flex flex-column justify-content-center align-items-center" style="height: 85vh;">
+            <div class="container card pt-5 pb-3" style="max-width: 450px;">
+                <div class="row justify-content-center mb-4">
+                    <div class="col-12 text-center">
+                        <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100">
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-3">
+                    <div class="col-12 col-lg-9 text-center error-title">
+                        <h1 th:text="#{error.404.title}">Error 404</h1>
+                        <p th:text="#{error.404.info}">Sieht so aus als gäbe es die Seite nicht... Sorry!</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-3">
+                    <div class="col-7 text-center">
+                        <div class="d-grid">
+                            <a th:href="@{/}" class="btn btn-primary" th:text="#{back.home}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <th:block th:insert="fragments/footer.html"></th:block>
+    <th:block th:insert="fragments/scripts.html"></th:block>
 </body>
+
 </html>
