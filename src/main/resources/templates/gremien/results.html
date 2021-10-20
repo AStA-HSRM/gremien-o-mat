@@ -53,13 +53,13 @@
                     </div>
                 </div>
             </th:block>
-        </div>
-        <div class="row justify-content-center mb-4">
-            <div class="col-12 text-center">
-                <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/results}">
-                    <button type="submit" class="btn btn-primary bg-color-primary custom-btn-w"
-                        th:text="#{back.home}"></button>
-                </form>
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 text-center">
+                    <form th:method="POST" th:action="@{/__${gremium.abbr}__/queries/results}">
+                        <button type="submit" class="btn btn-primary bg-color-primary custom-btn-w"
+                            th:text="#{back.home}"></button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>
