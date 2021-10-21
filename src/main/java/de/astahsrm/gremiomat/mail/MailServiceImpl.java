@@ -55,7 +55,15 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendWelcomeMail(Locale locale, MgmtUser user) {
-        // TODO Auto-generated method stub
-
+        Context context = new Context();
+        Candidate details = user.getDetails();
+        context.setVariable("name", details.getFirstname() + " " + details.getLastname());
+        context.setVariable("username", user.getUsername());
+        context.setLocale(locale);
+        try {
+            send(templateEngine.process("mail/welcome", context), user);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
