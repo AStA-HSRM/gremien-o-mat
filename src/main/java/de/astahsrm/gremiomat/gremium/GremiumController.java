@@ -32,6 +32,7 @@ import de.astahsrm.gremiomat.query.QueryFormSimple;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.security.SecurityService;
 
 @Controller
 @RequestMapping("/")
@@ -57,6 +58,9 @@ public class GremiumController {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private SecurityService securityService;
+
     @ModelAttribute(USER_ANSWERS)
     public void initSession(Model m) {
         if (m.getAttribute(USER_ANSWERS) == null) {
@@ -77,6 +81,12 @@ public class GremiumController {
         return "login";
     }
 
+    @GetMapping("/reset-password")
+    public String getReset(Model m) {
+        m.addAllAttributes(gremiumService.getGremienNavMap());
+        return "forgot-password";
+    }
+
     @PostMapping("/reset-password")
     public String postReset(HttpServletRequest request, @RequestParam("email") String userEmail) {
         Optional<MgmtUser> uOpt = mgmtUserService.findUserByEmail(userEmail);
@@ -88,10 +98,15 @@ public class GremiumController {
         return "redirect:/login?reset=true";
     }
 
-    @GetMapping("/reset-password")
-    public String getReset(Model m) {
-        m.addAllAttributes(gremiumService.getGremienNavMap());
-        return "forgot-password";
+    @GetMapping("/change-password")
+    public String getChangePassword(HttpServletRequest request, @RequestParam("token") String token, Model m) {
+        MgmtUser user = securityService.validatePasswordResetToken(token);
+        if (user != null) {
+            m.addAttribute("candidate", user.getDetails());
+            return "change-password";
+        } else {
+            return "redirect:/404";
+        }
     }
 
     @GetMapping("/{abbr}")
