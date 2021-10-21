@@ -34,6 +34,7 @@ import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
 import de.astahsrm.gremiomat.security.SecurityService;
 
+
 @Controller
 @RequestMapping("/")
 @SessionAttributes("userAnswers")
@@ -84,7 +85,7 @@ public class GremiumController {
     @GetMapping("/reset-password")
     public String getReset(Model m) {
         m.addAllAttributes(gremiumService.getGremienNavMap());
-        return "forgot-password";
+        return "password/forgot-password";
     }
 
     @PostMapping("/reset-password")
@@ -105,9 +106,15 @@ public class GremiumController {
             m.addAttribute("candidate", user.getDetails());
             return "change-password";
         } else {
-            return "redirect:/404";
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/change-password")
+    public String postChangePassword(Model m) {        
+        return "";
+    }
+    
 
     @GetMapping("/{abbr}")
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
