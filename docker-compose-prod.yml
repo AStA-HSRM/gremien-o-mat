@@ -1,9 +1,24 @@
 version: "2"
 
-services:
-  tomcat-test:
+services: 
+  spring:
     build: .
     restart: always
-    container_name: tomcat-test
+    depends_on:
+      - db
+    environment:
+      # required arguments
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/temp_db
+      - SPRING_DATASOURCE_USERNAME=dev
+      - SPRING_DATASOURCE_PASSWORD=dev123
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.mariadb.jdbc.Driver
+      - SPRING_MAIL_USERNAME=mail@example.com
+      - SPRING_MAIL_PASSWORD=N0tTh3Actu4lP4SSw0rd
+      # optional arguments
+      # - SERVER_PORT=8090
+      # - DEBUG=true
+      # - SPRING_THYMELEAF_CACHE=false
+      # - LOGGING_LEVEL_WEB=DEBUG
+    # network_mode: host
     ports: 
-      - 8080:8080
+      - 8090:8090
