@@ -19,40 +19,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String USER = "USER";
 
     @Autowired
-    private MgmtUserDetailsService mgmtUserDetailsService;
+    private MgmtUserDetailsImpl mgmtUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.authorizeRequests().antMatchers("/assets/**", "/css/**", "/favicon/**", "/img/**").permitAll()
-            .antMatchers("/gremien/**","/gremien**").permitAll()
-            .antMatchers("/api/**","/api**").permitAll()
-            .antMatchers("/user/**", "/user**").authenticated()
-            .antMatchers("/admin/**", "/admin**").hasAnyRole(ADMIN)
+                .antMatchers("/user/change-password").permitAll()
+                .antMatchers("/admin/**", "/admin**").hasAnyRole(ADMIN)
+                .antMatchers("/user/**", "/user**").authenticated()
+                .antMatchers("/api/**", "/api**").permitAll()
+                .antMatchers("/**").permitAll()
 
-            .and()
-            .formLogin()
-            .loginPage("/login")
-            .defaultSuccessUrl("/mgmt")
-            .loginProcessingUrl("/login")
-            .failureUrl("/login?error=true")
-            .permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/mgmt")
+                .loginProcessingUrl("/login")
+                .failureUrl("/login?error=true")
+                .permitAll()
 
-            .and()
-            .logout()
-            .logoutUrl("/logout")
-            .logoutSuccessUrl("/")
-            .deleteCookies("JSESSIONID")
-            .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
+                .permitAll()
 
-            .and()
-            .rememberMe().key("uniqueAndSecret");
+                .and().rememberMe().key("uniqueAndSecret");
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder authmanagerbuilder) throws Exception {
         authmanagerbuilder.userDetailsService(mgmtUserDetailsService).passwordEncoder(passwordEncoder());
-        
+
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
