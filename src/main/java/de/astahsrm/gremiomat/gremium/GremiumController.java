@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -24,9 +26,12 @@ import org.springframework.web.server.ResponseStatusException;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
+import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryFormSimple;
 import de.astahsrm.gremiomat.query.QueryService;
+import de.astahsrm.gremiomat.security.MgmtUser;
+import de.astahsrm.gremiomat.security.MgmtUserService;
 
 @Controller
 @RequestMapping("/")
@@ -45,6 +50,12 @@ public class GremiumController {
 
     @Autowired
     private GremiumService gremiumService;
+
+    @Autowired
+    private MgmtUserService mgmtUserService;
+
+    @Autowired
+    private MailService mailService;
 
     @ModelAttribute(USER_ANSWERS)
     public void initSession(Model m) {
@@ -66,11 +77,21 @@ public class GremiumController {
         return "login";
     }
 
-    // TODO Handle password resets!
-    @GetMapping("/password-reset")
+    @PostMapping("/reset-password")
+    public String postReset(HttpServletRequest request, @RequestParam("email") String userEmail) {
+        Optional<MgmtUser> uOpt = mgmtUserService.findUserByEmail(userEmail);
+        if (uOpt.isPresent()) {
+            MgmtUser user = uOpt.get();
+            mailService.sendResetPasswordMail(request.getRequestURI().split("/reset-password")[0], request.getLocale(),
+                    mgmtUserService.createPasswordResetTokenForUser(user), user);
+        }
+        return "redirect:/login?reset=true";
+    }
+
+    @GetMapping("/reset-password")
     public String getReset(Model m) {
         m.addAllAttributes(gremiumService.getGremienNavMap());
-        return REDIRECT_HOME;
+        return "forgot-password";
     }
 
     @GetMapping("/{abbr}")
@@ -83,6 +104,24 @@ public class GremiumController {
             m.addAttribute(GREMIUM, gremiumOptional.get());
             m.addAllAttributes(gremiumService.getGremienNavMap());
             return "gremien/info";
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+    }
+
+    @GetMapping("/{abbr}/candidates/{id}")
+    public String getCandidate(@PathVariable String abbr, @PathVariable long id, Model m) {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            for (Candidate c : gremium.getJoinedCandidates()) {
+                if (c.getId() == id) {
+                    m.addAttribute("candidate", c);
+                    m.addAttribute(GREMIUM, gremium);
+                    m.addAllAttributes(gremiumService.getGremienNavMap());
+                    return "gremien/candidate";
+                }
+            }
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateService.CANDIDATE_NOT_FOUND);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
@@ -116,41 +155,6 @@ public class GremiumController {
                         || queryIndex == gremium.getContainedQueries().size() - 1);
                 m.addAllAttributes(gremiumService.getGremienNavMap());
                 return "gremien/query";
-            }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
-    }
-
-    private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
-            Model m, QueryFormSimple form) {
-        String redirect = REDIRECT_HOME + abbr + "/queries/";
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            if (gremium.getContainedQueries().size() > queryIndex && queryIndex >= 0) {
-                Query q = gremium.getContainedQueries().get(queryIndex);
-                if (nav == QueryNav.SKIP) {
-                    userAnswers.put(q, 2);
-                    m.addAttribute(USER_ANSWERS, userAnswers);
-                    if (queryIndex + 1 < gremium.getContainedQueries().size()) {
-                        return redirect + Integer.toString(queryIndex + 1);
-                    } else {
-                        return redirect + "results";
-                    }
-                }
-                userAnswers.put(q, form.getOpinion());
-                m.addAttribute(USER_ANSWERS, userAnswers);
-                switch (nav) {
-                    case NEXT:
-                        return redirect + Integer.toString(queryIndex + 1);
-                    case PREV:
-                        return redirect + Integer.toString(queryIndex - 1);
-                    case RESULTS:
-                        return redirect + "results";
-                    default:
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-                }
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
@@ -235,21 +239,39 @@ public class GremiumController {
         return REDIRECT_HOME;
     }
 
-    @GetMapping("/{abbr}/candidates/{id}")
-    public String getCandidate(@PathVariable String abbr, @PathVariable long id, Model m) {
+    private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
+            Model m, QueryFormSimple form) {
+        String redirect = REDIRECT_HOME + abbr + "/queries/";
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            for (Candidate c : gremium.getJoinedCandidates()) {
-                if (c.getId() == id) {
-                    m.addAttribute("candidate", c);
-                    m.addAttribute(GREMIUM, gremium);
-                    m.addAllAttributes(gremiumService.getGremienNavMap());
-                    return "gremien/candidate";
+            if (gremium.getContainedQueries().size() > queryIndex && queryIndex >= 0) {
+                Query q = gremium.getContainedQueries().get(queryIndex);
+                if (nav == QueryNav.SKIP) {
+                    userAnswers.put(q, 2);
+                    m.addAttribute(USER_ANSWERS, userAnswers);
+                    if (queryIndex + 1 < gremium.getContainedQueries().size()) {
+                        return redirect + Integer.toString(queryIndex + 1);
+                    } else {
+                        return redirect + "results";
+                    }
+                }
+                userAnswers.put(q, form.getOpinion());
+                m.addAttribute(USER_ANSWERS, userAnswers);
+                switch (nav) {
+                case NEXT:
+                    return redirect + Integer.toString(queryIndex + 1);
+                case PREV:
+                    return redirect + Integer.toString(queryIndex - 1);
+                case RESULTS:
+                    return redirect + "results";
+                default:
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 }
             }
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateService.CANDIDATE_NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
+
 }
