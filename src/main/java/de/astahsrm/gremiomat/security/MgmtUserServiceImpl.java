@@ -2,7 +2,6 @@ package de.astahsrm.gremiomat.security;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -28,6 +27,9 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Autowired
     private PasswordTokenRepository passwordTokenRepository;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Override
     public String getRoleOfUserById(String uid) {
@@ -95,7 +97,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public String createPasswordResetTokenForUser(MgmtUser user) {
-        String token = UUID.randomUUID().toString();
+        String token = securityService.generateResetToken();
         if (getUserById(user.getUsername()).isPresent()) {
             PasswordResetToken myToken = new PasswordResetToken(token, user);
             passwordTokenRepository.save(myToken);

@@ -4,5 +4,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface SecurityService {
-    public String validatePasswordResetToken(String token);
+    public MgmtUser validatePasswordResetToken(String token);
+
+    public String generateResetToken();
+
+    public String generatePassword();
 }
