@@ -209,3 +209,6 @@ docker-persistence/*
 
 # ignore secret configuration files
 secret.properties
+
+# Gzipped log file
+*.log.*.gz
