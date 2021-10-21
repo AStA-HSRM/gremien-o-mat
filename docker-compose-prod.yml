@@ -4,8 +4,6 @@ services:
   spring:
     build: .
     restart: always
-    depends_on:
-      - db
     environment:
       # required arguments
       - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/temp_db
