@@ -23,4 +23,8 @@ public interface MgmtUserService {
     public void delUserById(String username);
 
     public void lockAllUsers();
+
+    public Optional<MgmtUser> findUserByEmail(String userEmail);
+
+    public String createPasswordResetTokenForUser(MgmtUser user);
 }

@@ -2,6 +2,7 @@ package de.astahsrm.gremiomat.security;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
+import de.astahsrm.gremiomat.password.PasswordResetToken;
+import de.astahsrm.gremiomat.password.PasswordTokenRepository;
 
 @Service
 public class MgmtUserServiceImpl implements MgmtUserService {
@@ -22,6 +25,9 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
 
     @Override
     public String getRoleOfUserById(String uid) {
@@ -75,5 +81,25 @@ public class MgmtUserServiceImpl implements MgmtUserService {
             user.setLocked(true);
             saveUser(user);
         }
+    }
+
+    @Override
+    public Optional<MgmtUser> findUserByEmail(String userEmail) {
+        for (MgmtUser user : mgmtUserRepository.findAll()) {
+            if (user.hasDetails() && user.getDetails().getEmail().equals(userEmail)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public String createPasswordResetTokenForUser(MgmtUser user) {
+        String token = UUID.randomUUID().toString();
+        if (getUserById(user.getUsername()).isPresent()) {
+            PasswordResetToken myToken = new PasswordResetToken(token, user);
+            passwordTokenRepository.save(myToken);
+        }
+        return token;
     }
 }
