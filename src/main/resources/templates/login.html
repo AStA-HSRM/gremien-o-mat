@@ -54,9 +54,26 @@
                 </form>
                 <div class="row justify-content-center">
                     <div class="col-12 text-center">
-                        <a class="link-secondary text-decoration-none text-sm" th:href="@{/password-reset}"
+                        <a class="link-secondary text-decoration-none text-sm" th:href="@{/reset-password}"
                             th:text="#{password.forgot}">
                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center w-100">
+            <div class="position-fixed p-3 top-0" style="z-index: 11">
+                <div id="toast" data-bs-autohide="false" class="toast hide" role="alert" aria-live="assertive"
+                    aria-atomic="true">
+                    <div class="toast-header">
+                        <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="20" class="me-2">
+                        <strong class="me-auto" th:text="#{title}"></strong>
+                        <small th:text="#{information}"></small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <p th:text="#{password.reset.toast}">
+                        </p>
                     </div>
                 </div>
             </div>
@@ -64,6 +81,16 @@
     </main>
     <th:block th:insert="fragments/footer.html"></th:block>
     <th:block th:insert="fragments/scripts.html"></th:block>
+    <script lang="js">
+        const urlParams = new URLSearchParams(window.location.search);
+        window.onload = (e) => {
+            let myAlert = document.querySelector('.toast');
+            let bsAlert = new bootstrap.Toast(myAlert);
+            if (urlParams.get('reset') != null && urlParams.get('reset')) {
+                bsAlert.show();
+            }
+        }
+    </script>
 </body>
 
 </html>
