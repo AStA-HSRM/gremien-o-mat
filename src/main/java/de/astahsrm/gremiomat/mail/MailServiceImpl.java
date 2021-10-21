@@ -1,6 +1,9 @@
 package de.astahsrm.gremiomat.mail;
 
+import java.util.Locale;
+
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +13,12 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.security.MgmtUser;
+
 @Service
 public class MailServiceImpl implements MailService {
+
     @Value("${spring.mail.username}")
     private String from;
 
@@ -22,16 +29,33 @@ public class MailServiceImpl implements MailService {
     private TemplateEngine templateEngine;
 
     @Override
-    public void sendMail(String to) throws MessagingException {
+    public void sendResetPasswordMail(String appUrl, Locale locale, String token, MgmtUser user) {
+        String url = appUrl + "/user/change-password?token=" + token;
         Context context = new Context();
-        context.setVariable("name", "Jon Doe");
-        context.setVariable("username", "joDoe");
-        String process = templateEngine.process("mail/test", context);
-        javax.mail.internet.MimeMessage mimeMessage = mailSender.createMimeMessage();
+        Candidate details = user.getDetails();
+        context.setVariable("name", details.getFirstname() + " " + details.getLastname());
+        context.setVariable("username", user.getUsername());
+        context.setVariable("url", url);
+        context.setLocale(locale);
+        try {
+            send(templateEngine.process("mail/reset", context), user);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void send(String html, MgmtUser toUser) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setSubject("Test");
-        helper.setText(process, true);
-        helper.setTo(to);
+        helper.setText(html, true);
+        helper.setTo(toUser.getDetails().getEmail());
         mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendWelcomeMail(Locale locale, MgmtUser user) {
+        // TODO Auto-generated method stub
+
     }
 }
