@@ -92,4 +92,8 @@ public class MgmtUser {
     public void setLocked(boolean isLocked) {
         this.isLocked = isLocked;
     }
+
+    public boolean hasDetails() {
+        return this.details != null;
+    }
 }
