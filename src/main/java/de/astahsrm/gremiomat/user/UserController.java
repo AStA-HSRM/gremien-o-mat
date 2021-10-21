@@ -28,6 +28,7 @@ import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.security.SecurityService;
 
 @Controller
 @RequestMapping("/user")
@@ -47,6 +48,9 @@ public class UserController {
     @Autowired
     private PhotoService photoService;
 
+    @Autowired
+    private SecurityService securityService;
+
     @GetMapping
     public String getUserInfo(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
@@ -61,6 +65,18 @@ public class UserController {
         m.addAttribute("candidate", userDetails);
         return "user/user-info-edit";
     }
+
+    @GetMapping("/changePassword")
+    public String getChangePasswordPage(Model model, 
+      @RequestParam("token") String token) {
+          MgmtUser user = securityService.validatePasswordResetToken(token);
+          if(user != null) {
+            return "change-password";
+          }
+          else {
+            return "redirect:/404";
+          }
+      }
 
     @PostMapping("/info/edit")
     public String postUserInfoEditWithImage(Principal loggedInUser, @ModelAttribute CandidateForm form,
