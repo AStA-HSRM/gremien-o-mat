@@ -15,10 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.password.PasswordResetToken;
 import de.astahsrm.gremiomat.password.PasswordTokenRepository;
 
+@Service
 public class SecurityServiceImpl implements SecurityService {
 
     private static final SecureRandom random = new SecureRandom();
@@ -54,6 +56,9 @@ public class SecurityServiceImpl implements SecurityService {
         return passToken.getExpiryDate().before(cal.getTime());
     }
 
+    /***
+     * https://neilmadden.blog/2018/08/30/moving-away-from-uuids/
+     */
     @Override
     public String generateResetToken() {
         byte[] buffer = new byte[20];
