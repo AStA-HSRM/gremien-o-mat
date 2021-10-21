@@ -27,7 +27,6 @@ import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumForm;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.password.PasswordService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
@@ -63,9 +62,6 @@ public class AdminController {
 
     @Autowired
     private UsernameService usernameService;
-
-    @Autowired
-    private PasswordService passwordService;
 
     @GetMapping
     public String getAdminPage() {
@@ -254,7 +250,6 @@ public class AdminController {
         if (!candidateService.getCandidateByEmail(c.getEmail()).isEmpty()) {
             MgmtUser u = new MgmtUser();
             u.setUsername(usernameService.generateUsername(c));
-            u.setPassword(passwordService.generatePassword());
             u.setRole(SecurityConfig.USER);
             u.setDetails(candidateService.saveCandidate(c));
             mgmtUserService.saveUser(u);
