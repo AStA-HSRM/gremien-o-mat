@@ -1,6 +1,5 @@
 package de.astahsrm.gremiomat.photo;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -54,9 +53,7 @@ public class Photo {
         if (getClass() != obj.getClass())
             return false;
         Photo other = (Photo) obj;
-        if (id != other.id)
-            return false;
-        return true;
+        return id != other.id;
     }
 
     public long getId() {
