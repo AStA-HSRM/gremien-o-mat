@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MgmtUserDetailsService implements UserDetailsService {
+public class MgmtUserDetailsImpl implements UserDetailsService {
     @Autowired
     private MgmtUserRepository mgmtUserRepository;
 
