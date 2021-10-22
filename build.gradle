@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
+	implementation 'org.passay:passay:1.0'
+	implementation 'com.google.guava:guava:11.0.2'
 	implementation 'com.opencsv:opencsv:5.5.2'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
