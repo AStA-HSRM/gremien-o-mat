@@ -22,10 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.candidate.CandidateForm;
+import de.astahsrm.gremiomat.candidate.CandidateDto;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
-import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerForm;
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerDto;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
 import de.astahsrm.gremiomat.password.PasswordDto;
 import de.astahsrm.gremiomat.photo.Photo;
@@ -58,7 +58,7 @@ public class UserController {
     @GetMapping
     public String getUserInfo(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        CandidateForm form = new CandidateForm();
+        CandidateDto form = new CandidateDto();
         form.setFirstname(userDetails.getFirstname());
         form.setLastname(userDetails.getLastname());
         form.setAge(userDetails.getAge());
@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @PostMapping("/info/edit")
-    public String postUserInfoEditWithImage(Principal loggedInUser, @ModelAttribute CandidateForm form,
+    public String postUserInfoEditWithImage(Principal loggedInUser, @ModelAttribute CandidateDto form,
             BindingResult res, Model m) {
         if (res.hasErrors()) {
             return "user/user-info-edit";
@@ -162,7 +162,7 @@ public class UserController {
         Optional<CandidateAnswer> aOpt = candidateAnswerService.getAnswerById(answerId);
         if (aOpt.isPresent()) {
             CandidateAnswer ca = aOpt.get();
-            CandidateAnswerForm form = new CandidateAnswerForm();
+            CandidateAnswerDto form = new CandidateAnswerDto();
             form.setQuery(ca.getQuery());
             form.setAnswerId(ca.getId());
             form.setOpinion(ca.getOpinion());
@@ -175,7 +175,7 @@ public class UserController {
     }
 
     @PostMapping("answers/{answerId}/edit")
-    public String postAnswerEdit(@ModelAttribute CandidateAnswerForm form, @PathVariable long answerId,
+    public String postAnswerEdit(@ModelAttribute CandidateAnswerDto form, @PathVariable long answerId,
             BindingResult res, Principal loggedInUser, Model m) {
         if (res.hasErrors()) {
             return "user/answer-edit";

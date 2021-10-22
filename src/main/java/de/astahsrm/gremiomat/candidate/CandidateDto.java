@@ -1,6 +1,6 @@
 package de.astahsrm.gremiomat.candidate;
 
-public class CandidateForm {
+public class CandidateDto {
 
     private int age;
     private int semester;

@@ -25,12 +25,12 @@ import de.astahsrm.gremiomat.candidate.CandidateFormAdmin;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
-import de.astahsrm.gremiomat.gremium.GremiumForm;
+import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
-import de.astahsrm.gremiomat.query.QueryFormAdmin;
+import de.astahsrm.gremiomat.query.QueryAdminDto;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
@@ -104,12 +104,12 @@ public class AdminController {
 
     @GetMapping("/gremien/new")
     public String getNewGremiumEditPage(Model m) {
-        m.addAttribute("form", new GremiumForm());
+        m.addAttribute("form", new GremiumDto());
         return "admin/gremium-edit";
     }
 
     @PostMapping("/gremien/new")
-    public String postNewUserGremiumPage(GremiumForm form, BindingResult res, Model m) {
+    public String postNewUserGremiumPage(GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
             return "error";
@@ -137,7 +137,7 @@ public class AdminController {
         Optional<Gremium> gOpt = gremiumService.getGremiumByAbbr(abbr);
         if (gOpt.isPresent()) {
             Gremium g = gOpt.get();
-            GremiumForm form = new GremiumForm();
+            GremiumDto form = new GremiumDto();
             form.setAbbr(g.getAbbr());
             form.setName(g.getName());
             form.setDescription(g.getDescription());
@@ -149,7 +149,7 @@ public class AdminController {
     }
 
     @PostMapping("/gremien/{abbr}/edit")
-    public String postGremiumEditPage(GremiumForm form, BindingResult res, Model m) {
+    public String postGremiumEditPage(GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
             return "error";
@@ -170,7 +170,7 @@ public class AdminController {
         Optional<Query> qOpt = queryService.getQueryById(id);
         if (qOpt.isPresent()) {
             Query query = qOpt.get();
-            QueryFormAdmin form = new QueryFormAdmin();
+            QueryAdminDto form = new QueryAdminDto();
             form.setQueryTxt(query.getText());
             form.setGremien(query.getGremien());
             form.setId(query.getId());
@@ -184,7 +184,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/gremien/{abbr}/queries/{id}/edit", params = "save")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, QueryFormAdmin form,
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, QueryAdminDto form,
             BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());

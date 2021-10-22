@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.astahsrm.gremiomat.gremium.Gremium;
 
-public class QueryFormAdmin {
+public class QueryAdminDto {
     private String queryTxt;
     private List<Gremium> gremien;
     private long id;

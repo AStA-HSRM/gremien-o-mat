@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.query.Query;
 
-public class CandidateAnswerForm {
+public class CandidateAnswerDto {
     @NotNull
     private long answerId;
 

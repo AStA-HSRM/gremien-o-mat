@@ -27,7 +27,7 @@ import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.query.Query;
-import de.astahsrm.gremiomat.query.QueryFormSimple;
+import de.astahsrm.gremiomat.query.QueryDto;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
@@ -130,7 +130,7 @@ public class GremiumController {
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             if (gremium.getContainedQueries().size() > queryIndex) {
-                QueryFormSimple form = new QueryFormSimple();
+                QueryDto form = new QueryDto();
                 Query query = gremium.getContainedQueries().get(queryIndex);
                 if (userAnswers.size() > 0) {
                     for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
@@ -160,25 +160,25 @@ public class GremiumController {
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "next")
     public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.NEXT, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "prev")
     public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.PREV, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "results")
     public String resultsPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.RESULTS, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "skip")
     public String skipQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @ModelAttribute QueryFormSimple form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+            @ModelAttribute QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.SKIP, userAnswers, abbr, queryIndex, m, form);
     }
 
@@ -237,7 +237,7 @@ public class GremiumController {
     }
 
     private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
-            Model m, QueryFormSimple form) {
+            Model m, QueryDto form) {
         String redirect = REDIRECT_HOME + abbr + "/queries/";
         Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
