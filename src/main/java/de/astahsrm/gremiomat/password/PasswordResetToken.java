@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.security.MgmtUser;
 
@@ -22,15 +24,22 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     private String token;
 
-    @OneToOne(targetEntity = MgmtUser.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private MgmtUser user;
 
+    @NotNull
     private Date expiryDate;
 
+    public PasswordResetToken() {
+        this.token = "";
+    }
+
     public PasswordResetToken(String token, MgmtUser user) {
+        super();
         setToken(token);
         setUser(user);
     }
