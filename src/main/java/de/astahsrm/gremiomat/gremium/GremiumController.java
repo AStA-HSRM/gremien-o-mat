@@ -26,14 +26,11 @@ import org.springframework.web.server.ResponseStatusException;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
-import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryFormSimple;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
-import de.astahsrm.gremiomat.security.SecurityService;
-
 
 @Controller
 @RequestMapping("/")
@@ -55,12 +52,6 @@ public class GremiumController {
 
     @Autowired
     private MgmtUserService mgmtUserService;
-
-    @Autowired
-    private MailService mailService;
-
-    @Autowired
-    private SecurityService securityService;
 
     @ModelAttribute(USER_ANSWERS)
     public void initSession(Model m) {
@@ -93,28 +84,12 @@ public class GremiumController {
         Optional<MgmtUser> uOpt = mgmtUserService.findUserByEmail(userEmail);
         if (uOpt.isPresent()) {
             MgmtUser user = uOpt.get();
-            mailService.sendResetPasswordMail(request.getRequestURI().split("/reset-password")[0], request.getLocale(),
-                    mgmtUserService.createPasswordResetTokenForUser(user), user);
+            // mailService.sendResetPasswordMail(request.getRequestURI().split("/reset-password")[0],
+            // request.getLocale(), mgmtUserService.createPasswordResetTokenForUser(user),
+            // user);
         }
-        return "redirect:/login?reset=true";
+        return "redirect:/login?reset=0";
     }
-
-    @GetMapping("/change-password")
-    public String getChangePassword(HttpServletRequest request, @RequestParam("token") String token, Model m) {
-        MgmtUser user = securityService.validatePasswordResetToken(token);
-        if (user != null) {
-            m.addAttribute("candidate", user.getDetails());
-            return "change-password";
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/change-password")
-    public String postChangePassword(Model m) {        
-        return "";
-    }
-    
 
     @GetMapping("/{abbr}")
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
