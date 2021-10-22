@@ -10,12 +10,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.password.PasswordResetToken;
@@ -31,12 +25,12 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired
     private PasswordTokenService passwordTokenService;
 
-    public MgmtUser validatePasswordResetToken(String token) {
+    public PasswordResetToken validatePasswordResetToken(String token) {
         Optional<PasswordResetToken> pOpt = passwordTokenService.getTokenByToken(token);
         if (pOpt.isPresent()) {
             PasswordResetToken passToken = pOpt.get();
             if (passToken != null && !isTokenExpired(passToken)) {
-                return passToken.getUser();
+                return pOpt.get();
             }
         }
         return null;
@@ -58,7 +52,11 @@ public class SecurityServiceImpl implements SecurityService {
     public String generateResetToken() {
         byte[] buffer = new byte[20];
         random.nextBytes(buffer);
-        return encoder.encodeToString(buffer);
+        String token = encoder.encodeToString(buffer);
+        while(passwordTokenService.getTokenByToken(token).isPresent()) {
+            token = encoder.encodeToString(buffer);
+        }
+        return token;
     }
 
     public String generatePassword() {

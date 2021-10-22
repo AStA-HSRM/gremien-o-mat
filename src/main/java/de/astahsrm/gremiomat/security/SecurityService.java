@@ -2,9 +2,11 @@ package de.astahsrm.gremiomat.security;
 
 import org.springframework.stereotype.Service;
 
+import de.astahsrm.gremiomat.password.PasswordResetToken;
+
 @Service
 public interface SecurityService {
-    public MgmtUser validatePasswordResetToken(String token);
+    public PasswordResetToken validatePasswordResetToken(String token);
 
     public String generateResetToken();
 
