@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.gremium;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class GremiumDto {
 
@@ -8,8 +9,11 @@ public class GremiumDto {
     private String name;
 
     @NotBlank
+    @Size(min = 3, max = 9)
     private String abbr;
     
+    @NotBlank
+    @Size(max = 500)
     private String description;
 
     public String getName() {

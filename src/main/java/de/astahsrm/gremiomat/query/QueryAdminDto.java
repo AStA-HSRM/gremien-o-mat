@@ -3,11 +3,19 @@ package de.astahsrm.gremiomat.query;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import de.astahsrm.gremiomat.gremium.Gremium;
 
 public class QueryAdminDto {
+
+    @NotBlank
     private String queryTxt;
+
+    @NotNull
     private List<Gremium> gremien;
+
     private long id;
 
     public String getQueryTxt() {
