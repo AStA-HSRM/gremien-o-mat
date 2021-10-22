@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.password.PasswordResetToken;
-import de.astahsrm.gremiomat.password.PasswordTokenRepository;
+import de.astahsrm.gremiomat.password.PasswordTokenService;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
@@ -28,32 +29,26 @@ public class SecurityServiceImpl implements SecurityService {
     private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
 
     @Autowired
-    private PasswordTokenRepository passwordTokenRepository;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordTokenService passwordTokenService;
 
     public MgmtUser validatePasswordResetToken(String token) {
-        final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
-        if (passToken != null && !isTokenExpired(passToken)) {
-            MgmtUser user = passToken.getUser();
-            UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, passwordEncoder.encode(user.getPassword()));
-            Authentication auth = authenticationManager.authenticate(authReq);
-            SecurityContext sc = SecurityContextHolder.getContext();
-            sc.setAuthentication(auth);
-            return user;
-        } else {
-            return null;
+        Optional<PasswordResetToken> pOpt = passwordTokenService.getTokenByToken(token);
+        if (pOpt.isPresent()) {
+            PasswordResetToken passToken = pOpt.get();
+            if (passToken != null && !isTokenExpired(passToken)) {
+                return passToken.getUser();
+            }
         }
-    
+        return null;
     }
 
     private boolean isTokenExpired(PasswordResetToken passToken) {
         final Calendar cal = Calendar.getInstance();
-        return passToken.getExpiryDate().before(cal.getTime());
+        if(passToken.getExpiryDate().before(cal.getTime())) {
+            passwordTokenService.deleteToken(passToken);
+            return true;
+        }
+        return false;
     }
 
     /***
