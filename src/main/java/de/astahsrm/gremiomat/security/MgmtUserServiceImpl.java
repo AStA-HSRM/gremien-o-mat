@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
@@ -30,6 +32,9 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public String getRoleOfUserById(String uid) {
@@ -103,5 +108,23 @@ public class MgmtUserServiceImpl implements MgmtUserService {
             passwordTokenRepository.save(myToken);
         }
         return token;
+    }
+
+    @Override
+    public void changePassword(String token, String newPassword) throws AuthenticationException {
+        PasswordResetToken pToken = securityService.validatePasswordResetToken(token);
+        if(pToken != null) {
+            Optional<MgmtUser> mOpt = mgmtUserRepository.findById(pToken.getUser().getUsername());
+            if(mOpt.isPresent()) {
+                MgmtUser user = mOpt.get();
+                user.setPassword(passwordEncoder.encode(newPassword));
+                saveUser(user);
+                return;
+            }
+            else {
+                throw new EntityNotFoundException();
+            }
+        }
+        throw new AuthenticationException("Token is invalid.");
     }
 }

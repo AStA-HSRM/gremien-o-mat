@@ -3,6 +3,8 @@ package de.astahsrm.gremiomat.security;
 import java.util.List;
 import java.util.Optional;
 
+import javax.naming.AuthenticationException;
+
 import de.astahsrm.gremiomat.candidate.Candidate;
 
 public interface MgmtUserService {
@@ -27,4 +29,6 @@ public interface MgmtUserService {
     public Optional<MgmtUser> findUserByEmail(String userEmail);
 
     public String createPasswordResetTokenForUser(MgmtUser user);
+
+    public void changePassword(String token, String newPassword) throws AuthenticationException;
 }
