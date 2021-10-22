@@ -23,13 +23,13 @@
 # logging.level.org.springframework.boot.autoconfigure=ERROR
 
 # Mail config
-spring.mail.default-encoding=UTF-8
-spring.mail.host=host.boi
-spring.mail.port=69
-spring.mail.username=boi
-spring.mail.password=b01
-spring.mail.test-connection=false
-spring.mail.properties.mail.smtp.auth=true
-spring.mail.properties.mail.smtp.starttls.enable=true
+# spring.mail.default-encoding=UTF-8
+# spring.mail.host=host.boi
+# spring.mail.port=69
+# spring.mail.username=boi
+# spring.mail.password=b01
+# spring.mail.test-connection=false
+# spring.mail.properties.mail.smtp.auth=true
+# spring.mail.properties.mail.smtp.starttls.enable=true
 
-spring.config.import=optional:file:/srv/spring/config/override.properties
+# spring.config.import=optional:file:/srv/spring/config/override.properties

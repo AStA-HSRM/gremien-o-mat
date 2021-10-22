@@ -12,11 +12,9 @@ RUN mkdir -pv ${SPRING_FOLDER}/logs && \
 # Set path for log file
 ENV LOGGING_FILE_NAME=${SPRING_FOLDER}/logs/error.log
 
-# Set path for settings file
-ENV SPRING_CONFIG_LOCATION=${SPRING_FOLDER}/config/application.properties
-
-# Copy over application.properties file to container (ENV variables take precedence)
-COPY src/main/resources/application.properties.prod ${SPRING_FOLDER}/config/application.properties
+# Copy over override.properties file to container (ENV variables take precedence)
+ENV SPRING_CONFIG_IMPORT=optional:file:${SPRING_FOLDER}/config/override.properties
+COPY src/main/resources/application.properties.sample ${SPRING_FOLDER}/config/override.properties
 
 # Set proper perms
 RUN chown -R spring:spring ${SPRING_FOLDER}
