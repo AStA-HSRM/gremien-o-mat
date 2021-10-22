@@ -33,8 +33,8 @@ INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
 
 INSERT INTO mgmt_user (version, username, password, role, details_id) VALUES
-(0,'user','{noop}user','USER',-20),
-(0,'admin','{noop}admin', 'ADMIN', NULL);
+(0,'user','$2a$12$Zxm6Dkl4JRjJ5iyRIkxG6.UfPH177Qah97q99JSoVHhU37CFhTD/C','USER',-20),
+(0,'admin','$2a$12$wTNqe067K8paDzpcggpd1O2ElkaR8JQjSlnaM3wDzsVreexdILsYC', 'ADMIN', NULL);
 
 INSERT INTO password_reset_token (id, expiry_date, token, user_username) VALUES
 (92,'2023-06-15','123','user');
