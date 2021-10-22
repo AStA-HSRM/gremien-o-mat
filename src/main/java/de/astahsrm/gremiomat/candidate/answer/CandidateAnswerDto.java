@@ -1,5 +1,8 @@
 package de.astahsrm.gremiomat.candidate.answer;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.query.Query;
@@ -8,12 +11,19 @@ public class CandidateAnswerDto {
     @NotNull
     private long answerId;
 
+    @NotNull
     private Query query;
     
-    @NotNull
+    @Min(-1)
+    @Max(2)
     private int opinion;
     
+    @NotBlank
     private String reason;
+
+    public CandidateAnswerDto() {
+        this.opinion = 2;
+    }
 
     public long getAnswerId() {
         return answerId;

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -175,7 +176,7 @@ public class UserController {
     }
 
     @PostMapping("answers/{answerId}/edit")
-    public String postAnswerEdit(@ModelAttribute CandidateAnswerDto form, @PathVariable long answerId,
+    public String postAnswerEdit(@Valid CandidateAnswerDto form, @PathVariable long answerId,
             BindingResult res, Principal loggedInUser, Model m) {
         if (res.hasErrors()) {
             return "user/answer-edit";
