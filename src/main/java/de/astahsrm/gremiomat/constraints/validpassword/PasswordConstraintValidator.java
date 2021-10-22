@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.password;
+package de.astahsrm.gremiomat.constraints.validpassword;
 
 import java.util.Arrays;
 

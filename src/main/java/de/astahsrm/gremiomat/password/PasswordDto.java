@@ -1,5 +1,7 @@
 package de.astahsrm.gremiomat.password;
 
+import de.astahsrm.gremiomat.constraints.validpassword.ValidPassword;
+
 public class PasswordDto {
     
     @ValidPassword
