@@ -83,10 +83,10 @@ public class GremiumController {
     public String postReset(HttpServletRequest request, @RequestParam("email") String userEmail) {
         Optional<MgmtUser> uOpt = mgmtUserService.findUserByEmail(userEmail);
         if (uOpt.isPresent()) {
+            /*
             MgmtUser user = uOpt.get();
-            // mailService.sendResetPasswordMail(request.getRequestURI().split("/reset-password")[0],
-            // request.getLocale(), mgmtUserService.createPasswordResetTokenForUser(user),
-            // user);
+            mailService.sendResetPasswordMail(request.getRequestURI().split("/reset-password")[0],request.getLocale(), mgmtUserService.createPasswordResetTokenForUser(user),user);
+            */
         }
         return "redirect:/login?reset=0";
     }
