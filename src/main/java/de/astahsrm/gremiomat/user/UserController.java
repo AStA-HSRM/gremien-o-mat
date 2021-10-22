@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
+import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,7 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerForm;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
+import de.astahsrm.gremiomat.password.PasswordDto;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.security.MgmtUser;
@@ -66,17 +70,29 @@ public class UserController {
         return "user/user-info-edit";
     }
 
-    @GetMapping("/changePassword")
-    public String getChangePasswordPage(Model model, 
-      @RequestParam("token") String token) {
-          MgmtUser user = securityService.validatePasswordResetToken(token);
-          if(user != null) {
-            return "change-password";
-          }
-          else {
-            return "redirect:/404";
-          }
-      }
+    @GetMapping("/change-password")
+    public String getChangePassword(HttpServletRequest request, @RequestParam("token") String token, Model m) {
+        if (securityService.validatePasswordResetToken(token) != null) {
+            m.addAttribute("form", new PasswordDto());
+            return "password/change-password";
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/change-password")
+    public String postChangePassword(@RequestParam("token") String token, Model m, PasswordDto form, BindingResult res) {
+        if (res.hasErrors()) {
+            m.addAttribute("error", true);
+            return "password/change-password";
+        }
+        try {
+            mgmtUserService.changePassword(token, form.getNewPassword());
+            return "redirect:/login?reset=1";
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getExplanation());
+        }
+    }
 
     @PostMapping("/info/edit")
     public String postUserInfoEditWithImage(Principal loggedInUser, @ModelAttribute CandidateForm form,
