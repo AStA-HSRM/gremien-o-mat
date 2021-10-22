@@ -36,6 +36,9 @@ INSERT INTO mgmt_user (version, username, password, role, details_id) VALUES
 (0,'user','{noop}user','USER',-20),
 (0,'admin','{noop}admin', 'ADMIN', NULL);
 
+INSERT INTO password_reset_token (id, expiry_date, token, user_username) VALUES
+(92,'2023-06-15','123','user');
+
 INSERT INTO candidate_answers (answers_id, candidate_id) VALUES
 (-31,-20),
 (-32,-20),
