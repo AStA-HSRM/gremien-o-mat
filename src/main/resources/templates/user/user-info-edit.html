@@ -12,6 +12,8 @@
         <div class="container-fluid">
             <a class="navbar-brand" th:href="@{/}"><img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="30"></a>
             <div>
+                <a class="btn btn-secondary btn-sm my-1" data-bs-toggle="modal" href="#uploadModal" role="button"
+                        aria-controls="uploadModalLabel" th:text="#{edit.photo}"></a>
                 <a class="btn btn-primary btn-sm my-1 mx-2" data-bs-toggle="offcanvas" href="#offcanvas" role="button"
                     aria-controls="offcanvas" th:text="#{edit.profile}">
                 </a>
@@ -39,7 +41,7 @@
             </div>
             <!-- Gremien Badges (Not clickable) -->
             <div class="row justify-content-center">
-                <div class="col-auto text-center my-3">   
+                <div class="col-auto text-center my-3">
                     <th:block th:each="g : ${candidate.gremien}">
                         <span class="badge bg-primary text-light" th:text="${g.name}"></span>
                     </th:block>
@@ -114,18 +116,30 @@
                         <h5 class="modal-title" id="uploadModalLabel" th:text="#{edit.photo}"></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body pb-0">
                         <div class="mb-3">
                             <label for="formFile" class="form-label" th:text="#{edit.photo.cta}"></label>
                             <input class="form-control" name="photo" type="file" id="formFile">
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                            th:text="#{edit.cancel}"></button>
-                        <a class="btn btn-secondary" th:href=@{/user/info/upload/del}
-                            th:text="#{edit.photo.delete}"></a>
-                        <button type="submit" class="btn btn-primary" th:text="#{edit.photo.save}"></button>
+                    <div class="row justify-content-center p-3 pt-0">
+                        <div class="col-12 col-lg-4 text-center mt-2">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary" th:text="#{edit.photo.save}"></button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 text-center mt-2">
+                            <div class="d-grid">
+                                <a class="btn btn-secondary" th:href=@{/user/info/upload/del}
+                                    th:text="#{edit.photo.delete}"></a>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 text-center mt-2">
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                    th:text="#{edit.cancel}"></button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
