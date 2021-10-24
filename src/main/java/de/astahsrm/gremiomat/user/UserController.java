@@ -27,6 +27,8 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerDto;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
+import de.astahsrm.gremiomat.faculty.Faculty;
+import de.astahsrm.gremiomat.faculty.FacultyService;
 import de.astahsrm.gremiomat.password.PasswordDto;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
@@ -55,6 +57,9 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
+    @Autowired
+    private FacultyService facultyService;
+
     @GetMapping
     public String getUserInfo(Principal loggedInUser, Model m) {
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
@@ -65,7 +70,13 @@ public class UserController {
         form.setCourse(userDetails.getCourse());
         form.setSemester(userDetails.getSemester());
         form.setBio(userDetails.getBio());
+        form.setAgeShowing(userDetails.isAgeShowing());
+        form.setCourseShowing(userDetails.isCourseShowing());
+        if(userDetails.getFaculty() != null) {
+            form.setFaculty(userDetails.getFaculty().getAbbr());
+        }
         m.addAttribute("form", form);
+        m.addAttribute("faculties", facultyService.getAllFaculties());
         m.addAttribute("candidate", userDetails);
         return "user/user-info-edit";
     }
@@ -105,8 +116,17 @@ public class UserController {
         c.setLastname(form.getLastname());
         c.setAge(form.getAge());
         c.setSemester(form.getSemester());
+        c.setAgeShowing(form.isAgeShowing());
+        c.setCourseShowing(form.isCourseShowing());
         c.setCourse(form.getCourse());
         c.setBio(form.getBio());
+        Optional<Faculty> fOpt = facultyService.getByAbbr(form.getFaculty());
+        if(fOpt.isPresent()) {
+            c.setFaculty(fOpt.get());
+        }
+        else {
+            c.setFaculty(null);
+        }
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
         if (uOpt.isPresent()) {
             MgmtUser u = uOpt.get();

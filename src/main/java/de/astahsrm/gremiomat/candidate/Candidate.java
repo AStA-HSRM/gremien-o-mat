@@ -18,6 +18,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
+import de.astahsrm.gremiomat.faculty.Faculty;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.photo.Photo;
 
@@ -39,6 +40,9 @@ public class Candidate {
 
     @NotEmpty(message = "{notEmpty}")
     private String email;
+
+    @OneToOne
+    private Faculty faculty;
 
     @NotNull
     @ManyToMany(mappedBy = "joinedCandidates", cascade = CascadeType.PERSIST)
@@ -62,7 +66,15 @@ public class Candidate {
 
     private String course;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean ageShowing;
+    
+    @Column(columnDefinition = "boolean default false")
+    private boolean courseShowing;
+
     public Candidate() {
+        this.ageShowing = false;
+        this.courseShowing = false;
         this.firstname = "";
         this.lastname = "";
         this.email = "";
@@ -96,8 +108,32 @@ public class Candidate {
         return true;
     }
 
+    public boolean isAgeShowing() {
+        return ageShowing;
+    }
+
+    public void setAgeShowing(boolean ageShowing) {
+        this.ageShowing = ageShowing;
+    }
+
+    public boolean isCourseShowing() {
+        return courseShowing;
+    }
+
+    public void setCourseShowing(boolean courseShowing) {
+        this.courseShowing = courseShowing;
+    }
+
     public List<Gremium> getGremien() {
         return gremien;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package de.astahsrm.gremiomat.candidate;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -9,12 +7,8 @@ import de.astahsrm.gremiomat.constraints.semesterandcourse.SemesterAndCourse;
 
 public class CandidateDto {
 
-    @Min(0)
-    @Max(120)
     private int age;
 
-    @Min(1)
-    @Max(20)
     @SemesterAndCourse
     private int semester;
 
@@ -24,12 +18,53 @@ public class CandidateDto {
     @NotBlank
     private String lastname;
 
+    private String faculty;
+
     @Size(max = 50)
-    @SemesterAndCourse
     private String course;
 
     @Size(max = 1000)
     private String bio;
+
+    private boolean ageShowing;
+
+    private boolean courseShowing;
+
+    public CandidateDto() {
+        this.age = 0;
+        this.semester = 0;
+        this.firstname = "";
+        this.lastname = "";
+        this.faculty = "";
+        this.course = "";
+        this.bio = "";
+        this.ageShowing = false;
+        this.courseShowing = false;
+    }
+
+    public boolean isAgeShowing() {
+        return ageShowing;
+    }
+
+    public void setAgeShowing(boolean ageShowing) {
+        this.ageShowing = ageShowing;
+    }
+
+    public boolean isCourseShowing() {
+        return courseShowing;
+    }
+
+    public void setCourseShowing(boolean courseShowing) {
+        this.courseShowing = courseShowing;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
 
     public int getAge() {
         return age;

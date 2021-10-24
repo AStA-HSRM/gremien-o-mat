@@ -18,6 +18,11 @@ INSERT INTO candidate (id, version, firstname, lastname, email) VALUES
 (-21,0,'Kim','Kardashian','2@mail.de'),
 (-22,0,'Robert','McClanahan','3@mail.de');
 
+INSERT INTO faculty (abbr, name, version) VALUES
+('UDE', 'Unter den Eichen', 0),
+('ING', 'Ingeneurswissenschaften', 0),
+('KSR','Kurt-Schuhmacher Ring', 0);
+
 INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-31,0,-1,1,'Weil ich der erste Kandidat bin!'),
   (-32,0,-2,-1,'Weil ich der erste Kandidat bin!'),
