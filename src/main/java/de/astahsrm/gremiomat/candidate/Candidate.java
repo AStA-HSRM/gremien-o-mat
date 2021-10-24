@@ -73,12 +73,12 @@ public class Candidate {
     private boolean courseShowing;
 
     @Column(columnDefinition = "boolean default false")
-    private boolean welcomed;
+    private boolean welcomeMailSent;
 
     public Candidate() {
         this.ageShowing = false;
         this.courseShowing = false;
-        this.welcomed = false;
+        this.welcomeMailSent = false;
         this.firstname = "";
         this.lastname = "";
         this.email = "";
@@ -112,12 +112,12 @@ public class Candidate {
         return true;
     }
 
-    public boolean isWelcomed() {
-        return welcomed;
+    public boolean isWelcomeMailSent() {
+        return welcomeMailSent;
     }
 
-    public void setWelcomed(boolean welcomed) {
-        this.welcomed = welcomed;
+    public void setWelcomeMailSent(boolean welcomeMailSent) {
+        this.welcomeMailSent = welcomeMailSent;
     }
 
     public boolean isAgeShowing() {
