@@ -43,7 +43,9 @@
                     <th:block th:each="g : ${candidate.gremien}">
                         <span class="badge bg-primary text-light" th:text="${g.name}"></span>
                     </th:block>
-                    <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
+                    <th:block th:if="${candidate.faculty} != null">
+                        <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
+                    </th:block>
                 </div>
             </div>
             <!-- Candidate Name and Course -->

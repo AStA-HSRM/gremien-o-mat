@@ -26,7 +26,9 @@
                         <a class="text-decoration-none" th:href="@{/__${g.abbr}__}"><span
                                 class="badge bg-primary text-light" th:text="${g.name}"></span></a>
                     </th:block>
-                    <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
+                    <th:block th:if="${candidate.faculty} != null">
+                        <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
+                    </th:block>
                 </div>
             </div>
             <div class="row justify-content-center mb-4">
