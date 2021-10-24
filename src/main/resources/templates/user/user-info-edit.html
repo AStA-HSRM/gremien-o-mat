@@ -21,9 +21,9 @@
     </nav>
     <!-- Main Content -->
     <main>
-        <div class="container-fluid pt-5">
+        <div class="container py-4 mt-lg-5">
             <div class="row justify-content-center">
-                <div class="col-12 col-lg-3 text-center px-5">
+                <div class="col-auto text-center px-5">
                     <!-- Profile Image Modal Trigger -->
                     <a data-bs-toggle="modal" href="#uploadModal" role="button" aria-controls="uploadModalLabel">
                         <div class="image-container mx-auto">
@@ -35,22 +35,25 @@
                             </div>
                         </div>
                     </a>
-                    <!-- Gremien Badges (Not clickable) -->
-                    <p class="mt-3">
-                        <th:block th:each="g : ${candidate.gremien}">
-                            <span class="badge bg-light text-secondary" th:text="${g.name}"></span>
-                        </th:block>
-                    </p>
+                </div>
+            </div>
+            <!-- Gremien Badges (Not clickable) -->
+            <div class="row justify-content-center">
+                <div class="col-auto text-center my-3">   
+                    <th:block th:each="g : ${candidate.gremien}">
+                        <span class="badge bg-primary text-light" th:text="${g.name}"></span>
+                    </th:block>
+                    <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
                 </div>
             </div>
             <!-- Candidate Name and Course -->
             <div class="row justify-content-center mb-4">
                 <div class="col-12 col-lg-8 text-center">
                     <h2 class="card-text text-"
-                        th:text="${candidate.age le 0} ? |${candidate.firstname} ${candidate.lastname}| : |${candidate.firstname} ${candidate.lastname}, ${candidate.age}|">
+                        th:text="${candidate.ageShowing} ? |${candidate.firstname} ${candidate.lastname}, ${candidate.age}| : |${candidate.firstname} ${candidate.lastname}|">
                     </h2>
                     <h6 class="text-secondary"
-                        th:text="${candidate.semester le 0 || candidate.course eq ''} ? #{candidate.student} : |${candidate.semester}. Semester, ${candidate.course}|">
+                        th:text="${candidate.courseShowing} ? |${candidate.semester}. #{semester}, ${candidate.course}| : #{candidate.student}">
                     </h6>
                 </div>
             </div>
@@ -62,7 +65,7 @@
             </div>
             <!-- Answers -->
             <div class="row justify-content-center" th:if="${candidate.answers != null}">
-                <div class="col-12 col-lg-6">
+                <div class="col-lg-7">
                     <h4 class="mb-4 text-center" th:text="#{candidate.answers}"></h4>
                     <div class="accordion" id="answers">
                         <th:block th:each="a, status : ${candidate.answers}">
@@ -133,39 +136,55 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <form th:method="POST" th:action="@{/user/info/edit}" th:object="${form}">
-                <div class="mb-3">
+            <form class="row g-2" th:method="POST" th:action="@{/user/info/edit}" th:object="${form}">
+                <div class="mb-3 col-md-9">
                     <label for="firstname" th:text="#{firstname}"></label>
                     <input th:field="*{firstname}" th:placeholder="#{placeholder.firstname}" type="text"
                         class="form-control" id="firstname">
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 col-md-3">
+                    <label for="age" th:text="#{age}"></label>
+                    <input th:field="*{age}" type="number" min="16" max="120" class="form-control" id="age"
+                        aria-describedby="ageHelp">
+                </div>
+                <div class="mb-3 col-12">
                     <label for="lastname" th:text="#{lastname}"></label>
                     <input th:field="*{lastname}" th:placeholder="#{placeholder.lastname}" type="text"
                         class="form-control" id="lastname">
                 </div>
-                <div class="mb-3">
-                    <label for="age" th:text="#{age}"></label>
-                    <input th:field="*{age}" type="text" class="form-control" id="age" aria-describedby="ageHelp">
-                    <div id="ageHelp" class="form-text" th:text="#{help.age}"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="semester" th:text="#{semester}"></label>
-                    <input th:field="*{semester}" type="text" class="form-control" id="semester"
-                        aria-describedby="semesterHelp">
-                    <div id="semesterHelp" class="form-text" th:text="#{help.semester}"></div>
-                </div>
-                <div class="mb-3">
+                <div class="mb-3 col-md-9">
                     <label for="course" th:text="#{course}"></label>
                     <input th:field="*{course}" th:placeholder="#{placeholder.course}" type="text" class="form-control"
                         id="course">
                 </div>
-                <div class="mb-4">
+                <div class="mb-3 col-md-3">
+                    <label for="semester" th:text="#{semester}"></label>
+                    <input th:field="*{semester}" type="number" min="1" class="form-control" id="semester"
+                        aria-describedby="semesterHelp">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="faculty" th:text="#{faculty}"></label>
+                    <select th:field="*{faculty}" class="form-select" id="faculty">
+                        <option th:selected="(*{faculty} eq '')" th:text="#{placeholder.faculty}" th:value="${null}">
+                        </option>
+                        <option th:selected="(*{faculty} eq ${f.abbr})" th:each="f : ${faculties}" th:value="${f.abbr}"
+                            th:text="${f.name}"></option>
+                    </select>
+                </div>
+                <div>
                     <label for="bio" th:text="#{bio}"></label>
                     <textarea th:field="*{bio}" type="text" class="form-control" id="bio"
                         th:placeholder="#{placeholder.bio}" style="height: 12rem;"></textarea>
                 </div>
-                <div class="d-grid gap-3">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="showCourse" th:field="*{courseShowing}">
+                    <label class="form-check-label" for="showCourse" th:text="#{show.course}"></label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="showAge" th:field="*{ageShowing}">
+                    <label class="form-check-label" for="showAge" th:text="#{show.age}"></label>
+                </div>
+                <div class="d-grid gap-3 mt-4">
                     <button class="btn btn-primary" type="submit" th:text="#{edit.save}"></button>
                 </div>
             </form>

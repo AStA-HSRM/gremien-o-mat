@@ -11,18 +11,22 @@
     <th:block th:insert="fragments/nav.html"></th:block>
     <!-- Main Content -->
     <main>
-        <div class="container py-4 px-4">
+        <div class="container py-4 mt-lg-5">
             <div class="row justify-content-center">
-                <div class="col-12 col-lg-8 text-center">
+                <div class="col-auto text-center">
                     <img class="profile-img"
                         th:src="${candidate.getPhoto() != null} ? @{/api/v1/photo/__${candidate.id}__} : @{/assets/img/placeholder.jpg}"
                         alt="Profile picture" />
-                    <p class="mt-3">
-                        <th:block th:each="g : ${candidate.gremien}">
-                            <a class="text-decoration-none" th:href="@{/__${g.abbr}__}"><span
-                                    class="badge bg-light text-secondary" th:text="${g.name}"></span></a>
-                        </th:block>
-                    </p>
+                </div>
+            </div>
+            <!-- Gremien Badges -->
+            <div class="row justify-content-center">
+                <div class="col-auto text-center my-3">
+                    <th:block th:each="g : ${candidate.gremien}">
+                        <a class="text-decoration-none" th:href="@{/__${g.abbr}__}"><span
+                                class="badge bg-primary text-light" th:text="${g.name}"></span></a>
+                    </th:block>
+                    <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
                 </div>
             </div>
             <div class="row justify-content-center mb-4">
@@ -43,8 +47,8 @@
             </div>
             <!-- Answers -->
             <div class="row justify-content-center" th:if="${candidate.answers != null}">
-                <div class="col-12 col-lg-6">
-                    <h4 class="mb-4 text-center">Meine Standpunkte</h4>
+                <div class="col-lg-7">
+                    <h4 class="mb-4 text-center" th:text="#{candidate.answers}"></h4>
                     <div class="accordion" id="answers">
                         <th:block th:each="a, status : ${candidate.answers}">
                             <div class="accordion-item">
