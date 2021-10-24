@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
+import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryDto;
 import de.astahsrm.gremiomat.query.QueryService;
@@ -53,6 +54,9 @@ public class GremiumController {
 
     @Autowired
     private MgmtUserService mgmtUserService;
+
+    @Autowired
+    private MailService mailService;
 
     @ModelAttribute(USER_ANSWERS)
     public void initSession(Model m) {
@@ -84,10 +88,8 @@ public class GremiumController {
     public String postReset(HttpServletRequest request, @RequestParam("email") String userEmail) {
         Optional<MgmtUser> uOpt = mgmtUserService.findUserByEmail(userEmail);
         if (uOpt.isPresent()) {
-            /*
             MgmtUser user = uOpt.get();
-            mailService.sendResetPasswordMail(request.getRequestURI().split("/reset-password")[0],request.getLocale(), mgmtUserService.createPasswordResetTokenForUser(user),user);
-            */
+            mailService.sendResetPasswordMail(request.getLocale(), user);
         }
         return "redirect:/login?reset=0";
     }
@@ -157,26 +159,26 @@ public class GremiumController {
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "next")
-    public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @Valid QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    public String nextQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers, @Valid QueryDto form,
+            @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.NEXT, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "prev")
-    public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @Valid QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    public String prevQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers, @Valid QueryDto form,
+            @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.PREV, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "results")
-    public String resultsPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @Valid QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    public String resultsPost(@SessionAttribute HashMap<Query, Integer> userAnswers, @Valid QueryDto form,
+            @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.RESULTS, userAnswers, abbr, queryIndex, m, form);
     }
 
     @PostMapping(value = "/{abbr}/queries/{queryIndex}", params = "skip")
-    public String skipQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers,
-            @Valid QueryDto form, @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
+    public String skipQueryPost(@SessionAttribute HashMap<Query, Integer> userAnswers, @Valid QueryDto form,
+            @PathVariable String abbr, @PathVariable int queryIndex, Model m) {
         return handleQueryNav(QueryNav.SKIP, userAnswers, abbr, queryIndex, m, form);
     }
 

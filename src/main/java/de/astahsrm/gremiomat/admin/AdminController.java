@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.opencsv.exceptions.CsvException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
@@ -62,6 +65,9 @@ public class AdminController {
 
     @Autowired
     private UsernameService usernameService;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     public String getAdminPage() {
@@ -234,7 +240,8 @@ public class AdminController {
     }
 
     @PostMapping("/users/new")
-    public String postNewUser(@ModelAttribute CandidateDtoAdmin form, BindingResult res, Model m) {
+    public String postNewUser(HttpServletRequest request, @ModelAttribute CandidateDtoAdmin form, BindingResult res,
+            Model m) {
         if (res.hasErrors()) {
             return "admin/user-edit";
         }
@@ -253,7 +260,7 @@ public class AdminController {
             u.setRole(SecurityConfig.USER);
             u.setDetails(candidateService.saveCandidate(c));
             mgmtUserService.saveUser(u);
-            // TODO Send Welcome Mail after User is saved.
+            mailService.sendWelcomeMail(request.getLocale(), u);
             return "redirect:/admin/users/";
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");
