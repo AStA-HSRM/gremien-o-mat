@@ -56,11 +56,9 @@
             </div>
             <!-- Bio -->
             <div class="row justify-content-center mb-4" th:if="${candidate.bio != null && candidate.bio != ''}">
-                <div class="col-lg-3"></div>
-                <div class="col-lg-6 col text-justify">
-                    <p th:text="${candidate.bio}"></p>
+                <div class="col-auto text-justify">
+                    <div style="max-width: 500px;" th:text="${candidate.bio}"></div>
                 </div>
-                <div class="col-lg-3"></div>
             </div>
             <!-- Answers -->
             <div class="row justify-content-center" th:if="${candidate.answers != null}">
@@ -120,7 +118,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                             th:text="#{edit.cancel}"></button>
-                        <a class="btn btn-danger" th:href=@{/user/info/upload/del} th:text="#{edit.photo.delete}"></a>
+                        <a class="btn btn-secondary" th:href=@{/user/info/upload/del}
+                            th:text="#{edit.photo.delete}"></a>
                         <button type="submit" class="btn btn-primary" th:text="#{edit.photo.save}"></button>
                     </div>
                 </form>

@@ -37,8 +37,8 @@
             </div>
             <!-- Bio -->
             <div class="row justify-content-center mb-4" th:if="${candidate.bio != null && candidate.bio != ''}">
-                <div class="col-12 col-lg-6 text-align-justify">
-                    <p th:text="${candidate.bio}"></p>
+                <div class="col-auto text-justify">
+                    <div style="max-width: 500px;" th:text="${candidate.bio}"></div>
                 </div>
             </div>
             <!-- Answers -->
