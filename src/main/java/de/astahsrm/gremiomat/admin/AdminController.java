@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.candidate.CandidateFormAdmin;
+import de.astahsrm.gremiomat.candidate.CandidateDtoAdmin;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
@@ -218,7 +218,7 @@ public class AdminController {
     @GetMapping("/users/new")
     public String getUserNew(Principal loggedInUser, Model m) {
         Candidate c = new Candidate();
-        CandidateFormAdmin form = new CandidateFormAdmin();
+        CandidateDtoAdmin form = new CandidateDtoAdmin();
         form.setAge(c.getAge());
         form.setBio(c.getBio());
         form.setCourse(c.getCourse());
@@ -234,7 +234,7 @@ public class AdminController {
     }
 
     @PostMapping("/users/new")
-    public String postNewUser(@ModelAttribute CandidateFormAdmin form, BindingResult res, Model m) {
+    public String postNewUser(@ModelAttribute CandidateDtoAdmin form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             return "admin/user-edit";
         }
@@ -276,7 +276,7 @@ public class AdminController {
     @GetMapping("/users/{username}/edit")
     public String getUserEditPage(@PathVariable String username, Model m) {
         Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
-        CandidateFormAdmin form = new CandidateFormAdmin();
+        CandidateDtoAdmin form = new CandidateDtoAdmin();
         form.setAge(c.getAge());
         form.setBio(c.getBio());
         form.setCourse(c.getCourse());
@@ -301,7 +301,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/users/{username}/edit", params = "save")
-    public String postUserEditPage(@PathVariable String username, @ModelAttribute CandidateFormAdmin form,
+    public String postUserEditPage(@PathVariable String username, @ModelAttribute CandidateDtoAdmin form,
             BindingResult res, Model m) {
         if (res.hasErrors()) {
             return "admin/user-edit";

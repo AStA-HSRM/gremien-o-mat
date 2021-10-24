@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 
 import de.astahsrm.gremiomat.gremium.Gremium;
 
-public class CandidateFormAdmin {
+public class CandidateDtoAdmin {
 
     @NotEmpty
     @Min(16)
