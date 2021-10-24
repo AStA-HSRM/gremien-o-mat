@@ -72,9 +72,13 @@ public class Candidate {
     @Column(columnDefinition = "boolean default false")
     private boolean courseShowing;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean welcomed;
+
     public Candidate() {
         this.ageShowing = false;
         this.courseShowing = false;
+        this.welcomed = false;
         this.firstname = "";
         this.lastname = "";
         this.email = "";
@@ -106,6 +110,14 @@ public class Candidate {
         } else if (!email.equals(other.email))
             return false;
         return true;
+    }
+
+    public boolean isWelcomed() {
+        return welcomed;
+    }
+
+    public void setWelcomed(boolean welcomed) {
+        this.welcomed = welcomed;
     }
 
     public boolean isAgeShowing() {
