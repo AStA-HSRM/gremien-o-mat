@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.constraints.fieldsexist;
+package de.astahsrm.gremiomat.constraints.courseandsemesterbothexist;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

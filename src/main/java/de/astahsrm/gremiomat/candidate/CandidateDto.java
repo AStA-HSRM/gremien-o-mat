@@ -3,7 +3,7 @@ package de.astahsrm.gremiomat.candidate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import de.astahsrm.gremiomat.constraints.fieldsexist.CourseAndSemesterBothExist;
+import de.astahsrm.gremiomat.constraints.courseandsemesterbothexist.CourseAndSemesterBothExist;
 
 @CourseAndSemesterBothExist
 public class CandidateDto {

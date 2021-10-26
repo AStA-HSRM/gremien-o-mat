@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.constraints.fieldsexist;
+package de.astahsrm.gremiomat.constraints.courseandsemesterbothexist;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
