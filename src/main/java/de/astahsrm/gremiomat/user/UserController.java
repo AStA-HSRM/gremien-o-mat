@@ -72,7 +72,7 @@ public class UserController {
         form.setBio(userDetails.getBio());
         form.setAgeShowing(userDetails.isAgeShowing());
         form.setCourseShowing(userDetails.isCourseShowing());
-        if(userDetails.getFaculty() != null) {
+        if (userDetails.getFaculty() != null) {
             form.setFaculty(userDetails.getFaculty().getAbbr());
         }
         m.addAttribute("form", form);
@@ -92,9 +92,11 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public String postChangePassword(@RequestParam("token") String token, Model m, PasswordDto form, BindingResult res) {
+    public String postChangePassword(@RequestParam("token") String token, Model m, @Valid PasswordDto form,
+            BindingResult res) {
         if (res.hasErrors()) {
-            m.addAttribute("error", true);
+            m.addAttribute("error", res.getAllErrors());
+            m.addAttribute("form", new PasswordDto());
             return "password/change-password";
         }
         try {
@@ -106,8 +108,8 @@ public class UserController {
     }
 
     @PostMapping("/info/edit")
-    public String postUserInfoEditWithImage(Principal loggedInUser, @Valid CandidateDto form,
-            BindingResult res, Model m) {
+    public String postUserInfoEditWithImage(Principal loggedInUser, @Valid CandidateDto form, BindingResult res,
+            Model m) {
         if (res.hasErrors()) {
             return "user/user-info-edit";
         }
@@ -121,10 +123,9 @@ public class UserController {
         c.setCourse(form.getCourse());
         c.setBio(form.getBio());
         Optional<Faculty> fOpt = facultyService.getByAbbr(form.getFaculty());
-        if(fOpt.isPresent()) {
+        if (fOpt.isPresent()) {
             c.setFaculty(fOpt.get());
-        }
-        else {
+        } else {
             c.setFaculty(null);
         }
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
@@ -195,8 +196,8 @@ public class UserController {
     }
 
     @PostMapping("answers/{answerId}/edit")
-    public String postAnswerEdit(@Valid CandidateAnswerDto form, @PathVariable long answerId,
-            BindingResult res, Principal loggedInUser, Model m) {
+    public String postAnswerEdit(@Valid CandidateAnswerDto form, @PathVariable long answerId, BindingResult res,
+            Principal loggedInUser, Model m) {
         if (res.hasErrors()) {
             return "user/answer-edit";
         }
