@@ -41,9 +41,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendResetPasswordMail(Locale locale, MgmtUser user) {
         Context context = new Context();
-        Candidate details = user.getDetails();
         String url = URL + "/user/change-password?token=" + mgmtUserService.createPasswordResetTokenForUser(user);
-        context.setVariable("fullname", details.getFirstname() + " " + details.getLastname());
         context.setVariable("url", url);
         context.setLocale(locale);
         try {
