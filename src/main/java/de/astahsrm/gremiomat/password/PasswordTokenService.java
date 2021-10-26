@@ -6,4 +6,6 @@ public interface PasswordTokenService {
     public Optional<PasswordResetToken> getTokenByToken(String token);
 
     public void deleteToken(PasswordResetToken passToken);
+
+    public void save(PasswordResetToken myToken);
 }

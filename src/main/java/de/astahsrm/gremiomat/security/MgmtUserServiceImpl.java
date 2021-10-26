@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.password.PasswordResetToken;
-import de.astahsrm.gremiomat.password.PasswordTokenRepository;
+import de.astahsrm.gremiomat.password.PasswordTokenService;
 
 @Service
 public class MgmtUserServiceImpl implements MgmtUserService {
@@ -28,7 +28,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     private CandidateService candidateService;
 
     @Autowired
-    private PasswordTokenRepository passwordTokenRepository;
+    private PasswordTokenService passwordTokenService;
 
     @Autowired
     private SecurityService securityService;
@@ -102,12 +102,12 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public String createPasswordResetTokenForUser(MgmtUser user) {
-        String token = securityService.generateResetToken();
+        String tokenStr = securityService.generateResetToken();
         if (getUserById(user.getUsername()).isPresent()) {
-            PasswordResetToken myToken = new PasswordResetToken(token, user);
-            passwordTokenRepository.save(myToken);
+            PasswordResetToken token = new PasswordResetToken(tokenStr, user);
+            passwordTokenService.save(token);
         }
-        return token;
+        return tokenStr;
     }
 
     @Override
@@ -119,6 +119,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
                 MgmtUser user = mOpt.get();
                 user.setPassword(passwordEncoder.encode(newPassword));
                 saveUser(user);
+                passwordTokenService.deleteToken(pToken);
                 return;
             }
             else {

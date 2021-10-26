@@ -25,4 +25,10 @@ public class PasswordTokenServiceImpl implements PasswordTokenService {
     public void deleteToken(PasswordResetToken passToken) {
        passwordTokenRepository.delete(passToken);
     }
+
+    @Override
+    public void save(PasswordResetToken token) {
+       passwordTokenRepository.save(token);
+    }
+
 }
