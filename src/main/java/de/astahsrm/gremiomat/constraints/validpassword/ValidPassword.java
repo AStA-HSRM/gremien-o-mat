@@ -12,8 +12,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 
 @Documented
 @Constraint(validatedBy = PasswordConstraintValidator.class)
-@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.ANNOTATION_TYPE })
-@Retention(value = RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPassword {
 
     String message() default "Invalid Password";
