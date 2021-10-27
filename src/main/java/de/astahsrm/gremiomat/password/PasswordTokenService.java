@@ -3,9 +3,13 @@ package de.astahsrm.gremiomat.password;
 import java.util.Optional;
 
 public interface PasswordTokenService {
-    public Optional<PasswordResetToken> getTokenByToken(String token);
+    public Optional<PasswordToken> getTokenByToken(String token);
 
-    public void deleteToken(PasswordResetToken passToken);
+    public void deleteToken(PasswordToken passToken);
 
-    public void save(PasswordResetToken myToken);
+    public void save(PasswordToken myToken);
+
+    public PasswordToken validatePasswordResetToken(String token);
+
+    public String generateResetToken();
 }
