@@ -16,7 +16,7 @@ import de.astahsrm.gremiomat.security.MgmtUser;
 
 
 @Entity
-public class PasswordResetToken {
+public class PasswordToken {
 
     private static final int EXPIRATION = 60 * 24;
 
@@ -34,11 +34,11 @@ public class PasswordResetToken {
     @NotNull
     private Date expiryDate;
 
-    public PasswordResetToken() {
+    public PasswordToken() {
         this.token = "";
     }
 
-    public PasswordResetToken(String token, MgmtUser user) {
+    public PasswordToken(String token, MgmtUser user) {
         super();
         setToken(token);
         setUser(user);
