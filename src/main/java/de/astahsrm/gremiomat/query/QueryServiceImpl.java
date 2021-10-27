@@ -1,11 +1,18 @@
 package de.astahsrm.gremiomat.query;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
@@ -67,5 +74,31 @@ public class QueryServiceImpl implements QueryService {
             }
         }
         queryRepository.delete(q);
+    }
+
+    @Override
+    public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr)
+            throws IOException, CsvException {
+        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(gremiumAbbr);
+        if (gremiumOptional.isPresent()) {
+            Gremium gremium = gremiumOptional.get();
+            CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
+                    .build();
+            String[] entry;
+            while ((entry = reader.readNext()) != null) {
+                Optional<Query> qOpt = getQueryByTxt(entry[0]);
+                Query q = null;
+                if (qOpt.isPresent()) {
+                    q = qOpt.get();
+                } else {
+                    q = new Query();
+                }
+                q.addGremium(gremium);
+                q.setText(entry[0]);
+                gremiumService.addQueryToGremium(saveQuery(q), gremium);
+            }
+        } else {
+            throw new EntityNotFoundException();
+        }
     }
 }
