@@ -12086,6 +12086,10 @@ footer {
   font-size: small;
 }
 
+.text-mono {
+  font-family: monospace;
+}
+
 .text-align-justify {
   text-align: justify;
 }
