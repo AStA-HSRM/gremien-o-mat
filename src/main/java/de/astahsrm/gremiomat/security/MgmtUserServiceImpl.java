@@ -1,12 +1,15 @@
 package de.astahsrm.gremiomat.security;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -15,7 +18,8 @@ import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
-import de.astahsrm.gremiomat.password.PasswordResetToken;
+import de.astahsrm.gremiomat.mail.MailService;
+import de.astahsrm.gremiomat.password.PasswordToken;
 import de.astahsrm.gremiomat.password.PasswordTokenService;
 
 @Service
@@ -31,10 +35,10 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     private PasswordTokenService passwordTokenService;
 
     @Autowired
-    private SecurityService securityService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private MailService mailService;
 
     @Override
     public String getRoleOfUserById(String uid) {
@@ -102,9 +106,9 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public String createPasswordResetTokenForUser(MgmtUser user) {
-        String tokenStr = securityService.generateResetToken();
+        String tokenStr = passwordTokenService.generateResetToken();
         if (getUserById(user.getUsername()).isPresent()) {
-            PasswordResetToken token = new PasswordResetToken(tokenStr, user);
+            PasswordToken token = new PasswordToken(tokenStr, user);
             passwordTokenService.save(token);
         }
         return tokenStr;
@@ -112,20 +116,48 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public void changePassword(String token, String newPassword) throws AuthenticationException {
-        PasswordResetToken pToken = securityService.validatePasswordResetToken(token);
-        if(pToken != null) {
+        PasswordToken pToken = passwordTokenService.validatePasswordResetToken(token);
+        if (pToken != null) {
             Optional<MgmtUser> mOpt = mgmtUserRepository.findById(pToken.getUser().getUsername());
-            if(mOpt.isPresent()) {
+            if (mOpt.isPresent()) {
                 MgmtUser user = mOpt.get();
                 user.setPassword(passwordEncoder.encode(newPassword));
                 saveUser(user);
                 passwordTokenService.deleteToken(pToken);
                 return;
-            }
-            else {
+            } else {
                 throw new EntityNotFoundException();
             }
         }
         throw new AuthenticationException("Token is invalid.");
+    }
+
+    @Override
+    public void saveNewUser(Candidate c, Locale locale) {
+        mailService.sendWelcomeMail(locale, saveUser(new MgmtUser(generateUsername(c), generatePassword(), c)));
+    }
+
+    private String generateUsername(Candidate c) {
+        String username = c.getFirstname().substring(0, 2).concat(c.getLastname().substring(0, 3));
+        int count = 0;
+        String result = String.format("%s%03d", username, count);
+        while (getUserById(result).isPresent()) {
+            count++;
+            result = String.format("%s%03d", username, count);
+        }
+        return result;
+    }
+
+    private String generatePassword() {
+        String upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true);
+        String lowerCaseLetters = RandomStringUtils.random(2, 97, 122, true, true);
+        String numbers = RandomStringUtils.randomNumeric(2);
+        String specialChar = RandomStringUtils.random(2, 33, 47, false, false);
+        String totalChars = RandomStringUtils.randomAlphanumeric(2);
+        String combinedChars = upperCaseLetters.concat(lowerCaseLetters).concat(numbers).concat(specialChar)
+                .concat(totalChars);
+        List<Character> pwdChars = combinedChars.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        Collections.shuffle(pwdChars);
+        return pwdChars.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
     }
 }

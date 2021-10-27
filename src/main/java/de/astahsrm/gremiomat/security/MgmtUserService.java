@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.security;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.naming.AuthenticationException;
@@ -17,6 +18,8 @@ public interface MgmtUserService {
     public Optional<MgmtUser> getUserById(String name);
 
     public MgmtUser saveUser(MgmtUser u);
+    
+    public void saveNewUser(Candidate c, Locale locale);
 
     public List<MgmtUser> getAllUsersSortedByUsername();
 
@@ -31,4 +34,5 @@ public interface MgmtUserService {
     public String createPasswordResetTokenForUser(MgmtUser user);
 
     public void changePassword(String token, String newPassword) throws AuthenticationException;
+
 }
