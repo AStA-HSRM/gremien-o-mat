@@ -25,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateDtoAdmin;
 import de.astahsrm.gremiomat.candidate.CandidateService;
-import de.astahsrm.gremiomat.csv.CSVService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
@@ -37,16 +36,11 @@ import de.astahsrm.gremiomat.query.QueryAdminDto;
 import de.astahsrm.gremiomat.query.QueryService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
-import de.astahsrm.gremiomat.security.SecurityConfig;
-import de.astahsrm.gremiomat.username.UsernameService;
 import javassist.NotFoundException;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-
-    @Autowired
-    private CSVService csvService;
 
     @Autowired
     private CandidateService candidateService;
@@ -64,9 +58,6 @@ public class AdminController {
     private PhotoService photoService;
 
     @Autowired
-    private UsernameService usernameService;
-
-    @Autowired
     private MailService mailService;
 
     @GetMapping
@@ -82,9 +73,9 @@ public class AdminController {
     }
 
     @PostMapping("/csv-user-upload")
-    public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile,
+    public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile, HttpServletRequest req,
             @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException, NotFoundException {
-        csvService.saveCandidatesFromCSV(csvFile, gremiumAbbr);
+        candidateService.saveCandidatesFromCSV(csvFile, gremiumAbbr, req.getLocale());
         return "redirect:/admin/candidates";
     }
 
@@ -98,7 +89,7 @@ public class AdminController {
     @PostMapping("/csv-query-upload")
     public String processQueryCSV(@RequestParam("csv-file") MultipartFile csvFile,
             @RequestParam("gremiumSelect") String abbr) throws IOException, CsvException, NotFoundException {
-        csvService.saveQueriesFromCSV(csvFile, abbr);
+        queryService.saveQueriesFromCSV(csvFile, abbr);
         return "redirect:/admin/gremien/" + abbr;
     }
 
@@ -254,13 +245,8 @@ public class AdminController {
         c.setBio(form.getBio());
         c.setEmail(form.getEmail());
         c.setGremien(form.getGremien());
-        if (!candidateService.getCandidateByEmail(c.getEmail()).isEmpty()) {
-            MgmtUser u = new MgmtUser();
-            u.setUsername(usernameService.generateUsername(c));
-            u.setRole(SecurityConfig.USER);
-            u.setDetails(candidateService.saveCandidate(c));
-            mgmtUserService.saveUser(u);
-            mailService.sendWelcomeMail(request.getLocale(), u);
+        if (!candidateService.candidateExists(c)) {
+            mgmtUserService.saveNewUser(c, request.getLocale());
             return "redirect:/admin/users/";
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");

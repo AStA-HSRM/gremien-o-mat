@@ -30,11 +30,11 @@ import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
 import de.astahsrm.gremiomat.faculty.Faculty;
 import de.astahsrm.gremiomat.faculty.FacultyService;
 import de.astahsrm.gremiomat.password.PasswordDto;
+import de.astahsrm.gremiomat.password.PasswordTokenService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
-import de.astahsrm.gremiomat.security.SecurityService;
 
 @Controller
 @RequestMapping("/user")
@@ -55,7 +55,7 @@ public class UserController {
     private PhotoService photoService;
 
     @Autowired
-    private SecurityService securityService;
+    private PasswordTokenService passwordTokenService;
 
     @Autowired
     private FacultyService facultyService;
@@ -83,7 +83,7 @@ public class UserController {
 
     @GetMapping("/change-password")
     public String getChangePassword(HttpServletRequest request, @RequestParam("token") String token, Model m) {
-        if (securityService.validatePasswordResetToken(token) != null) {
+        if (passwordTokenService.validatePasswordResetToken(token) != null) {
             m.addAttribute("form", new PasswordDto());
             return "password/change-password";
         } else {
