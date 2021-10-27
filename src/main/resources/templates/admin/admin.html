@@ -1,40 +1,56 @@
 <!DOCTYPE html>
 
-<!-- TODO Make 'lang' and 'xml:lang' attributes responsive!-->
-<html lang="de" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <link
-      rel="shortcut icon"
-      type="image/x-icon"
-      th:href="@{/assets/favicon/favicon.ico}"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta content="text/html; charset=utf-8" />
-    <title th:text="#{title} + ' | ' + #{org}"></title>
-    <link th:href="@{/assets/css/stylesheet.css}" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Poppins"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="//fonts.googleapis.com/css?family=Kumbh+Sans"
-    />
-  </head>
-  <body>
-    <h2>Admin page</h2>
-    <ul>
-      <li><a th:href=@{/admin/gremien}>Gremien</a></li>
-      <li><a th:href="@{/admin/users}">Users</a></li>
-      <li><a th:href=@{/admin/csv-user-upload}>CSV User upload</a></li>
-      <li><a th:href=@{/admin/csv-query-upload}>CSV Query upload</a></li>
-    </ul>
-    <a th:href=@{/logout}>Logout</a>
-  </body>
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragments/head.html"></th:block>
+    <title th:text="#{title}"></title>
+</head>
+
+<body>
+    <th:block th:insert="fragments/nav-admin.html"></th:block>
+    <!-- Main Content -->
+    <main>
+        <div class="container pt-md-5">
+            <!-- Logo -->
+            <div class="row pt-md-5">
+                <div class="col-12 text-center">
+                    <img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="100">
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="row pt-5">
+                <div class="col-12 text-center">
+                    <h1 th:text="'Willkommen zum ' + #{nav.admin}"></h1>
+                </div>
+            </div>
+            <div class="row justify-content-center my-3">
+                <div class="col-12 col-lg-6 text-center">
+                    <p>
+                        <span th:text="#{admin.info}"></span>
+                    </p>
+                </div>
+            </div>
+            <!-- Gremium Buttons -->
+            <div class="row justify-content-md-center my-3">
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary custom-btn-w" th:href="@{/admin/users}" th:text="#{nav.users}"></a>
+                </div>
+            </div>
+            <div class="row justify-content-md-center my-3">
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary custom-btn-w" th:href="@{/admin/gremien}" th:text="#{nav.gremien}"></a>
+                </div>
+            </div>
+            <div class="row justify-content-md-center my-3">
+                <div class="col-12 text-center">
+                    <a class="btn btn-primary custom-btn-w" th:href="@{/admin/queries}" th:text="#{nav.queries}"></a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <th:block th:insert="fragments/footer.html"></th:block>
+    <th:block th:insert="fragments/scripts.html"></th:block>
+</body>
+
 </html>
