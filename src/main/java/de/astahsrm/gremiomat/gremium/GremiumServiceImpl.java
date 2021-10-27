@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -71,14 +73,29 @@ public class GremiumServiceImpl implements GremiumService {
         if (gremiumOptional.isPresent()) {
             return gremiumOptional.get().getContainedQueries();
         } else {
-            throw new NotFoundException(GREMIUM_NOT_FOUND);
+            throw new EntityNotFoundException();
         }
     }
 
     @Override
     public void addCandidateToGremium(Candidate candidate, Gremium gremium) {
-        gremium.addCandidate(candidate);
-        gremiumRepository.save(gremium);
+        if (!gremium.getJoinedCandidates().contains(candidate)) {
+            gremium.addCandidate(candidate);
+            gremiumRepository.save(gremium);
+        } else {
+            gremium.delCandidate(candidate);
+            gremium.addCandidate(candidate);
+            gremiumRepository.save(gremium);
+        }
+    }
+
+    @Override
+    public void delCandidateFromGremien(Candidate candidate) {
+        for (Gremium g : candidate.getGremien()) {
+            Gremium gremium = gremiumRepository.getById(g.getAbbr());
+            gremium.delCandidate(candidate);
+            saveGremium(gremium);
+        }
     }
 
     @Override
@@ -107,4 +124,5 @@ public class GremiumServiceImpl implements GremiumService {
         m.put("fbr", fbrGremien);
         return m;
     }
+
 }

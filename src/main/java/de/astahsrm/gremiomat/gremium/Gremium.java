@@ -89,8 +89,7 @@ public class Gremium {
     }
 
     public void addCandidate(Candidate candidate) {
-        if (!this.joinedCandidates.contains(candidate))
-            this.joinedCandidates.add(candidate);
+        this.joinedCandidates.add(candidate);
     }
 
     public void delCandidate(Candidate candidate) {
