@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragments/head.html"></th:block>
+    <title th:text="#{title}"></title>
+</head>
+
+<body>
+    <th:block th:insert="fragments/nav-admin.html"></th:block>
+    <!-- Main Content -->
+    <main>
+        <div class="container mt-5 px-3">
+            <!-- Logo -->
+            <div class="row pt-md-5">
+                <div class="col-12 text-center mb-3">
+                    <img th:src="@{/assets/img/LogoB.svg}" alt="AStA Logo" width="100">
+                </div>
+            </div>
+            <!-- Call to action -->
+            <div class="row justify-content-center my-3">
+                <div class="col-12 col-lg-8 text-center">
+                    <h3 th:text="#{home.gremien.cta}"></h3>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-12 col-lg-6 text-center">
+                    <p>
+                        <span th:text="#{admin.gremien.info}"></span>
+                    </p>
+                </div>
+            </div>
+            <!-- Gremium Buttons -->
+            <th:block th:each="gremium : ${rest}">
+                <div class="row justify-content-md-center mb-3" th:if="${rest.size()} gt 0">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-dark custom-btn-w" th:href=@{/admin/gremien/__${gremium.abbr}__}
+                            th:text="${gremium.name}"></a>
+                    </div>
+                </div>
+            </th:block>
+            <!-- FSR Dropdown Button -->
+            <div class="row justify-content-center mt-3" th:if="${fsr.size()} gt 0">
+                <div class="col-12 text-center">
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle custom-btn-w" type="button"
+                            id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:text="#{btn.fsr}">
+                        </button>
+                        <ul class="dropdown-menu custom-btn-w" aria-labelledby="fsrDropdownMenuButton">
+                            <th:block th:each="gremium : ${fsr}">
+                                <li>
+                                    <a class="dropdown-item" th:href="@{/admin/gremien/__${gremium.abbr}__}"
+                                        th:text="${gremium.name}"></a>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- FBR Dropdown Button -->
+            <div class="row justify-content-center mt-3 mb-3" th:if="${fbr.size()} gt 0">
+                <div class="col-12 text-center">
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle custom-btn-w" type="button"
+                            id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:text="#{btn.fbr}">
+                        </button>
+                        <ul class="dropdown-menu custom-btn-w" aria-labelledby="fbrDropdownMenuButton">
+                            <th:block th:each="gremium : ${fbr}">
+                                <li>
+                                    <a class="dropdown-item" th:href="@{/admin/gremien/__${gremium.abbr}__}"
+                                        th:text="${gremium.name}"></a>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </main>
+    <th:block th:insert="fragments/footer.html"></th:block>
+    <th:block th:insert="fragments/scripts.html"></th:block>
+</body>
+
+</html>
