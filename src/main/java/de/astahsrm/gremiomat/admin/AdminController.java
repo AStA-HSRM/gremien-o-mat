@@ -28,7 +28,6 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
@@ -56,9 +55,6 @@ public class AdminController {
 
     @Autowired
     private PhotoService photoService;
-
-    @Autowired
-    private MailService mailService;
 
     @GetMapping
     public String getAdminPage() {
@@ -95,8 +91,8 @@ public class AdminController {
 
     @GetMapping("/gremien")
     public String getGremienOverview(Model m) {
-        m.addAttribute("gremienList", gremiumService.getAllGremiumsSortedByName());
-        return "admin/gremien-overview";
+        m.addAllAttributes(gremiumService.getGremienNavMap());
+        return "admin/gremien";
     }
 
     @GetMapping("/gremien/new")
@@ -123,16 +119,6 @@ public class AdminController {
     public String getGremiumInfoPage(@PathVariable String abbr, Model m) {
         Optional<Gremium> gOpt = gremiumService.getGremiumByAbbr(abbr);
         if (gOpt.isPresent()) {
-            m.addAttribute("gremium", gOpt.get());
-            return "admin/gremium-info";
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
-    }
-
-    @GetMapping("/gremien/{abbr}/edit")
-    public String getGremiumEditPage(@PathVariable String abbr, Model m) {
-        Optional<Gremium> gOpt = gremiumService.getGremiumByAbbr(abbr);
-        if (gOpt.isPresent()) {
             Gremium g = gOpt.get();
             GremiumDto form = new GremiumDto();
             form.setAbbr(g.getAbbr());
@@ -140,12 +126,12 @@ public class AdminController {
             form.setDescription(g.getDescription());
             m.addAttribute("form", form);
             m.addAttribute("gremium", g);
-            return "admin/gremium-edit";
+            return "admin/gremium";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
-    @PostMapping("/gremien/{abbr}/edit")
+    @PostMapping("/gremien/{abbr}")
     public String postGremiumEditPage(GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
