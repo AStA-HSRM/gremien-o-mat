@@ -35,6 +35,7 @@ import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.security.MgmtUser;
 import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Controller
 @RequestMapping("/user")
@@ -62,23 +63,31 @@ public class UserController {
 
     @GetMapping
     public String getUserInfo(Principal loggedInUser, Model m) {
-        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
-        CandidateDto form = new CandidateDto();
-        form.setFirstname(userDetails.getFirstname());
-        form.setLastname(userDetails.getLastname());
-        form.setAge(userDetails.getAge());
-        form.setCourse(userDetails.getCourse());
-        form.setSemester(userDetails.getSemester());
-        form.setBio(userDetails.getBio());
-        form.setAgeShowing(userDetails.isAgeShowing());
-        form.setCourseShowing(userDetails.isCourseShowing());
-        if (userDetails.getFaculty() != null) {
-            form.setFaculty(userDetails.getFaculty().getAbbr());
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
+        if (uOpt.isPresent()) {
+            MgmtUser user = uOpt.get();
+            if(user.getRole().equals(SecurityConfig.ADMIN)) {
+                return "redirect:/admin/users";
+            }
+            Candidate userDetails = user.getDetails();
+            CandidateDto form = new CandidateDto();
+            form.setFirstname(userDetails.getFirstname());
+            form.setLastname(userDetails.getLastname());
+            form.setAge(userDetails.getAge());
+            form.setCourse(userDetails.getCourse());
+            form.setSemester(userDetails.getSemester());
+            form.setBio(userDetails.getBio());
+            form.setAgeShowing(userDetails.isAgeShowing());
+            form.setCourseShowing(userDetails.isCourseShowing());
+            if (userDetails.getFaculty() != null) {
+                form.setFaculty(userDetails.getFaculty().getAbbr());
+            }
+            m.addAttribute("form", form);
+            m.addAttribute("faculties", facultyService.getAllFaculties());
+            m.addAttribute("candidate", userDetails);
+            return "user/user-info-edit";
         }
-        m.addAttribute("form", form);
-        m.addAttribute("faculties", facultyService.getAllFaculties());
-        m.addAttribute("candidate", userDetails);
-        return "user/user-info-edit";
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
     }
 
     @GetMapping("/change-password")
