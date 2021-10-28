@@ -31,6 +31,8 @@ public class GremienErrorController implements ErrorController {
                 return "error/500";
             case BAD_REQUEST:
                 return "error/400";
+            case FORBIDDEN:
+                return "error/403";
             default:
                 return "error";
             }
