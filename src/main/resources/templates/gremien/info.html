@@ -32,13 +32,13 @@
                 </div>
             </div>
             <!-- Candidate Heading -->
-            <div th:if="${gremium.joinedCandidates.size() > 0}" class="row justify-content-center mt-5 mb-3">
+            <div th:if="${gremium.candidates.size() > 0}" class="row justify-content-center mt-5 mb-3">
                 <div class="col-12 text-center">
                     <h3 th:text="#{info.candidates}"></h3>
                 </div>
             </div>
             <!-- Candidate List -->
-            <th:block th:each="c : ${gremium.joinedCandidates}">
+            <th:block th:each="c : ${gremium.candidates}">
                 <div class="row justify-content-center mb-2">
                     <div class="col-lg-4 col-12">
                         <a class="text-decoration-none text-black"
