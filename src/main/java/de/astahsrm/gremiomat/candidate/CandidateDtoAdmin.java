@@ -1,6 +1,6 @@
 package de.astahsrm.gremiomat.candidate;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -30,7 +30,7 @@ public class CandidateDtoAdmin {
     private String email;
     private String course;
     private String bio;
-    private List<Gremium> gremien;
+    private Set<Gremium> gremien;
 
     public int getAge() {
         return age;
@@ -88,11 +88,12 @@ public class CandidateDtoAdmin {
         this.email = email;
     }
 
-    public List<Gremium> getGremien() {
+    public Set<Gremium> getGremien() {
         return gremien;
     }
 
-    public void setGremien(List<Gremium> gremien) {
+    public void setGremien(Set<Gremium> gremien) {
         this.gremien = gremien;
     }
+
 }

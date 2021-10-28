@@ -1,7 +1,6 @@
 package de.astahsrm.gremiomat.query;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,12 +28,11 @@ public class Query {
     private String text;
 
     @NotNull
-    @ManyToMany(mappedBy = "containedQueries", cascade = CascadeType.PERSIST)
-    private List<Gremium> gremien;
+    @ManyToMany(targetEntity = Gremium.class, mappedBy = "queries", cascade = CascadeType.PERSIST)
+    private Set<Gremium> gremien;
 
     public Query() {
         this.text = "";
-        this.gremien = new ArrayList<>();
     }
 
     @Override
@@ -83,11 +81,11 @@ public class Query {
         this.text = text;
     }
 
-    public List<Gremium> getGremien() {
+    public Set<Gremium> getGremien() {
         return gremien;
     }
 
-    public void setGremien(List<Gremium> gremien) {
+    public void setGremien(Set<Gremium> gremien) {
         this.gremien = gremien;
     }
 

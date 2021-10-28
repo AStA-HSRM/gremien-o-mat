@@ -1,7 +1,6 @@
 package de.astahsrm.gremiomat.candidate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,12 +44,12 @@ public class Candidate {
     private Faculty faculty;
 
     @NotNull
-    @ManyToMany(mappedBy = "joinedCandidates", cascade = CascadeType.PERSIST)
-    private List<Gremium> gremien;
+    @ManyToMany(targetEntity = Gremium.class, mappedBy = "candidates", cascade = CascadeType.PERSIST)
+    private Set<Gremium> gremien;
 
     @NotNull
     @OneToMany
-    private List<CandidateAnswer> answers;
+    private Set<CandidateAnswer> answers;
 
     @OneToOne
     private Photo photo;
@@ -83,8 +82,6 @@ public class Candidate {
         this.lastname = "";
         this.email = "";
         this.bio = "";
-        this.answers = new ArrayList<>();
-        this.gremien = new ArrayList<>();
     }
 
     @Override
@@ -136,7 +133,7 @@ public class Candidate {
         this.courseShowing = courseShowing;
     }
 
-    public List<Gremium> getGremien() {
+    public Set<Gremium> getGremien() {
         return gremien;
     }
 
@@ -169,7 +166,7 @@ public class Candidate {
         this.gremien.remove(gremium);
     }
 
-    public void setGremien(List<Gremium> gremien) {
+    public void setGremien(Set<Gremium> gremien) {
         this.gremien = gremien;
     }
 
@@ -205,11 +202,11 @@ public class Candidate {
         this.email = email;
     }
 
-    public List<CandidateAnswer> getAnswers() {
+    public Set<CandidateAnswer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<CandidateAnswer> answers) {
+    public void setAnswers(Set<CandidateAnswer> answers) {
         this.answers = answers;
     }
 

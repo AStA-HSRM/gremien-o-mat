@@ -1,7 +1,6 @@
 package de.astahsrm.gremiomat.gremium;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -40,27 +39,25 @@ public class Gremium {
     private String description;
 
     @NotNull
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "query_contain", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "query_id"))
-    private List<Query> containedQueries;
+    @ManyToMany(targetEntity = Query.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "queriesInGremium", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "query_id"))
+    private Set<Query> queries;
 
     @NotNull
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "candidate_join", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "candidate_id"))
-    private List<Candidate> joinedCandidates;
+    @ManyToMany(targetEntity = Candidate.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "candidatesInGremium", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "candidate_id"))
+    private Set<Candidate> candidates;
 
     public Gremium() {
         this.name = "";
         this.abbr = "";
         this.description = "";
-        this.containedQueries = new ArrayList<>();
-        this.joinedCandidates = new ArrayList<>();
     }
 
     @Override
     public String toString() {
-        return "Gremium [abbr=" + abbr + ", containedQueries=" + containedQueries + ", description=" + description
-                + ", joinedCandidates=" + joinedCandidates + ", name=" + name + "]";
+        return "Gremium [abbr=" + abbr + ", containedQueries=" + queries + ", description=" + description
+                + ", joinedCandidates=" + candidates + ", name=" + name + "]";
     }
 
     @Override
@@ -89,11 +86,11 @@ public class Gremium {
     }
 
     public void addCandidate(Candidate candidate) {
-        this.joinedCandidates.add(candidate);
+        this.candidates.add(candidate);
     }
 
     public void delCandidate(Candidate candidate) {
-        this.joinedCandidates.remove(candidate);
+        this.candidates.remove(candidate);
     }
 
     public long getVersion() {
@@ -128,30 +125,30 @@ public class Gremium {
         this.description = description;
     }
 
-    public List<Query> getContainedQueries() {
-        return containedQueries;
+    public Set<Query> getQueries() {
+        return queries;
     }
 
-    public void setContainedQueries(List<Query> containedQueries) {
-        this.containedQueries = containedQueries;
+    public void setQueries(Set<Query> queries) {
+        this.queries = queries;
     }
 
-    public List<Candidate> getJoinedCandidates() {
-        return joinedCandidates;
+    public Set<Candidate> getCandidates() {
+        return candidates;
     }
 
-    public void setJoinedCandidates(List<Candidate> joinedCandidates) {
-        this.joinedCandidates = joinedCandidates;
+    public void setCandidates(Set<Candidate> candidates) {
+        this.candidates = candidates;
     }
 
     public void addQuery(Query query) {
-        if (!this.containedQueries.contains(query)) {
-            this.containedQueries.add(query);
+        if (!this.queries.contains(query)) {
+            this.queries.add(query);
         }
     }
 
     public void delQuery(Query q) {
-        this.containedQueries.remove(q);
+        this.queries.remove(q);
     }
 
 }
