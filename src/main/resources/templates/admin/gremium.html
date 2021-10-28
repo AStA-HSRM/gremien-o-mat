@@ -58,6 +58,7 @@
             <div class="row pt-4">
                 <div class="col-12 text-center">
                     <h1 th:text="${gremium.name}"></h1>
+                    <p class="form-text" th:text="#{admin.help.gremium}"></p>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -68,7 +69,7 @@
         </div>
         <div class="container my-4">
             <!-- Queries Heading -->
-            <div th:if="${gremium.queries.size() > 0}" class="row justify-content-center mt-4">
+            <div class="row justify-content-center mt-4">
                 <div class="col-12 text-center">
                     <h3 th:text="#{nav.queries}"></h3>
                     <p class="form-text" th:text="#{admin.help.queries}"></p>
@@ -79,16 +80,23 @@
                 <div class="col-12 col-md-6">
                     <div class="list-group">
                         <a class="list-group-item bg-light list-group-item-action text-decoration-none link-dark"
-                            th:each="q, status : ${gremium.queries}" th:href="@{/admin/gremien/__${gremium.abbr}__/queries/__${q.id}__}">
+                            th:each="q, status : ${gremium.queries}"
+                            th:href="@{/admin/gremien/__${gremium.abbr}__/queries/__${q.id}__}">
                             <span th:text="|${status.count}. |"></span><span th:text="${q.text}"></span>
                         </a>
                     </div>
                 </div>
             </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    <a class=" btn btn-dark btn-sm" th:href=@{/admin/gremien/__${gremium.abbr}__/queries/new}
+                        th:text="#{admin.new.query}"></a>
+                </div>
+            </div>
         </div>
         <div class="container">
             <!-- Candidate Heading -->
-            <div th:if="${gremium.candidates.size() > 0}" class="row justify-content-center">
+            <div class="row justify-content-center">
                 <div class="col-12 text-center">
                     <h3 th:text="#{info.candidates}"></h3>
                     <p class="form-text" th:text="#{admin.help.users}"></p>
@@ -98,8 +106,7 @@
             <th:block th:each="c : ${gremium.candidates}">
                 <div class="row justify-content-center mb-2">
                     <div class="col-lg-5 col-12">
-                        <a class="text-decoration-none text-black"
-                            th:href="@{/admin/users/__${c.id}__}">
+                        <a class="text-decoration-none text-black" th:href="@{/admin/users/__${c.id}__}">
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <div class="row">

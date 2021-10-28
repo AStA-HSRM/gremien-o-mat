@@ -148,9 +148,28 @@ public class AdminController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
+    @GetMapping("/gremien/{abbr}/queries/new")
+    public String newQuery(@PathVariable String abbr, Model m) {
+        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute("form", new QueryAdminDto());
+        m.addAttribute("abbr", abbr);
+        return "admin/query";
+    }
+
+    @PostMapping("/gremien/{abbr}/queries/new")
+    public String saveNewQuery(@PathVariable String abbr, QueryAdminDto form, BindingResult res, Model m) {
+        if (res.hasErrors()) {
+            m.addAttribute("error", res.getAllErrors());
+            return "admin/query-edit";
+        } else {
+            form.addGremiumAbbr(abbr);
+            saveQuery(new Query(), form);
+            return "redirect:/admin/gremien/" + abbr;
+        }
+    }
+
     @GetMapping("/gremien/{abbr}/queries/{id}")
-    public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, Model m,
-            Principal loggedInUser) {
+    public String getGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, Model m) {
         Optional<Query> qOpt = queryService.getQueryById(id);
         if (qOpt.isPresent()) {
             Query query = qOpt.get();
@@ -177,21 +196,7 @@ public class AdminController {
         } else {
             Optional<Query> qOpt = queryService.getQueryById(id);
             if (qOpt.isPresent()) {
-                Query q = qOpt.get();
-                ArrayList<Gremium> gremien = new ArrayList<>();
-                for (String gId : form.getGremien()) {
-                    Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(gId);
-                    if(gOpt.isPresent()) {
-                        gremien.add(gOpt.get());
-                    }
-                    else {
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
-                    }
-                }
-                q.setGremien(Set.of(gremien.toArray(new Gremium[0])));
-                q.setText(form.getTxt());
-                q.setId(id);
-                queryService.saveQuery(q);
+                saveQuery(qOpt.get(), form);
                 return "redirect:/admin/gremien/" + abbr;
             }
             return "error";
@@ -363,6 +368,21 @@ public class AdminController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
         }
         return "redirect:/admin/users/" + username + "/edit";
+    }
+
+    private void saveQuery(Query q, QueryAdminDto form) {
+        ArrayList<Gremium> gremien = new ArrayList<>();
+        for (String gId : form.getGremien()) {
+            Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(gId);
+            if (gOpt.isPresent()) {
+                gremien.add(gOpt.get());
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+            }
+        }
+        q.setGremien(Set.of(gremien.toArray(new Gremium[0])));
+        q.setText(form.getTxt());
+        queryService.saveQuery(q);
     }
 
 }

@@ -13,12 +13,13 @@
     <main>
         <div class="container card bg-dark text-light p-4 my-5" style="max-width: 600px;">
             <h3 class="my-3" th:text="#{edit.query}"></h3>
-            <form th:method="POST" th:object="${form}"
-                th:action="@{/admin/gremien/__${abbr}__/queries/__${query.id}__}">
-                <div class="col-12 mb-3">
+            <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
+                <div class="col-12 mb-3"
+                    th:if="not ${#strings.contains(#httpServletRequest.requestURI, '/' + abbr + '/queries/new')}">
                     <label th:text="#{gremium}"></label>
-                    <select name="gremien" id="gremien" th:field="*{gremien}" multiple>
-                        <option th:each="g : ${allGremien}" th:value="${g.abbr}" th:text="${g.abbr}"></option>
+                    <select class="form-select" name="gremien" id="gremien" th:field="*{gremien}" multiple>
+                        <option th:each="g : ${allGremien}" th:value="${g.abbr}"><span th:text="${g.name}"></span>
+                        </option>
                     </select>
                 </div>
                 <div class="col-12 mb-4">
@@ -27,9 +28,9 @@
                         required></textarea>
                 </div>
                 <div class="d-grid gap-3 mb-3">
-                    <button class="btn btn-success" type="submit" th:text="#{edit.save}"> </button>
+                    <button class="btn btn-success" type="submit" th:text="#{save}"> </button>
                 </div>
-                <div class="d-grid gap-3 mb-3">
+                <div class="d-grid gap-3 mb-3" th:if="not ${#strings.contains(#httpServletRequest.requestURI, '/new')}">
                     <a class="btn btn-danger link-light" th:text="#{query.delete}"
                         th:href="@{/admin/gremien/__${abbr}__/queries/__${query.id}__/delete}"
                         onclick="return confirm('Are you sure you want to permanently delete this query?')">

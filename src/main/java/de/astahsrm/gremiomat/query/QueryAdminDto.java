@@ -40,4 +40,8 @@ public class QueryAdminDto {
     public void addGremium(Gremium g) {
         this.gremien.add(g.getAbbr());
     }
+
+    public void addGremiumAbbr(String abbr) {
+        this.gremien.add(abbr);
+    }
 }

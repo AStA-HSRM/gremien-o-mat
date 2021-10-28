@@ -33,6 +33,9 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public Query saveQuery(Query query) {
+        if(!getQueryById(query.getId()).isPresent()) {
+            queryRepository.save(query);
+        }
         for (Gremium gremium : gremiumService.getAllGremiumsSortedByName()) {
             if(query.getGremien().contains(gremium)) {
                 gremium.addQuery(query);
@@ -41,7 +44,7 @@ public class QueryServiceImpl implements QueryService {
                 gremium.delQuery(query);
             }
             gremiumService.saveGremium(gremium);
-        } 
+        }
         return queryRepository.getById(query.getId());
     }
 
