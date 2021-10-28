@@ -11,42 +11,33 @@ import de.astahsrm.gremiomat.gremium.Gremium;
 public class QueryAdminDto {
 
     @NotBlank
-    private String queryTxt;
+    private String txt;
 
     @NotNull
-    private List<Gremium> gremien;
+    private List<String> gremien;
 
-    private long id;
-
-    public String getQueryTxt() {
-        return queryTxt;
+    public QueryAdminDto() {
+        this.txt = "";
+        this.gremien = new ArrayList<>();
     }
 
-    public void setQueryTxt(String queryTxt) {
-        this.queryTxt = queryTxt;
+    public String getTxt() {
+        return txt;
     }
 
-    public List<Gremium> getGremien() {
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public List<String> getGremien() {
         return gremien;
     }
 
-    public void setGremien(List<Gremium> gremien) {
-        if(this.gremien == null) {
-            this.gremien = new ArrayList<>();
-        }
-        for (int i = 0; i < gremien.size(); i++) {
-            if (gremien.get(i) instanceof Gremium) {
-                this.gremien.add(gremien.get(i));
-            }
-        }
+    public void setGremien(List<String> gremien) {
+        this.gremien = gremien;
     }
 
-    public long getId() {
-        return id;
+    public void addGremium(Gremium g) {
+        this.gremien.add(g.getAbbr());
     }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
 }

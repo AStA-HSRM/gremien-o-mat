@@ -33,7 +33,16 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public Query saveQuery(Query query) {
-        return queryRepository.save(query);
+        for (Gremium gremium : gremiumService.getAllGremiumsSortedByName()) {
+            if(query.getGremien().contains(gremium)) {
+                gremium.addQuery(query);
+            }
+            else {
+                gremium.delQuery(query);
+            }
+            gremiumService.saveGremium(gremium);
+        } 
+        return queryRepository.getById(query.getId());
     }
 
     @Override
@@ -79,7 +88,7 @@ public class QueryServiceImpl implements QueryService {
     @Override
     public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr)
             throws IOException, CsvException {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(gremiumAbbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(gremiumAbbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
