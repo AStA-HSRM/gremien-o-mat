@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.gremium;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -31,16 +32,16 @@ public class GremiumServiceImpl implements GremiumService {
     }
 
     @Override
-    public Optional<Gremium> getGremiumByAbbr(String abbr) {
+    public Optional<Gremium> findGremiumByAbbr(String abbr) {
         return gremiumRepository.findById(abbr);
     }
 
     @Override
     public void delByAbbrGremium(String abbr) {
-        Optional<Gremium> gremiumOptional = getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            for (Candidate cand : gremium.getJoinedCandidates()) {
+            for (Candidate cand : gremium.getCandidates()) {
                 Optional<Candidate> cOptional = candidateService.getCandidateById(cand.getId());
                 if (cOptional.isPresent()) {
                     Candidate candidate = cOptional.get();
@@ -59,9 +60,9 @@ public class GremiumServiceImpl implements GremiumService {
 
     @Override
     public List<Candidate> getGremiumCandidatesByGremiumAbbr(String abbr) throws NotFoundException {
-        Optional<Gremium> gremiumOptional = getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
-            return gremiumOptional.get().getJoinedCandidates();
+            return Arrays.asList(gremiumOptional.get().getCandidates().toArray(new Candidate[0]));
         } else {
             throw new NotFoundException(GREMIUM_NOT_FOUND);
         }
@@ -69,9 +70,9 @@ public class GremiumServiceImpl implements GremiumService {
 
     @Override
     public List<Query> getGremiumQueriesByGremiumAbbr(String abbr) throws NotFoundException {
-        Optional<Gremium> gremiumOptional = getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
-            return gremiumOptional.get().getContainedQueries();
+            return Arrays.asList(gremiumOptional.get().getQueries().toArray(new Query[0]));
         } else {
             throw new EntityNotFoundException();
         }
@@ -79,7 +80,7 @@ public class GremiumServiceImpl implements GremiumService {
 
     @Override
     public void addCandidateToGremium(Candidate candidate, Gremium gremium) {
-        if (!gremium.getJoinedCandidates().contains(candidate)) {
+        if (!gremium.getCandidates().contains(candidate)) {
             gremium.addCandidate(candidate);
             gremiumRepository.save(gremium);
         } else {

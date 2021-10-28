@@ -79,7 +79,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public void delCandidate(Candidate c) {
         for (Gremium g : c.getGremien()) {
-            Optional<Gremium> gOptional = gremiumService.getGremiumByAbbr(g.getAbbr());
+            Optional<Gremium> gOptional = gremiumService.findGremiumByAbbr(g.getAbbr());
             if (gOptional.isPresent()) {
                 Gremium gremium = gOptional.get();
                 gremium.delCandidate(c);
@@ -116,7 +116,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public void saveCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr, Locale locale)
             throws IOException, CsvException {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(gremiumAbbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(gremiumAbbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)

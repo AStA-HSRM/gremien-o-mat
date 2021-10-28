@@ -13,7 +13,7 @@ public interface GremiumService {
 
     public Gremium saveGremium(Gremium gremium);
 
-    public Optional<Gremium> getGremiumByAbbr(String abbr);
+    public Optional<Gremium> findGremiumByAbbr(String abbr);
 
     public void delByAbbrGremium(String abbr);
 

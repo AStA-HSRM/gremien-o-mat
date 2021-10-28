@@ -96,7 +96,7 @@ public class GremiumController {
 
     @GetMapping("/{abbr}")
     public String getGremiumInfo(@PathVariable String abbr, Model m) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             if (m.getAttribute(USER_ANSWERS) != null) {
                 m.addAttribute(USER_ANSWERS, new HashMap<Query, Integer>());
@@ -110,10 +110,10 @@ public class GremiumController {
 
     @GetMapping("/{abbr}/candidates/{id}")
     public String getCandidate(@PathVariable String abbr, @PathVariable long id, Model m) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            for (Candidate c : gremium.getJoinedCandidates()) {
+            for (Candidate c : gremium.getCandidates()) {
                 if (c.getId() == id) {
                     m.addAttribute("candidate", c);
                     m.addAttribute(GREMIUM, gremium);
@@ -129,12 +129,12 @@ public class GremiumController {
     @GetMapping("/{abbr}/queries/{queryIndex}")
     public String getQuery(@SessionAttribute HashMap<Query, Integer> userAnswers, @PathVariable String abbr,
             @PathVariable int queryIndex, Model m) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            if (gremium.getContainedQueries().size() > queryIndex) {
+            if (gremium.getQueries().size() > queryIndex) {
                 QueryDto form = new QueryDto();
-                Query query = gremium.getContainedQueries().get(queryIndex);
+                Query query = gremium.getQueries().toArray(new Query[0])[queryIndex];
                 if (userAnswers.size() > 0) {
                     for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
                         if (entry.getKey().equals(query)) {
@@ -144,12 +144,12 @@ public class GremiumController {
                     }
                 }
                 m.addAttribute(GREMIUM, gremium);
-                m.addAttribute("queryListSize", gremium.getContainedQueries().size());
+                m.addAttribute("queryListSize", gremium.getQueries().size());
                 m.addAttribute("query", query);
                 m.addAttribute("queryIndex", queryIndex);
                 m.addAttribute("queryForm", form);
-                m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getContainedQueries().size()
-                        || queryIndex == gremium.getContainedQueries().size() - 1);
+                m.addAttribute("isQueriesAnswered", userAnswers.size() == gremium.getQueries().size()
+                        || queryIndex == gremium.getQueries().size() - 1);
                 m.addAllAttributes(gremiumService.getGremienNavMap());
                 return "gremien/query";
             }
@@ -185,13 +185,13 @@ public class GremiumController {
     @GetMapping("/{abbr}/queries/results")
     public String getResults(@SessionAttribute HashMap<Query, Integer> userAnswers, @PathVariable String abbr,
             Model m) {
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
             HashMap<Candidate, Double> compatibility = new HashMap<>();
             int skipped = 0;
             // Goes through every candidate in gremium
-            for (Candidate candidate : gremium.getJoinedCandidates()) {
+            for (Candidate candidate : gremium.getCandidates()) {
                 double percentage = 0;
                 double answersInCommon = 0;
                 // Goes through every entry inside of 'userAnswers' Map
@@ -239,15 +239,15 @@ public class GremiumController {
     private String handleQueryNav(QueryNav nav, HashMap<Query, Integer> userAnswers, String abbr, int queryIndex,
             Model m, @Valid QueryDto form) {
         String redirect = REDIRECT_HOME + abbr + "/queries/";
-        Optional<Gremium> gremiumOptional = gremiumService.getGremiumByAbbr(abbr);
+        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(abbr);
         if (gremiumOptional.isPresent()) {
             Gremium gremium = gremiumOptional.get();
-            if (gremium.getContainedQueries().size() > queryIndex && queryIndex >= 0) {
-                Query q = gremium.getContainedQueries().get(queryIndex);
+            if (gremium.getQueries().size() > queryIndex && queryIndex >= 0) {
+                Query q = gremium.getQueries().toArray(new Query[0])[queryIndex];
                 if (nav == QueryNav.SKIP) {
                     userAnswers.put(q, 2);
                     m.addAttribute(USER_ANSWERS, userAnswers);
-                    if (queryIndex + 1 < gremium.getContainedQueries().size()) {
+                    if (queryIndex + 1 < gremium.getQueries().size()) {
                         return redirect + Integer.toString(queryIndex + 1);
                     } else {
                         return redirect + "results";

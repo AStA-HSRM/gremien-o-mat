@@ -55,12 +55,12 @@ INSERT INTO candidate_answers (answers_id, candidate_id) VALUES
 (-38,-22),
 (-39,-22);
 
-INSERT INTO candidate_join (gremium_id, candidate_id) VALUES
+INSERT INTO candidates_in_gremium (gremium_id, candidate_id) VALUES
 ('dtg',-20),
 ('dtg',-21),
 ('dtg', -22);
 
-INSERT INTO query_contain (gremium_id, query_id) VALUES
+INSERT INTO queries_in_gremium (gremium_id, query_id) VALUES
 ('dtg',-1),
 ('dtg',-2),
 ('dtg',-3);
