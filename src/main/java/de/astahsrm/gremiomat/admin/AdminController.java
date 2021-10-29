@@ -93,6 +93,7 @@ public class AdminController {
     @GetMapping("/gremien")
     public String getGremienOverview(Model m) {
         m.addAllAttributes(gremiumService.getGremienNavMap());
+        m.addAttribute("form", new GremiumDto());
         return "admin/gremien";
     }
 

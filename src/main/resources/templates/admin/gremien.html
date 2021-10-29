@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <th:block th:insert="fragments/nav-admin.html"></th:block>
+    <th:block th:insert="fragments/admin/nav.html"></th:block>
     <!-- Main Content -->
     <main>
         <div class="container mt-5 px-3">
@@ -35,7 +35,7 @@
             <th:block th:each="gremium : ${rest}">
                 <div class="row justify-content-md-center mb-3" th:if="${rest.size()} gt 0">
                     <div class="col-12 text-center">
-                        <a class="btn btn-dark custom-btn-w" th:href=@{/admin/gremien/__${gremium.abbr}__}
+                        <a class="btn btn-outline-dark custom-btn-w" th:href=@{/admin/gremien/__${gremium.abbr}__}
                             th:text="${gremium.name}"></a>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
             <div class="row justify-content-center mt-3" th:if="${fsr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
-                        <button class="btn btn-dark dropdown-toggle custom-btn-w" type="button"
+                        <button class="btn btn-outline-dark dropdown-toggle custom-btn-w" type="button"
                             id="fsrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
                             th:text="#{btn.fsr}">
                         </button>
@@ -63,7 +63,7 @@
             <div class="row justify-content-center mt-3 mb-3" th:if="${fbr.size()} gt 0">
                 <div class="col-12 text-center">
                     <div class="dropdown">
-                        <button class="btn btn-dark dropdown-toggle custom-btn-w" type="button"
+                        <button class="btn btn-outline-dark dropdown-toggle custom-btn-w" type="button"
                             id="fbrDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
                             th:text="#{btn.fbr}">
                         </button>
@@ -78,7 +78,15 @@
                     </div>
                 </div>
             </div>
+            <div class="row justify-content-md-center mb-3" th:if="${rest.size()} gt 0">
+                <div class="col-12 text-center">
+                    <button class="btn btn-dark custom-btn-w" th:text="#{admin.new.gremium}" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasGremium" aria-controls="offcanvasGremium"></button>
+                </div>
+            </div>
+        </div>
     </main>
+    <th:block th:insert="fragments/admin/gremium-offcanvas.html"></th:block>
     <th:block th:insert="fragments/footer.html"></th:block>
     <th:block th:insert="fragments/scripts.html"></th:block>
 </body>
