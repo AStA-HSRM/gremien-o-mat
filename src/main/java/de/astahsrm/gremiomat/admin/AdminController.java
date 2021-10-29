@@ -3,6 +3,7 @@ package de.astahsrm.gremiomat.admin;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,13 +31,13 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryAdminDto;
 import de.astahsrm.gremiomat.query.QueryService;
-import de.astahsrm.gremiomat.security.MgmtUser;
-import de.astahsrm.gremiomat.security.MgmtUserService;
 
 @Controller
 @RequestMapping("/admin")
@@ -62,25 +63,11 @@ public class AdminController {
         return "admin/admin";
     }
 
-    @GetMapping("/csv-user-upload")
-    public String getUserCSVPage(Model m) {
-        m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
-        m.addAttribute("head2", "CSV User Upload");
-        return "admin/csv-upload";
-    }
-
     @PostMapping("/csv-user-upload")
     public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile, HttpServletRequest req,
             @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
         candidateService.saveCandidatesFromCSV(csvFile, gremiumAbbr, req.getLocale());
         return "redirect:/admin/candidates";
-    }
-
-    @GetMapping("/csv-query-upload")
-    public String getQueryCSVPage(Model m) {
-        m.addAttribute("gremiumList", gremiumService.getAllGremiumsSortedByName());
-        m.addAttribute("head2", "CSV Query Upload");
-        return "admin/csv-upload";
     }
 
     @PostMapping("/csv-query-upload")
@@ -207,7 +194,7 @@ public class AdminController {
     @GetMapping("/users")
     public String getUserOverview(Model m) {
         m.addAttribute("allUsers", mgmtUserService.getAllUsersSortedByUsername());
-        return "admin/user-overview";
+        return "admin/users";
     }
 
     @GetMapping("/users/new")
