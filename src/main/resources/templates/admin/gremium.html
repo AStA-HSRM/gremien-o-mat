@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <th:block th:insert="fragments/admin/nav.html"></th:block>
+    <th:block th:insert="fragments/admin.html :: nav"></th:block>
     <!-- Main Content -->
     <main>
         <div class="container-fluid pt-5 px-3">
@@ -25,39 +25,13 @@
                 </div>
             </div>
         </div>
-        <div class="container my-4">
-            <!-- Queries Heading -->
-            <div class="row justify-content-center mt-4">
-                <div class="col-12 text-center">
-                    <h3 th:text="#{nav.queries}"></h3>
-                    <p class="form-text" th:text="#{admin.help.queries}"></p>
-                </div>
-            </div>
-            <!-- Queries -->
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-6">
-                    <div class="list-group">
-                        <a class="list-group-item bg-light list-group-item-action text-decoration-none link-dark"
-                            th:each="q, status : ${gremium.queries}"
-                            th:href="@{/admin/gremien/__${gremium.abbr}__/queries/__${q.id}__}">
-                            <span th:text="|${status.count}. |"></span><span th:text="${q.text}"></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center mt-3">
-                <div class="col-12 text-center">
-                    <a class=" btn btn-dark btn-sm" th:href=@{/admin/gremien/__${gremium.abbr}__/queries/new}
-                        th:text="#{admin.new.query}"></a>
-                </div>
-            </div>
-        </div>
+        <th:block th:insert="fragments/admin.html :: queries(${gremium.queries})"></th:block>
         <div class="container">
             <!-- Candidate Heading -->
             <div class="row justify-content-center">
                 <div class="col-12 text-center">
                     <h3 th:text="#{info.candidates}"></h3>
-                    <p class="form-text" th:text="#{admin.help.users}"></p>
+                    <p class="form-text" th:text="#{admin.help.candidates}"></p>
                 </div>
             </div>
             <!-- Candidate List -->
@@ -90,7 +64,7 @@
             </th:block>
         </div>
     </main>
-    <th:block th:insert="fragments/admin/gremium-offcanvas.html"></th:block>
+    <th:block th:insert="fragments/admin.html :: gremiumOffCanvas"></th:block>
     <th:block th:insert="fragments/footer.html"></th:block>
     <th:block th:insert="fragments/scripts.html"></th:block>
 </body>
