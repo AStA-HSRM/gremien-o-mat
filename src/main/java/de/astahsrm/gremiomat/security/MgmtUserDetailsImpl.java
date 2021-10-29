@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUserRepository;
+
 @Service
 public class MgmtUserDetailsImpl implements UserDetailsService {
     @Autowired

@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.security;
+package de.astahsrm.gremiomat.mgmt;
 
 import java.util.List;
 import java.util.Locale;

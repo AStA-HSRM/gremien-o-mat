@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.security;
+package de.astahsrm.gremiomat.mgmt;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,8 +62,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public List<MgmtUser> getAllUsersSortedByUsername() {
-        return mgmtUserRepository.findAll(Sort.by(Direction.DESC, "username")).stream()
-                .filter(u -> !u.getUsername().equals("admin")).collect(Collectors.toList());
+        return mgmtUserRepository.findAll(Sort.by(Direction.DESC, "username")).stream().collect(Collectors.toList());
     }
 
     @Override

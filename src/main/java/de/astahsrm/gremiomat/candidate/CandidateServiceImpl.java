@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 
 @Service
 public class CandidateServiceImpl implements CandidateService {

@@ -29,12 +29,12 @@ import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerDto;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
 import de.astahsrm.gremiomat.faculty.Faculty;
 import de.astahsrm.gremiomat.faculty.FacultyService;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 import de.astahsrm.gremiomat.password.PasswordDto;
 import de.astahsrm.gremiomat.password.PasswordTokenService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
-import de.astahsrm.gremiomat.security.MgmtUser;
-import de.astahsrm.gremiomat.security.MgmtUserService;
 import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Controller

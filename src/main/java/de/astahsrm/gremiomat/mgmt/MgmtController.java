@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-import de.astahsrm.gremiomat.security.MgmtUserServiceImpl;
 import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Controller

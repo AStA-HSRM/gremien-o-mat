@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import de.astahsrm.gremiomat.security.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
 
 
 @Entity
