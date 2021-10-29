@@ -33,8 +33,10 @@
                 </li>
             </ul>
         </div>
-        <div class="d-lg-flex d-none"><a class=" btn btn-outline-light btn-sm" th:href=@{/logout}
-                th:text="#{logout}"></a>
+        <div class="d-lg-flex d-none">
+            <button th:if="${gremium != null}" class="btn btn-light btn-sm me-md-2" th:text="#{edit.gremium}" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasGremium" aria-controls="offcanvasGremium"></button>
+            <a class=" btn btn-outline-light btn-sm" th:href=@{/logout} th:text="#{logout}"></a>
         </div>
     </div>
 </nav>
