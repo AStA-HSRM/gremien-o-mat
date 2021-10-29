@@ -91,20 +91,14 @@ public class AdminController {
     }
 
     @GetMapping("/gremien")
-    public String getGremienOverview(Model m) {
+    public String getGremien(Model m) {
         m.addAllAttributes(gremiumService.getGremienNavMap());
         m.addAttribute("form", new GremiumDto());
         return "admin/gremien";
     }
 
-    @GetMapping("/gremien/new")
-    public String getNewGremiumEditPage(Model m) {
-        m.addAttribute("form", new GremiumDto());
-        return "admin/gremium-edit";
-    }
-
     @PostMapping("/gremien/new")
-    public String postNewUserGremiumPage(GremiumDto form, BindingResult res, Model m) {
+    public String saveNewGremiumString(GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
             return "error";
@@ -164,7 +158,7 @@ public class AdminController {
             return "admin/query-edit";
         } else {
             form.addGremiumAbbr(abbr);
-            saveQuery(new Query(), form);
+            updateQuery(new Query(), form);
             return "redirect:/admin/gremien/" + abbr;
         }
     }
@@ -197,7 +191,7 @@ public class AdminController {
         } else {
             Optional<Query> qOpt = queryService.getQueryById(id);
             if (qOpt.isPresent()) {
-                saveQuery(qOpt.get(), form);
+                updateQuery(qOpt.get(), form);
                 return "redirect:/admin/gremien/" + abbr;
             }
             return "error";
@@ -371,7 +365,7 @@ public class AdminController {
         return "redirect:/admin/users/" + username + "/edit";
     }
 
-    private void saveQuery(Query q, QueryAdminDto form) {
+    private void updateQuery(Query q, QueryAdminDto form) {
         ArrayList<Gremium> gremien = new ArrayList<>();
         for (String gId : form.getGremien()) {
             Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(gId);
