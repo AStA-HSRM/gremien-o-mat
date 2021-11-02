@@ -2,6 +2,7 @@ package de.astahsrm.gremiomat.query;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -112,5 +113,10 @@ public class QueryServiceImpl implements QueryService {
         } else {
             throw new EntityNotFoundException();
         }
+    }
+
+    @Override
+    public List<Query> getAllQueries() {
+        return queryRepository.findAll();
     }
 }
