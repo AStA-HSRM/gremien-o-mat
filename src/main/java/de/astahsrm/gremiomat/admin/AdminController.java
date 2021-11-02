@@ -81,7 +81,7 @@ public class AdminController {
     public String saveNewGremiumString(GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
-            return "error";
+            return "admin/gremium";
         }
         Gremium gremium = new Gremium();
         gremium.setName(form.getName());
@@ -110,7 +110,7 @@ public class AdminController {
     public String postGremiumEditPage(@PathVariable String abbr, GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
-            return "error";
+            return "admin/gremium";
         }
         Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
         if (gOpt.isPresent()) {
