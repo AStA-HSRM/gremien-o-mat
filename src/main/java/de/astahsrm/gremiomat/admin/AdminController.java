@@ -3,7 +3,7 @@ package de.astahsrm.gremiomat.admin;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,9 +31,7 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.mgmt.MgmtUser;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
-import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryAdminDto;
@@ -131,23 +129,11 @@ public class AdminController {
     }
 
     @GetMapping("/gremien/{abbr}/queries/new")
-    public String newQuery(@PathVariable String abbr, Model m) {
+    public String newQuery(Model m, @PathVariable String abbr) {
         m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("form", new QueryAdminDto());
         m.addAttribute("abbr", abbr);
         return "admin/query";
-    }
-
-    @PostMapping("/gremien/{abbr}/queries/new")
-    public String saveNewQuery(@PathVariable String abbr, QueryAdminDto form, BindingResult res, Model m) {
-        if (res.hasErrors()) {
-            m.addAttribute("error", res.getAllErrors());
-            return "admin/query-edit";
-        } else {
-            form.addGremiumAbbr(abbr);
-            updateQuery(new Query(), form);
-            return "redirect:/admin/gremien/" + abbr;
-        }
     }
 
     @GetMapping("/gremien/{abbr}/queries/{id}")
@@ -169,26 +155,19 @@ public class AdminController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
     }
 
+    @PostMapping("/gremien/{abbr}/queries/new")
+    public String saveNewQuery(@PathVariable String abbr) {
+        return "forward:/admin/queries/new?abbr=" + abbr;
+    }
+
     @PostMapping(value = "/gremien/{abbr}/queries/{id}")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id, QueryAdminDto form,
-            BindingResult res, Model m) {
-        if (res.hasErrors()) {
-            m.addAttribute("error", res.getAllErrors());
-            return "admin/query-edit";
-        } else {
-            Optional<Query> qOpt = queryService.getQueryById(id);
-            if (qOpt.isPresent()) {
-                updateQuery(qOpt.get(), form);
-                return "redirect:/admin/gremien/" + abbr;
-            }
-            return "error";
-        }
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id) {
+        return "forward:/admin/queries/" + id + "?abbr=" + abbr;
     }
 
     @GetMapping("/gremien/{abbr}/queries/{id}/delete")
-    public String deleteQuery(@PathVariable String abbr, @PathVariable long id) {
-        queryService.delQueryById(id);
-        return "redirect:/admin/gremien/" + abbr;
+    public String delGremiumQuery(@PathVariable String abbr, @PathVariable long id) {
+        return "forward:/admin/queries/" + id + "/del?abbr=" + abbr;
     }
 
     @GetMapping("/users")
@@ -244,127 +223,103 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/users/{username}")
-    public String getUserInfoPage(@PathVariable String username, Model m) {
-        m.addAttribute("candidate", mgmtUserService.getCandidateDetailsOfUser(username));
-        m.addAttribute("username", username);
-        return "user/user-info";
+    @GetMapping("/queries")
+    public String getQueries(Model m) {
+        m.addAttribute("allQueries", queryService.getAllQueries());
+        return "admin/queries";
     }
 
-    @GetMapping("/users/{username}/edit")
-    public String getUserEditPage(@PathVariable String username, Model m) {
-        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
-        CandidateDtoAdmin form = new CandidateDtoAdmin();
-        form.setAge(c.getAge());
-        form.setBio(c.getBio());
-        form.setCourse(c.getCourse());
-        form.setEmail(c.getEmail());
-        form.setFirstname(c.getFirstname());
-        form.setGremien(c.getGremien());
-        form.setLastname(c.getLastname());
-        form.setSemester(c.getSemester());
-        if (c.getPhoto() != null) {
-            m.addAttribute("photoId", c.getPhoto().getId());
-        }
-        m.addAttribute("username", username);
+    @GetMapping("/queries/new")
+    public String getNewQuery(Model m) {
         m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
-        m.addAttribute("form", form);
-        return "admin/user-edit";
+        m.addAttribute("form", new QueryAdminDto());
+        return "admin/query";
     }
 
-    @PostMapping(value = "/users/{username}/edit", params = "del")
-    public String postUserEditDel(@PathVariable String username, Model m) {
-        mgmtUserService.delUserById(username);
-        return "redirect:/admin/users";
+    @GetMapping("/queries/{id}")
+    public String getQuery(Model m, @PathVariable long id) {
+        Optional<Query> qOpt = queryService.getQueryById(id);
+        if (qOpt.isPresent()) {
+            Query query = qOpt.get();
+            QueryAdminDto form = new QueryAdminDto();
+            form.setTxt(query.getText());
+            for (Gremium g : query.getGremien()) {
+                form.addGremium(g);
+            }
+            m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+            m.addAttribute("form", form);
+            m.addAttribute("query", query);
+            return "admin/query";
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
     }
 
-    @PostMapping(value = "/users/{username}/edit", params = "save")
-    public String postUserEditPage(@PathVariable String username, @ModelAttribute CandidateDtoAdmin form,
-            BindingResult res, Model m) {
+    @PostMapping("/queries/new")
+    public String newQuery(Model m, QueryAdminDto form, BindingResult res,
+            @RequestParam(required = false) String abbr) {
         if (res.hasErrors()) {
-            return "admin/user-edit";
+            m.addAttribute("error", res.getAllErrors());
+            return "admin/query";
         }
-        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
-        c.setFirstname(form.getFirstname());
-        c.setLastname(form.getLastname());
-        c.setAge(form.getAge());
-        c.setSemester(form.getSemester());
-        c.setCourse(form.getCourse());
-        c.setBio(form.getBio());
-        c.setEmail(form.getEmail());
-        c.setGremien(form.getGremien());
-        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
-        if (uOpt.isPresent()) {
-            MgmtUser u = uOpt.get();
-            u.setDetails(candidateService.saveCandidate(c));
-            mgmtUserService.saveUser(u);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
-        }
-        return "redirect:/admin/users/" + username;
-    }
-
-    @GetMapping("/users/{username}/upload/del")
-    public String getUserInfoUploadDel(@PathVariable String username, Model m) {
-        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
-        Photo p = c.getPhoto();
-        c.setPhoto(null);
-        photoService.delPhoto(p);
-        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
-        if (uOpt.isPresent()) {
-            MgmtUser u = uOpt.get();
-            u.setDetails(candidateService.saveCandidate(c));
-            mgmtUserService.saveUser(u);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
-        }
-        return "redirect:/admin/users/" + username + "/edit";
-    }
-
-    @GetMapping("/users/{username}/upload")
-    public String getUserInfoUpload(@PathVariable String username, Model m) {
-        Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(username);
-        if (userDetails.getPhoto() != null) {
-            m.addAttribute("photoId", userDetails.getPhoto().getId());
-        }
-        return "user/user-info-upload";
-    }
-
-    @PostMapping("/users/{username}/upload")
-    public String uploadImage(@PathVariable String username, @RequestParam("photo") MultipartFile file, Model m)
-            throws IOException {
-        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
-        Photo photo = new Photo();
-        photo.setFilename(file.getOriginalFilename());
-        photo.setMimeType(file.getContentType());
-        photo.setBytes(file.getBytes());
-        if (photo.getBytes().length >= 17) {
-            c.setPhoto(photoService.save(photo));
-        }
-        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
-        if (uOpt.isPresent()) {
-            MgmtUser u = uOpt.get();
-            u.setDetails(candidateService.saveCandidate(c));
-            mgmtUserService.saveUser(u);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
-        }
-        return "redirect:/admin/users/" + username + "/edit";
-    }
-
-    private void updateQuery(Query q, QueryAdminDto form) {
-        ArrayList<Gremium> gremien = new ArrayList<>();
-        for (String gId : form.getGremien()) {
-            Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(gId);
+        Query q = new Query();
+        if (abbr != null && !abbr.isBlank()) {
+            Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
             if (gOpt.isPresent()) {
-                gremien.add(gOpt.get());
+                q.addGremium(gOpt.get());
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
             }
+        } else {
+            q.setGremien(new HashSet<>());
         }
-        q.setGremien(Set.of(gremien.toArray(new Gremium[0])));
         q.setText(form.getTxt());
         queryService.saveQuery(q);
+        if (abbr != null && !abbr.isBlank()) {
+            return "redirect:/admin/gremien/" + abbr;
+        } else {
+            return "redirect:/admin/queries";
+        }
     }
 
+    @PostMapping("/queries/{id}")
+    public String updateQuery(Model m, QueryAdminDto form, BindingResult res, @PathVariable long id,
+            @RequestParam(required = false) String abbr) {
+        if (res.hasErrors()) {
+            m.addAttribute("error", res.getAllErrors());
+            return "admin/query";
+        }
+        Optional<Query> qOpt = queryService.getQueryById(id);
+        if (qOpt.isPresent()) {
+            Query q = qOpt.get();
+            ArrayList<Gremium> gremien = new ArrayList<>();
+            for (String gId : form.getGremien()) {
+                Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(gId);
+                if (gOpt.isPresent()) {
+                    gremien.add(gOpt.get());
+                } else {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+                }
+            }
+            q.setGremien(Set.of(gremien.toArray(new Gremium[0])));
+            q.setText(form.getTxt());
+            queryService.saveQuery(q);
+            if (abbr != null && !abbr.isBlank()) {
+                return "redirect:/admin/gremien/" + abbr;
+            } else {
+                return "redirect:/admin/queries";
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/queries/{id}/del")
+    public String deleteQuery(Model m, @RequestParam(required = false) String abbr, @PathVariable long id) {
+        queryService.delQueryById(id);
+        if (abbr != null && !abbr.isBlank()) {
+            return "redirect:/admin/gremien/" + abbr;
+        } else {
+            return "redirect:/admin/queries";
+        }
+    }
 }
