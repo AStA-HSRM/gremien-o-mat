@@ -41,6 +41,8 @@ import de.astahsrm.gremiomat.query.QueryService;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private static final String REDIRECT_ADMIN_QUERIES = "redirect:/admin/queries";
+
     @Autowired
     private CandidateService candidateService;
 
@@ -66,13 +68,6 @@ public class AdminController {
             @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
         candidateService.saveCandidatesFromCSV(csvFile, gremiumAbbr, req.getLocale());
         return "redirect:/admin/candidates";
-    }
-
-    @PostMapping("/csv-query-upload")
-    public String processQueryCSV(@RequestParam("csv-file") MultipartFile csvFile,
-            @RequestParam("gremiumSelect") String abbr) throws IOException, CsvException {
-        queryService.saveQueriesFromCSV(csvFile, abbr);
-        return "redirect:/admin/gremien/" + abbr;
     }
 
     @GetMapping("/gremien")
@@ -226,6 +221,7 @@ public class AdminController {
     @GetMapping("/queries")
     public String getQueries(Model m) {
         m.addAttribute("allQueries", queryService.getAllQueries());
+        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
         return "admin/queries";
     }
 
@@ -277,7 +273,7 @@ public class AdminController {
         if (abbr != null && !abbr.isBlank()) {
             return "redirect:/admin/gremien/" + abbr;
         } else {
-            return "redirect:/admin/queries";
+            return REDIRECT_ADMIN_QUERIES;
         }
     }
 
@@ -306,7 +302,7 @@ public class AdminController {
             if (abbr != null && !abbr.isBlank()) {
                 return "redirect:/admin/gremien/" + abbr;
             } else {
-                return "redirect:/admin/queries";
+                return REDIRECT_ADMIN_QUERIES;
             }
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
@@ -319,7 +315,15 @@ public class AdminController {
         if (abbr != null && !abbr.isBlank()) {
             return "redirect:/admin/gremien/" + abbr;
         } else {
-            return "redirect:/admin/queries";
+            return REDIRECT_ADMIN_QUERIES;
         }
     }
+
+    @PostMapping("/queries/csv")
+    public String processQueryCSV(@RequestParam MultipartFile file,
+            @RequestParam(required = false) String abbr) throws IOException, CsvException {
+        queryService.saveQueriesFromCSV(file, abbr);
+        return REDIRECT_ADMIN_QUERIES;
+    }
+
 }
