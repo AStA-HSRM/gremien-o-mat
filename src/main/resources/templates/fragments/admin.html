@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link"
-                        th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/queries')} ? 'active'"
+                        th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/queries') and not #strings.contains(#httpServletRequest.requestURI, '/gremien')} ? 'active'"
                         th:href="@{/admin/queries}" th:text="#{nav.queries}"></a>
                 </li>
                 <li class="nav-item d-md-none d-block">
@@ -98,7 +98,7 @@
                             <p class="mb-0">
                                 <span th:text="|${status.count}. |"></span>
                                 <span th:text="${q.text}"></span>
-                                <span class="m-1 badge bg-secondary" th:each="g : ${q.gremien}"
+                                <span class="m-1 badge bg-dark" th:each="g : ${q.gremien}"
                                     th:text="${g.abbr}"></span>
                             </p>
                         </div>
@@ -109,7 +109,7 @@
     </th:block>
     <div class="row justify-content-center mt-3">
         <div class="col-12 text-center">
-            <a class=" btn btn-dark btn-sm"
+            <a class=" btn btn-dark"
                 th:href="@{${gremium != null} ? '/admin/gremien/__${gremium?.abbr}__/queries/new' : '/admin/queries/new'}"
                 th:text="#{admin.new.query}"></a>
         </div>
