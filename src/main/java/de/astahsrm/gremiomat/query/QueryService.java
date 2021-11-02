@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.query;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import com.opencsv.exceptions.CsvException;
@@ -22,4 +23,6 @@ public interface QueryService {
     public void delQuery(Query q);
 
     public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr) throws IOException, CsvException;
+
+    public List<Query> getAllQueries();
 }

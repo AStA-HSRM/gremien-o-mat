@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.security;
+package de.astahsrm.gremiomat.mgmt;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
+import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Entity
 public class MgmtUser {

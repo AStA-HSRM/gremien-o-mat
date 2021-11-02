@@ -71,13 +71,9 @@ public class Candidate {
     @Column(columnDefinition = "boolean default false")
     private boolean courseShowing;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean welcomeMailSent;
-
     public Candidate() {
         this.ageShowing = false;
         this.courseShowing = false;
-        this.welcomeMailSent = false;
         this.firstname = "";
         this.lastname = "";
         this.email = "";
@@ -107,14 +103,6 @@ public class Candidate {
         } else if (!email.equals(other.email))
             return false;
         return true;
-    }
-
-    public boolean isWelcomeMailSent() {
-        return welcomeMailSent;
-    }
-
-    public void setWelcomeMailSent(boolean welcomeMailSent) {
-        this.welcomeMailSent = welcomeMailSent;
     }
 
     public boolean isAgeShowing() {

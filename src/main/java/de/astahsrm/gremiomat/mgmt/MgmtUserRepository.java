@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.security;
+package de.astahsrm.gremiomat.mgmt;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

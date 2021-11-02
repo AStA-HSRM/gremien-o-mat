@@ -8,9 +8,9 @@
 </head>
 
 <body>
-    <th:block th:insert="fragments/nav-admin.html"></th:block>
+    <th:block th:insert="fragments/admin.html :: nav"></th:block>
     <!-- Main Content -->
-    <main>
+    <main class="p-2">
         <div class="container card bg-dark text-light p-4 my-5" style="max-width: 600px;">
             <h3 class="my-3" th:text="#{edit.query}"></h3>
             <form th:method="POST" th:object="${form}" th:action="@{__${#httpServletRequest.requestURI}__}">
@@ -32,13 +32,13 @@
                 </div>
                 <div class="d-grid gap-3 mb-3" th:if="not ${#strings.contains(#httpServletRequest.requestURI, '/new')}">
                     <a class="btn btn-danger link-light" th:text="#{query.delete}"
-                        th:href="@{/admin/gremien/__${abbr}__/queries/__${query.id}__/delete}"
+                        th:href="@{__${#httpServletRequest.requestURI}__/del}"
                         onclick="return confirm('Are you sure you want to permanently delete this query?')">
                     </a>
                 </div>
                 <div class="d-grid gap-3 mb-3">
                     <a class="btn btn-secondary link-light" th:text="#{edit.cancel}"
-                        th:href="@{/admin/gremien/__${abbr}__}">
+                        th:href="${abbr != null} ? @{/admin/gremien/__${abbr}__} : @{/admin/queries}">
                     </a>
                 </div>
             </form>

@@ -15,8 +15,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.security.MgmtUser;
-import de.astahsrm.gremiomat.security.MgmtUserService;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 
 @Service
 public class MailServiceImpl implements MailService {

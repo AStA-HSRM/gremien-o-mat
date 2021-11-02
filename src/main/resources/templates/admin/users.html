@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragments/head.html"></th:block>
+    <title th:text="|Admin · #{title}|"></title>
+</head>
+
+<body>
+    <th:block th:insert="fragments/admin.html :: nav"></th:block>
+    <!-- Main Content -->
+    <main>
+        <div class="container p-3">
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <h3 class="my-3" th:text="#{nav.users}"></h3>
+                    <p class="form-text" th:text="#{admin.help.users}"></p>
+                </div>
+            </div>
+            <!-- Candidate List -->
+            <th:block th:each="u : ${allUsers}">
+                <div class="row justify-content-center mb-2">
+                    <div class="col-lg-5 col-12">
+                        <a class="text-decoration-none text-black" th:href="@{/admin/users/__${u.username}__}">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 col-lg-2 text-center text-lg-start">
+                                            <img class="thumbnail-profile-img mt-2"
+                                                th:src="${u.details?.getPhoto() != null} ? @{/api/v1/photo/__${u.details?.id}__} : @{/assets/img/placeholder.jpg}"
+                                                alt="Profile picture" />
+                                        </div>
+                                        <div class="col-12 col-lg-10 text-center text-lg-start">
+                                            <p>
+                                                <strong th:text="${u.username}"></strong>
+                                                <br />
+                                                <span
+                                                    th:text="${u.details != null} ? |${u.details?.firstname} ${u.details?.lastname}| : ''"></span>
+                                                <br th:if="${u.details != null}" />
+                                                <span class="text-secondary"
+                                                    th:text="${u.details?.courseShowing} ? |${u.details?.semester}. Semester, ${u.details?.course}| : #{candidate.student}"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    <a class="btn btn-dark btn custom-btn-w" th:href=@{/admin/gremien/queries/new}
+                        th:text="#{admin.new.admin}"></a>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    <a class="btn btn-dark btn custom-btn-w" th:href=@{/admin/gremien/queries/new}
+                        th:text="#{admin.new.user}"></a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <th:block th:insert="fragments/footer.html"></th:block>
+    <th:block th:insert="fragments/scripts.html"></th:block>
+</body>
+
+</html>

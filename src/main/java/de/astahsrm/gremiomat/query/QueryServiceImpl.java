@@ -2,6 +2,8 @@ package de.astahsrm.gremiomat.query;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,14 +35,13 @@ public class QueryServiceImpl implements QueryService {
 
     @Override
     public Query saveQuery(Query query) {
-        if(!getQueryById(query.getId()).isPresent()) {
+        if (!getQueryById(query.getId()).isPresent()) {
             queryRepository.save(query);
         }
         for (Gremium gremium : gremiumService.getAllGremiumsSortedByName()) {
-            if(query.getGremien().contains(gremium)) {
+            if (query.getGremien().contains(gremium)) {
                 gremium.addQuery(query);
-            }
-            else {
+            } else {
                 gremium.delQuery(query);
             }
             gremiumService.saveGremium(gremium);
@@ -89,28 +90,31 @@ public class QueryServiceImpl implements QueryService {
     }
 
     @Override
-    public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr)
-            throws IOException, CsvException {
-        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(gremiumAbbr);
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
-                    .build();
-            String[] entry;
-            while ((entry = reader.readNext()) != null) {
-                Optional<Query> qOpt = getQueryByTxt(entry[0]);
-                Query q = null;
-                if (qOpt.isPresent()) {
-                    q = qOpt.get();
-                } else {
-                    q = new Query();
-                }
-                q.addGremium(gremium);
-                q.setText(entry[0]);
-                gremiumService.addQueryToGremium(saveQuery(q), gremium);
+    public void saveQueriesFromCSV(MultipartFile csvFile, String gremiumAbbr) throws IOException, CsvException {
+        String[] entry;
+        CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
+                .build();
+        Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(gremiumAbbr);
+        while ((entry = reader.readNext()) != null) {
+            Optional<Query> qOpt = getQueryByTxt(entry[0]);
+            Query q = null;
+            if (qOpt.isPresent()) {
+                q = qOpt.get();
+            } else {
+                q = new Query();
             }
-        } else {
-            throw new EntityNotFoundException();
+            if (gOpt.isPresent()) {
+                q.addGremium(gOpt.get());
+            } else {
+                q.setGremien(new HashSet<>());
+            }
+            q.setText(entry[0]);
+            saveQuery(q);
         }
+    }
+
+    @Override
+    public List<Query> getAllQueries() {
+        return queryRepository.findAll();
     }
 }

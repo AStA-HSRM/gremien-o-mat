@@ -1,0 +1,117 @@
+<!-- Navbar -->
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <img class="navbar-brand" th:src="@{/assets/img/LogoW.svg}" alt="AStA Logo" width="30">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link"
+                        th:classappend="not ${#strings.contains(#httpServletRequest.requestURI, '/admin/')} ? 'active'"
+                        th:href="@{/admin}" th:text="#{nav.admin}"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/users')} ? 'active'"
+                        th:href="@{/admin/users}" th:text="#{nav.users}"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/gremien')} ? 'active'"
+                        th:href="@{/admin/gremien}" th:text="#{nav.gremien}"></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/queries') and not #strings.contains(#httpServletRequest.requestURI, '/gremien')} ? 'active'"
+                        th:href="@{/admin/queries}" th:text="#{nav.queries}"></a>
+                </li>
+                <li class="nav-item d-md-none d-block">
+                    <a class="nav-link" th:href=@{/logout} th:text="#{logout}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="d-lg-flex d-none">
+            <button th:if="${gremium != null}" class="btn btn-light btn-sm me-md-2" th:text="#{edit.gremium}"
+                data-bs-toggle="offcanvas" data-bs-target="#offcanvasGremium" aria-controls="offcanvasGremium"></button>
+            <a class=" btn btn-outline-light btn-sm" th:href=@{/logout} th:text="#{logout}"></a>
+        </div>
+    </div>
+</nav>
+
+<!-- New Gremium Offcanvas -->
+<div th:fragment="gremiumOffCanvas" class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasGremium"
+    aria-labelledby="GremiumCanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="GremiumCanvasLabel" th:text="#{edit.gremium}"></h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form class="row g-2" th:method="POST"
+            th:action="@{(${gremium != null}? 'admin/gremien/__${gremium?.abbr}__' : '/admin/gremien/new')}"
+            th:object="${form}">
+            <div class="mb-3 col-12">
+                <label for="name" th:text="#{gremium.name}"></label>
+                <input th:field="*{name}" th:placeholder="#{placeholder.gremium.name}" type="text" class="form-control"
+                    id="name" required>
+            </div>
+            <div class="mb-3 col-12">
+                <label for="abbr" th:text="#{gremium.abbr}"></label>
+                <input th:field="*{abbr}" th:placeholder="#{placeholder.gremium.abbr}" type="text" class="form-control"
+                    id="abbr" required>
+            </div>
+            <div class="mb-3 col-12">
+                <label for="description" th:text="#{description}"></label>
+                <textarea th:field="*{description}" th:placeholder="#{placeholder.gremium.description}"
+                    class="form-control" id="description" style="min-height: 15rem;" required></textarea>
+            </div>
+            <div class="d-grid gap-3">
+                <button class="btn btn-dark" type="submit" th:text="#{save}"></button>
+            </div>
+            <div th:if="${gremium != null}" class="d-grid gap-3">
+                <a class="btn btn-danger text-light" th:text="#{gremium.delete}"
+                    th:href="@{/admin/gremien/__${gremium.abbr}__/delete}"
+                    onclick="return confirm('Are you sure you want to delete this Gremium with all its queries and candidates?');"></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:fragment="queries(qList)" class="container my-4">
+    <!-- Queries Heading -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-12 text-center">
+            <h3 th:text="#{nav.queries}"></h3>
+            <p class="form-text" th:text="#{admin.help.queries}"></p>
+        </div>
+    </div>
+    <!-- Queries -->
+    <th:block th:each="q, status : ${qList}">
+        <div class="row my-1 px-2">
+            <a class="d-flex justify-content-center link-dark text-decoration-none"
+                th:href="@{${gremium != null} ? '/admin/gremien/__${gremium?.abbr}__/queries/__${q.id}__' : '/admin/queries/__${q.id}__'}">
+                <div class="m-1 col-md-7 col-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p class="mb-0">
+                                <span th:text="|${status.count}. |"></span>
+                                <span th:text="${q.text}"></span>
+                                <span class="m-1 badge bg-dark" th:each="g : ${q.gremien}"
+                                    th:text="${g.abbr}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </th:block>
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 text-center">
+            <a class=" btn btn-dark"
+                th:href="@{${gremium != null} ? '/admin/gremien/__${gremium?.abbr}__/queries/new' : '/admin/queries/new'}"
+                th:text="#{admin.new.query}"></a>
+        </div>
+    </div>
+</div>

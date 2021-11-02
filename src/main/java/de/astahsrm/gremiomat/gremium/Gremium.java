@@ -13,7 +13,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
@@ -38,12 +37,10 @@ public class Gremium {
     @Basic(fetch = FetchType.EAGER)
     private String description;
 
-    @NotNull
     @ManyToMany(targetEntity = Query.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "queriesInGremium", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "query_id"))
     private Set<Query> queries;
 
-    @NotNull
     @ManyToMany(targetEntity = Candidate.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "candidatesInGremium", joinColumns = @JoinColumn(name = "gremium_id"), inverseJoinColumns = @JoinColumn(name = "candidate_id"))
     private Set<Candidate> candidates;

@@ -28,11 +28,11 @@ import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.mail.MailService;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryDto;
 import de.astahsrm.gremiomat.query.QueryService;
-import de.astahsrm.gremiomat.security.MgmtUser;
-import de.astahsrm.gremiomat.security.MgmtUserService;
 
 @Controller
 @RequestMapping("/")
