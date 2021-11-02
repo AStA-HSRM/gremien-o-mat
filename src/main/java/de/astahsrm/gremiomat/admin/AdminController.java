@@ -97,7 +97,6 @@ public class AdminController {
         if (gOpt.isPresent()) {
             Gremium g = gOpt.get();
             GremiumDto form = new GremiumDto();
-            form.setAbbr(g.getAbbr());
             form.setName(g.getName());
             form.setDescription(g.getDescription());
             m.addAttribute("form", form);
@@ -108,17 +107,18 @@ public class AdminController {
     }
 
     @PostMapping("/gremien/{abbr}")
-    public String postGremiumEditPage(GremiumDto form, BindingResult res, Model m) {
+    public String postGremiumEditPage(@PathVariable String abbr, GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
             return "error";
         }
-        Optional<Gremium> gremiumOptional = gremiumService.findGremiumByAbbr(form.getAbbr());
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            gremium.setName(form.getName());
-            gremium.setDescription(form.getDescription());
-            return "redirect:/admin/gremien/" + gremiumService.saveGremium(gremium).getAbbr();
+        Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
+        if (gOpt.isPresent()) {
+            Gremium g = gOpt.get();
+            g.setName(form.getName());
+            g.setDescription(form.getDescription());
+            gremiumService.saveGremium(g);
+            return "redirect:/admin/gremien/" + abbr;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
@@ -320,8 +320,8 @@ public class AdminController {
     }
 
     @PostMapping("/queries/csv")
-    public String processQueryCSV(@RequestParam MultipartFile file,
-            @RequestParam(required = false) String abbr) throws IOException, CsvException {
+    public String processQueryCSV(@RequestParam MultipartFile file, @RequestParam(required = false) String abbr)
+            throws IOException, CsvException {
         queryService.saveQueriesFromCSV(file, abbr);
         return REDIRECT_ADMIN_QUERIES;
     }

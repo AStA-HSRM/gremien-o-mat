@@ -50,14 +50,14 @@
     </div>
     <div class="offcanvas-body">
         <form class="row g-2" th:method="POST"
-            th:action="@{(${gremium != null}? 'admin/gremien/__${gremium?.abbr}__' : '/admin/gremien/new')}"
+            th:action="@{(${gremium != null}? '/admin/gremien/__${gremium?.abbr}__' : '/admin/gremien/new')}"
             th:object="${form}">
             <div class="mb-3 col-12">
                 <label for="name" th:text="#{gremium.name}"></label>
                 <input th:field="*{name}" th:placeholder="#{placeholder.gremium.name}" type="text" class="form-control"
                     id="name" required>
             </div>
-            <div class="mb-3 col-12">
+            <div class="mb-3 col-12" th:if="${gremium == null}">
                 <label for="abbr" th:text="#{gremium.abbr}"></label>
                 <input th:field="*{abbr}" th:placeholder="#{placeholder.gremium.abbr}" type="text" class="form-control"
                     id="abbr" required>
