@@ -91,15 +91,6 @@ public class GremiumServiceImpl implements GremiumService {
     }
 
     @Override
-    public void delCandidateFromGremien(Candidate candidate) {
-        for (Gremium g : candidate.getGremien()) {
-            Gremium gremium = gremiumRepository.getById(g.getAbbr());
-            gremium.delCandidate(candidate);
-            saveGremium(gremium);
-        }
-    }
-
-    @Override
     public void addQueryToGremium(Query query, Gremium gremium) {
         gremium.addQuery(query);
         gremiumRepository.save(gremium);
