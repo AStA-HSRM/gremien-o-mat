@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html th:lang-xmllang="#{lang}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragments/head.html"></th:block>
+    <title th:text="|${candidate.firstname} ${candidate.lastname} · #{title}|"></title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}"><img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="30"></a>
+            <div>
+                <a class="btn btn-secondary btn-sm my-1" data-bs-toggle="modal" href="#uploadModal" role="button"
+                        aria-controls="uploadModalLabel" th:text="#{edit.photo}"></a>
+                <a class="btn btn-primary btn-sm my-1 mx-2" data-bs-toggle="offcanvas" href="#offcanvas" role="button"
+                    aria-controls="offcanvas" th:text="#{edit.profile}">
+                </a>
+                <a class="btn btn-outline-secondary btn-sm my-1" th:href=@{/logout} th:text="#{logout}"></a>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <main>
+        <div class="container py-4 mt-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-auto text-center px-5">
+                    <!-- Profile Image Modal Trigger -->
+                    <a data-bs-toggle="modal" href="#uploadModal" role="button" aria-controls="uploadModalLabel">
+                        <div class="image-container mx-auto">
+                            <img class="profile-img"
+                                th:src="${candidate.getPhoto() != null} ? @{/api/v1/photo/__${candidate.id}__} : @{/assets/img/placeholder.jpg}"
+                                alt="Profile picture" />
+                            <div class="after">
+                                <span class="overlay-text" th:text="#{edit.photo}"></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Gremien Badges (Not clickable) -->
+            <div class="row justify-content-center">
+                <div class="col-auto text-center my-3">
+                    <th:block th:each="g : ${candidate.gremien}">
+                        <span class="badge bg-primary text-light" th:text="${g.name}"></span>
+                    </th:block>
+                    <th:block th:if="${candidate.faculty} != null">
+                        <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
+                    </th:block>
+                </div>
+            </div>
+            <!-- Candidate Name and Course -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-12 col-lg-8 text-center">
+                    <h2 class="card-text text-"
+                        th:text="${candidate.ageShowing} ? |${candidate.firstname} ${candidate.lastname}, ${candidate.age}| : |${candidate.firstname} ${candidate.lastname}|">
+                    </h2>
+                    <h6 class="text-secondary"
+                        th:text="${candidate.courseShowing} ? |${candidate.semester}. #{semester}, ${candidate.course}| : #{candidate.student}">
+                    </h6>
+                </div>
+            </div>
+            <!-- Bio -->
+            <div class="row justify-content-center mb-4" th:if="${candidate.bio != null && candidate.bio != ''}">
+                <div class="col-auto text-justify">
+                    <div style="max-width: 500px;" th:text="${candidate.bio}"></div>
+                </div>
+            </div>
+            <!-- Answers -->
+            <div class="row justify-content-center" th:if="${candidate.answers != null}">
+                <div class="col-lg-7">
+                    <h4 class="mb-4 text-center" th:text="#{candidate.answers}"></h4>
+                    <div class="accordion" id="answers">
+                        <th:block th:each="a, status : ${candidate.answers}">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" th:id="|query-${status.count}|">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        th:attr="data-bs-target=|#answer-${status.count}|, aria-controls=|answer-${status.count}|"
+                                        aria-expanded="false" th:text="${a.query.text}">
+                                    </button>
+                                </h2>
+                                <div th:id="|answer-${status.count}|" class="accordion-collapse collapse"
+                                    th:attr="aria-labelledby=|query-${status.count}|" data-bs-parent="#answers">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-auto text-start pt-2">
+                                                <th:block th:switch="${a.opinion}">
+                                                    <strong th:case="'-1'" th:text="#{answer.disagree}"></strong>
+                                                    <strong th:case="'0'" th:text="#{answer.neutral}"></strong>
+                                                    <strong th:case="'1'" th:text="#{answer.agree}"></strong>
+                                                </th:block>
+                                                <span th:text="|: ${a.reason}|"></span>
+                                            </div>
+                                            <div class="col text-center text-lg-end mt-1">
+                                                <a class="btn btn-sm btn-primary text-end"
+                                                    th:href="@{/user/answers/__${a.id}__/edit}" th:text="#{edit}">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Edit Profile Image -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:method="POST" th:action="@{/user/info/upload}" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel" th:text="#{edit.photo}"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body pb-0">
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label" th:text="#{edit.photo.cta}"></label>
+                            <input class="form-control" name="photo" type="file" id="formFile">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center p-3 pt-0">
+                        <div class="col-12 col-lg-4 text-center mt-2">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary" th:text="#{save}"></button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 text-center mt-2">
+                            <div class="d-grid">
+                                <a class="btn btn-secondary" th:href=@{/user/info/upload/del}
+                                    th:text="#{edit.photo.delete}"></a>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 text-center mt-2">
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                    th:text="#{edit.cancel}"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Profile -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasLabel" th:text="#{edit.profile}"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form class="row g-2" th:method="POST" th:action="@{/user/info/edit}" th:object="${form}">
+                <div class="mb-3 col-md-9">
+                    <label for="firstname" th:text="#{firstname}"></label>
+                    <input th:field="*{firstname}" th:placeholder="#{placeholder.firstname}" type="text"
+                        class="form-control" id="firstname">
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label for="age" th:text="#{age}"></label>
+                    <input th:field="*{age}" type="number" min="16" max="120" class="form-control" id="age"
+                        aria-describedby="ageHelp">
+                </div>
+                <div class="mb-3 col-12">
+                    <label for="lastname" th:text="#{lastname}"></label>
+                    <input th:field="*{lastname}" th:placeholder="#{placeholder.lastname}" type="text"
+                        class="form-control" id="lastname">
+                </div>
+                <div class="mb-3 col-md-9">
+                    <label for="course" th:text="#{course}"></label>
+                    <input th:field="*{course}" th:placeholder="#{placeholder.course}" type="text" class="form-control"
+                        id="course">
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label for="semester" th:text="#{semester}"></label>
+                    <input th:field="*{semester}" type="number" min="1" class="form-control" id="semester"
+                        aria-describedby="semesterHelp">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="faculty" th:text="#{faculty}"></label>
+                    <select th:field="*{faculty}" class="form-select" id="faculty">
+                        <option th:selected="(*{faculty} eq '')" th:text="#{placeholder.faculty}" th:value="${null}">
+                        </option>
+                        <option th:selected="(*{faculty} eq ${f.abbr})" th:each="f : ${faculties}" th:value="${f.abbr}"
+                            th:text="${f.name}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="bio" th:text="#{bio}"></label>
+                    <textarea th:field="*{bio}" type="text" class="form-control" id="bio"
+                        th:placeholder="#{placeholder.bio}" style="height: 12rem;"></textarea>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="showCourse" th:field="*{courseShowing}">
+                    <label class="form-check-label" for="showCourse" th:text="#{show.course}"></label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="showAge" th:field="*{ageShowing}">
+                    <label class="form-check-label" for="showAge" th:text="#{show.age}"></label>
+                </div>
+                <div class="d-grid gap-3 mt-4">
+                    <button class="btn btn-primary" type="submit" th:text="#{edit.save}"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <th:block th:insert="fragments/footer.html"></th:block>
+    <th:block th:insert="fragments/scripts.html"></th:block>
+</body>
+
+</html>
