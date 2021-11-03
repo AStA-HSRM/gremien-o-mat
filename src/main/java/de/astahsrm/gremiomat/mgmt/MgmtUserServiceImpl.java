@@ -1,23 +1,34 @@
 package de.astahsrm.gremiomat.mgmt;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
+import de.astahsrm.gremiomat.gremium.Gremium;
+import de.astahsrm.gremiomat.gremium.GremiumService;
 import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.password.PasswordToken;
 import de.astahsrm.gremiomat.password.PasswordTokenService;
@@ -31,6 +42,9 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private GremiumService gremiumService;
 
     @Autowired
     private PasswordTokenService passwordTokenService;
@@ -125,19 +139,19 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     }
 
     @Override
-    public void saveNewUser(Candidate c, Locale locale) {
-        mailService.sendWelcomeMail(locale, saveUser(new MgmtUser(generateUsername(c), generatePassword(), c)));
+    public void saveNewUser(Candidate c, Locale locale) throws NoSuchMessageException, MessagingException {
+        mailService.sendWelcomeMail(locale, saveUser(new MgmtUser(generateUsername(c.getFirstname(), c.getLastname()), generatePassword(), c)));
     }
 
-    private String generateUsername(Candidate c) {
-        String username = c.getFirstname().substring(0, 2).concat(c.getLastname().substring(0, 3));
+    private String generateUsername(String firstname, String lastname) {
+        String username = firstname.substring(0, 2).concat(lastname.substring(0, 3));
         int count = 0;
         String result = String.format("%s%03d", username, count);
         while (getUserById(result).isPresent()) {
             count++;
             result = String.format("%s%03d", username, count);
         }
-        return result;
+        return result.toLowerCase();
     }
 
     private String generatePassword() {
@@ -177,5 +191,38 @@ public class MgmtUserServiceImpl implements MgmtUserService {
             }
         }
         return true;
+    }
+
+    @Override
+    public void saveNewAdmin(Locale locale, String firstname, String lastname, String email) throws NoSuchMessageException, MessagingException {
+        mailService.sendAdminWelcomeMail(locale, saveUser(new MgmtUser(generateUsername(firstname, lastname), generatePassword())), firstname, lastname, email);
+    }
+
+       /*
+     * This function assumes that the first name of a candidate is placed in the
+     * first column of a CSV file, the last name in the second column and the mail
+     * address in the third column, like so:
+     * 
+     * | Firstname | Lastname | Mail Address |
+     */
+    @Override
+    public void saveUsersFromCSV(MultipartFile csvFile, String abbr, Locale locale)
+            throws IOException, CsvException, NoSuchMessageException, MessagingException {
+        String[] entry;
+        CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
+                .build();
+        while ((entry = reader.readNext()) != null) {
+            Candidate candidate = new Candidate();
+            candidate.setFirstname(entry[0]);
+            candidate.setLastname(entry[1]);
+            candidate.setEmail(entry[2]);
+            candidate = candidateService.saveCandidate(candidate);
+            Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
+            if (gOpt.isPresent()) {
+                candidate.addGremium(gOpt.get());
+                gremiumService.addCandidateToGremium(candidate, gOpt.get());
+            }
+            saveNewUser(candidate, locale);
+        }
     }
 }

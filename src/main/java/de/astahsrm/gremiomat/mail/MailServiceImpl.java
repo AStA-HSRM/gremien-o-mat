@@ -8,6 +8,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 @Service
 public class MailServiceImpl implements MailService {
 
-    public static final String URL = "localhost:8090";
+    public static final String URL = "localhost:8090/user/change-password?token=";
 
     @Value("${spring.mail.username}")
     private String from;
@@ -39,33 +40,39 @@ public class MailServiceImpl implements MailService {
     private MessageSource messageSource;
 
     @Override
-    public void sendResetPasswordMail(Locale locale, MgmtUser user) {
+    public void sendResetPasswordMail(Locale locale, MgmtUser user) throws NoSuchMessageException, MessagingException {
         Context context = new Context();
-        String url = URL + "/user/change-password?token=" + mgmtUserService.createPasswordResetTokenForUser(user);
+        String url = URL + mgmtUserService.createPasswordResetTokenForUser(user);
         context.setVariable("url", url);
         context.setLocale(locale);
-        try {
-            send(messageSource.getMessage("mail.reset.subject", null, locale),
-                    templateEngine.process("mail/reset", context), user);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        send(messageSource.getMessage("mail.reset.subject", null, locale),
+                templateEngine.process("mail/reset", context), user);
     }
 
     @Override
-    public void sendWelcomeMail(Locale locale, MgmtUser user) {
+    public void sendWelcomeMail(Locale locale, MgmtUser user) throws NoSuchMessageException, MessagingException {
         Context context = new Context();
         Candidate details = user.getDetails();
-        String url = URL + "/user/change-password?token=" + mgmtUserService.createPasswordResetTokenForUser(user);
+        String url = URL + mgmtUserService.createPasswordResetTokenForUser(user);
         context.setVariable("fullname", details.getFirstname() + " " + details.getLastname());
         context.setVariable("username", user.getUsername());
         context.setVariable("url", url);
         context.setLocale(locale);
-        try {
-            send(messageSource.getMessage("mail.welcome.title", null, locale), templateEngine.process("mail/welcome", context), user);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        send(messageSource.getMessage("mail.welcome.title", null, locale),
+                templateEngine.process("mail/welcome", context), user);
+    }
+
+    @Override
+    public void sendAdminWelcomeMail(Locale locale, MgmtUser user, String firstname, String lastname, String email)
+            throws NoSuchMessageException, MessagingException {
+        Context context = new Context();
+        String url = URL + mgmtUserService.createPasswordResetTokenForUser(user);
+        context.setVariable("fullname", firstname + " " + lastname);
+        context.setVariable("username", user.getUsername());
+        context.setVariable("url", url);
+        context.setLocale(locale);
+        send(messageSource.getMessage("mail.welcome.title", null, locale),
+                templateEngine.process("mail/welcome", context), user);
     }
 
     private void send(String subject, String html, MgmtUser toUser) throws MessagingException {

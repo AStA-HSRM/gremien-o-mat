@@ -1,13 +1,7 @@
 package de.astahsrm.gremiomat.candidate;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-
-import com.opencsv.exceptions.CsvException;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 
@@ -27,7 +21,5 @@ public interface CandidateService {
     Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, long id);
 
     public boolean candidateExists(Candidate c);
-
-    public void saveCandidatesFromCSV(MultipartFile csvFile, String gremiumAbbr, Locale locale) throws IOException, CsvException;
 
 }

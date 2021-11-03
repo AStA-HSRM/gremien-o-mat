@@ -1,17 +1,18 @@
 package de.astahsrm.gremiomat.admin;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.opencsv.exceptions.CsvException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,12 +32,12 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
-import de.astahsrm.gremiomat.mgmt.MgmtUser;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryAdminDto;
 import de.astahsrm.gremiomat.query.QueryService;
+import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Controller
 @RequestMapping("/admin")
@@ -62,13 +63,6 @@ public class AdminController {
     @GetMapping
     public String getAdminPage() {
         return "admin/admin";
-    }
-
-    @PostMapping("/csv-user-upload")
-    public String processUserCSV(@RequestParam("csv-file") MultipartFile csvFile, HttpServletRequest req,
-            @RequestParam("gremiumSelect") String gremiumAbbr) throws IOException, CsvException {
-        candidateService.saveCandidatesFromCSV(csvFile, gremiumAbbr, req.getLocale());
-        return "redirect:/admin/candidates";
     }
 
     @GetMapping("/gremien")
@@ -156,25 +150,8 @@ public class AdminController {
         m.addAttribute("allUsers", mgmtUserService.getAllUsersSortedByUsername());
         m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("usersLocked", mgmtUserService.areUsersLocked());
+        m.addAttribute("form", new CandidateDtoAdmin());
         return "admin/users";
-    }
-
-    @GetMapping("/users/new")
-    public String getUserNew(Principal loggedInUser, Model m) {
-        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
-        if (uOpt.isPresent()) {
-            MgmtUser user = uOpt.get();
-            CandidateDtoAdmin form = new CandidateDtoAdmin();
-            form.setEmail(user.getDetails().getEmail());
-            form.setFirstname(user.getDetails().getFirstname());
-            form.setLastname(user.getDetails().getLastname());
-            form.setRole(user.getRole());
-            m.addAttribute("username", loggedInUser.getName());
-            m.addAttribute("form", form);
-            return "admin/user-edit";
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, mgmtUserService.USER_NOT_FOUND);
-        }
     }
 
     @PostMapping("/users/new")
@@ -183,13 +160,25 @@ public class AdminController {
         if (res.hasErrors()) {
             return "admin/user-edit";
         }
+        if (form.getRole().equals(SecurityConfig.ADMIN)) {
+            try {
+                mgmtUserService.saveNewAdmin(request.getLocale(), form.getFirstname(), form.getLastname(),
+                        form.getEmail());
+            } catch (NoSuchMessageException | MessagingException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
+            }
+        }
+
         Candidate c = new Candidate();
         c.setFirstname(form.getFirstname());
         c.setLastname(form.getLastname());
         c.setEmail(form.getEmail());
-        MgmtUser user = new MgmtUser();
         if (!candidateService.candidateExists(c)) {
-            mgmtUserService.saveNewUser(c, request.getLocale());
+            try {
+                mgmtUserService.saveNewUser(candidateService.saveCandidate(c), request.getLocale());
+            } catch (NoSuchMessageException | MessagingException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
+            }
             return "redirect:/admin/users/";
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");
@@ -199,7 +188,11 @@ public class AdminController {
     @PostMapping("/users/csv")
     public String userCsvUpload(HttpServletRequest req, @RequestParam MultipartFile file,
             @RequestParam(required = false) String abbr) throws IOException, CsvException {
-        candidateService.saveCandidatesFromCSV(file, abbr, req.getLocale());
+        try {
+            mgmtUserService.saveUsersFromCSV(file, abbr, req.getLocale());
+        } catch (NoSuchMessageException | MessagingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
+        }
         return "redirect:/admin/users";
     }
 

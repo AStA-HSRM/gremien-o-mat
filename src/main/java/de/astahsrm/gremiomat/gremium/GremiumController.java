@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -89,7 +91,11 @@ public class GremiumController {
         Optional<MgmtUser> uOpt = mgmtUserService.findUserByEmail(userEmail);
         if (uOpt.isPresent()) {
             MgmtUser user = uOpt.get();
-            mailService.sendResetPasswordMail(request.getLocale(), user);
+            try {
+                mailService.sendResetPasswordMail(request.getLocale(), user);
+            } catch (NoSuchMessageException | MessagingException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
+            }
         }
         return "redirect:/login?reset=0";
     }
