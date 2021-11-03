@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.query;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -98,6 +99,9 @@ public class Query {
     }
 
     public boolean addGremium(Gremium gremium) {
+        if(this.gremien == null) {
+            this.gremien = new HashSet<>();
+        }
         if (!this.gremien.contains(gremium))
             return this.gremien.add(gremium);
         else
