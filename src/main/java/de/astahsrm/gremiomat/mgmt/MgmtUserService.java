@@ -29,6 +29,10 @@ public interface MgmtUserService {
 
     public void lockAllUsers();
 
+    public void unlockAllUsers();
+
+    public boolean areUsersLocked();
+
     public Optional<MgmtUser> findUserByEmail(String userEmail);
 
     public String createPasswordResetTokenForUser(MgmtUser user);

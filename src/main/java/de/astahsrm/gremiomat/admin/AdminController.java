@@ -31,6 +31,7 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
@@ -150,43 +151,30 @@ public class AdminController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
     }
 
-    @PostMapping("/gremien/{abbr}/queries/new")
-    public String saveNewQuery(@PathVariable String abbr) {
-        return "forward:/admin/queries/new?abbr=" + abbr;
-    }
-
-    @PostMapping(value = "/gremien/{abbr}/queries/{id}")
-    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id) {
-        return "forward:/admin/queries/" + id + "?abbr=" + abbr;
-    }
-
-    @GetMapping("/gremien/{abbr}/queries/{id}/delete")
-    public String delGremiumQuery(@PathVariable String abbr, @PathVariable long id) {
-        return "forward:/admin/queries/" + id + "/del?abbr=" + abbr;
-    }
-
     @GetMapping("/users")
     public String getUserOverview(Model m) {
         m.addAttribute("allUsers", mgmtUserService.getAllUsersSortedByUsername());
+        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute("usersLocked", mgmtUserService.areUsersLocked());
         return "admin/users";
     }
 
     @GetMapping("/users/new")
     public String getUserNew(Principal loggedInUser, Model m) {
-        Candidate c = new Candidate();
-        CandidateDtoAdmin form = new CandidateDtoAdmin();
-        form.setAge(c.getAge());
-        form.setBio(c.getBio());
-        form.setCourse(c.getCourse());
-        form.setEmail(c.getEmail());
-        form.setFirstname(c.getFirstname());
-        form.setGremien(c.getGremien());
-        form.setLastname(c.getLastname());
-        form.setSemester(c.getSemester());
-        m.addAttribute("username", loggedInUser.getName());
-        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
-        m.addAttribute("form", form);
-        return "admin/user-edit";
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
+        if (uOpt.isPresent()) {
+            MgmtUser user = uOpt.get();
+            CandidateDtoAdmin form = new CandidateDtoAdmin();
+            form.setEmail(user.getDetails().getEmail());
+            form.setFirstname(user.getDetails().getFirstname());
+            form.setLastname(user.getDetails().getLastname());
+            form.setRole(user.getRole());
+            m.addAttribute("username", loggedInUser.getName());
+            m.addAttribute("form", form);
+            return "admin/user-edit";
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, mgmtUserService.USER_NOT_FOUND);
+        }
     }
 
     @PostMapping("/users/new")
@@ -198,12 +186,8 @@ public class AdminController {
         Candidate c = new Candidate();
         c.setFirstname(form.getFirstname());
         c.setLastname(form.getLastname());
-        c.setAge(form.getAge());
-        c.setSemester(form.getSemester());
-        c.setCourse(form.getCourse());
-        c.setBio(form.getBio());
         c.setEmail(form.getEmail());
-        c.setGremien(form.getGremien());
+        MgmtUser user = new MgmtUser();
         if (!candidateService.candidateExists(c)) {
             mgmtUserService.saveNewUser(c, request.getLocale());
             return "redirect:/admin/users/";
@@ -212,9 +196,20 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/users/csv")
+    public String userCsvUpload(HttpServletRequest req, @RequestParam MultipartFile file,
+            @RequestParam(required = false) String abbr) throws IOException, CsvException {
+        candidateService.saveCandidatesFromCSV(file, abbr, req.getLocale());
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("/users/lock")
     public String lockUser(Model m) {
-        mgmtUserService.lockAllUsers();
+        if (mgmtUserService.areUsersLocked()) {
+            mgmtUserService.unlockAllUsers();
+        } else {
+            mgmtUserService.lockAllUsers();
+        }
         return "redirect:/admin/users";
     }
 
@@ -324,6 +319,21 @@ public class AdminController {
             throws IOException, CsvException {
         queryService.saveQueriesFromCSV(file, abbr);
         return REDIRECT_ADMIN_QUERIES;
+    }
+
+    @PostMapping("/gremien/{abbr}/queries/new")
+    public String saveNewQuery(@PathVariable String abbr) {
+        return "forward:/admin/queries/new?abbr=" + abbr;
+    }
+
+    @PostMapping(value = "/gremien/{abbr}/queries/{id}")
+    public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id) {
+        return "forward:/admin/queries/" + id + "?abbr=" + abbr;
+    }
+
+    @GetMapping("/gremien/{abbr}/queries/{id}/delete")
+    public String delGremiumQuery(@PathVariable String abbr, @PathVariable long id) {
+        return "forward:/admin/queries/" + id + "/del?abbr=" + abbr;
     }
 
 }

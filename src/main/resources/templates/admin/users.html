@@ -12,9 +12,23 @@
     <!-- Main Content -->
     <main>
         <div class="container p-3">
-            <div class="row mt-5">
+            <div class="container mb-5">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-12 text-center">
+                        <h3 th:text="#{admin.lock}"></h3>
+                        <p class="form-text" th:text="#{admin.lock.help}"></p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                        <a class="btn btn-dark my-1" th:href="@{/admin/users/lock}" onclick="confirm('Are you sure you want to toggle the locking of all user accounts?')" th:text="${usersLocked} ? #{admin.button.unlock} : #{admin.button.lock}"></a>
+                    </div>
+                </div>
+            </div>
+            <th:block th:insert="fragments/admin.html :: csv('/admin/users/csv')"></th:block>
+            <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="my-3" th:text="#{nav.users}"></h3>
+                    <h3 th:text="#{nav.users}"></h3>
                     <p class="form-text" th:text="#{admin.help.users}"></p>
                 </div>
             </div>
@@ -51,13 +65,8 @@
             </th:block>
             <div class="row justify-content-center mt-3">
                 <div class="col-12 text-center">
-                    <a class="btn btn-dark btn custom-btn-w" th:href=@{/admin/gremien/queries/new}
-                        th:text="#{admin.new.admin}"></a>
-                </div>
-            </div>
-            <div class="row justify-content-center mt-3">
-                <div class="col-12 text-center">
-                    <a class="btn btn-dark btn custom-btn-w" th:href=@{/admin/gremien/queries/new}
+                    <a class=" btn btn-dark"
+                        th:href="@{${gremium != null} ? '/admin/gremien/__${gremium?.abbr}__/queries/new' : '/admin/queries/new'}"
                         th:text="#{admin.new.user}"></a>
                 </div>
             </div>

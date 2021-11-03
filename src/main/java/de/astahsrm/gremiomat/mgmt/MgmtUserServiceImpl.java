@@ -21,6 +21,7 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.password.PasswordToken;
 import de.astahsrm.gremiomat.password.PasswordTokenService;
+import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Service
 public class MgmtUserServiceImpl implements MgmtUserService {
@@ -82,14 +83,6 @@ public class MgmtUserServiceImpl implements MgmtUserService {
             mgmtUserRepository.delete(mu);
         } else {
             throw new EntityNotFoundException();
-        }
-    }
-
-    @Override
-    public void lockAllUsers() {
-        for (MgmtUser user : mgmtUserRepository.findAll()) {
-            user.setLocked(true);
-            saveUser(user);
         }
     }
 
@@ -158,5 +151,31 @@ public class MgmtUserServiceImpl implements MgmtUserService {
         List<Character> pwdChars = combinedChars.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
         Collections.shuffle(pwdChars);
         return pwdChars.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+    }
+
+    @Override
+    public void unlockAllUsers() {
+        for (MgmtUser user : mgmtUserRepository.findAll()) {
+            user.setLocked(false);
+            saveUser(user);
+        }
+    }
+
+    @Override
+    public void lockAllUsers() {
+        for (MgmtUser user : mgmtUserRepository.findAll()) {
+            user.setLocked(true);
+            saveUser(user);
+        }
+    }
+
+    @Override
+    public boolean areUsersLocked() {
+        for (MgmtUser user : mgmtUserRepository.findAll()) {
+            if(user.getRole().equals(SecurityConfig.USER)) {
+                return user.isLocked();
+            }
+        }
+        return true;
     }
 }
