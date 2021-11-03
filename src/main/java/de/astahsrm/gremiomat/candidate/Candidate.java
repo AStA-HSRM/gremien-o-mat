@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.candidate;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.faculty.Faculty;
@@ -43,11 +43,9 @@ public class Candidate {
     @OneToOne
     private Faculty faculty;
 
-    @NotNull
     @ManyToMany(targetEntity = Gremium.class, mappedBy = "candidates", cascade = CascadeType.PERSIST)
     private Set<Gremium> gremien;
 
-    @NotNull
     @OneToMany
     private Set<CandidateAnswer> answers;
 
@@ -67,7 +65,7 @@ public class Candidate {
 
     @Column(columnDefinition = "boolean default false")
     private boolean ageShowing;
-    
+
     @Column(columnDefinition = "boolean default false")
     private boolean courseShowing;
 
@@ -78,6 +76,8 @@ public class Candidate {
         this.lastname = "";
         this.email = "";
         this.bio = "";
+        this.gremien = new HashSet<>();
+        this.answers = new HashSet<>();
     }
 
     @Override
