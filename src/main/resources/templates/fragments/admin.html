@@ -98,8 +98,7 @@
                             <p class="mb-0">
                                 <span th:text="|${status.count}. |"></span>
                                 <span th:text="${q.text}"></span>
-                                <span class="m-1 badge bg-dark" th:each="g : ${q.gremien}"
-                                    th:text="${g.abbr}"></span>
+                                <span class="m-1 badge bg-dark" th:each="g : ${q.gremien}" th:text="${g.abbr}"></span>
                             </p>
                         </div>
                     </div>
@@ -115,3 +114,59 @@
         </div>
     </div>
 </div>
+
+<!-- CVS Upload -->
+<th:block th:fragment="csv(url)">
+    <div class="container mb-5">
+        <div class="row justify-content-center mt-5">
+            <div class="col-12 text-center">
+                <h3 th:text="#{admin.csv}"></h3>
+                <p class="form-text" th:text="#{admin.help.csv}"></p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                <a class="btn btn-dark my-1" data-bs-toggle="modal" href="#uploadModal" role="button"
+                    aria-controls="uploadModalLabel" th:text="#{admin.csv.cta}"></a>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:method="POST" th:action="@{__${url}__}" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel" th:text="#{admin.csv}"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body pb-0">
+                        <div class="mb-3">
+                            <label for="file" class="form-label" th:text="#{admin.csv.modal}"></label>
+                            <input class="form-control" name="file" type="file" id="file">
+                        </div>
+                        <div class="mb-3">
+                            <label for="abbr" th:text="#{gremium}"></label>
+                            <select class="form-select" name="abbr">
+                                <option value="" th:text="#{placeholder.select.gremium}" selected></option>
+                                <option th:each="g : ${allGremien}" th:value="${g.abbr}" th:text="${g.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center p-3 pt-0">
+                        <div class="col-12 col-lg-6 text-center mt-2">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-dark" th:text="#{save}"></button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 text-center mt-2">
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"
+                                    th:text="#{edit.cancel}"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
