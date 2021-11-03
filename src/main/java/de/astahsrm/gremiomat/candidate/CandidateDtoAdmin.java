@@ -1,24 +1,17 @@
 package de.astahsrm.gremiomat.candidate;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import de.astahsrm.gremiomat.gremium.Gremium;
 
 public class CandidateDtoAdmin {
 
-    @NotEmpty
-    @Min(16)
-    @Max(120)
-    private int age;
-
-    @NotEmpty
-    private int semester;
+    @Email
+    @NotBlank
+    private String email;
 
     @NotBlank
     private String firstname;
@@ -26,26 +19,17 @@ public class CandidateDtoAdmin {
     @NotBlank
     private String lastname;
 
-    @Email
-    private String email;
-    private String course;
-    private String bio;
-    private Set<Gremium> gremien;
+    @NotBlank
+    private String role;
 
-    public int getAge() {
-        return age;
+    private List<Gremium> gremien;
+
+    public String getEmail() {
+        return email;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public int getSemester() {
-        return semester;
-    }
-
-    public void setSemester(int semester) {
-        this.semester = semester;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstname() {
@@ -64,35 +48,19 @@ public class CandidateDtoAdmin {
         this.lastname = lastname;
     }
 
-    public String getCourse() {
-        return course;
+    public String getRole() {
+        return role;
     }
 
-    public void setCourse(String course) {
-        this.course = course;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Gremium> getGremien() {
+    public List<Gremium> getGremien() {
         return gremien;
     }
 
-    public void setGremien(Set<Gremium> gremien) {
+    public void setGremien(List<Gremium> gremien) {
         this.gremien = gremien;
     }
 
