@@ -37,9 +37,6 @@ public class Candidate {
     @NotEmpty(message = "{notEmpty}")
     private String lastname;
 
-    @NotEmpty(message = "{notEmpty}")
-    private String email;
-
     @OneToOne
     private Faculty faculty;
 
@@ -74,17 +71,21 @@ public class Candidate {
         this.courseShowing = false;
         this.firstname = "";
         this.lastname = "";
-        this.email = "";
         this.bio = "";
         this.gremien = new HashSet<>();
         this.answers = new HashSet<>();
     }
 
     @Override
+    public String toString() {
+        return "Candidate [firstname=" + firstname + ", id=" + id + ", lastname=" + lastname + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + (int) (id ^ (id >>> 32));
         return result;
     }
 
@@ -97,12 +98,7 @@ public class Candidate {
         if (getClass() != obj.getClass())
             return false;
         Candidate other = (Candidate) obj;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        return true;
+        return id != other.id;
     }
 
     public boolean isAgeShowing() {
@@ -131,18 +127,6 @@ public class Candidate {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder bld = new StringBuilder();
-        bld.append("Candidate [email=" + email + ", firstname=" + firstname + ", gremien= {");
-        for (Gremium g : this.gremien) {
-            bld.append(g.getAbbr() + ",");
-        }
-        bld.deleteCharAt(bld.toString().length() - 1);
-        bld.append("}, lastname=" + lastname + "]");
-        return bld.toString();
     }
 
     public void addGremium(Gremium gremium) {
@@ -180,14 +164,6 @@ public class Candidate {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Set<CandidateAnswer> getAnswers() {

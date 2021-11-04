@@ -26,7 +26,7 @@ public interface MgmtUserService {
 
     public MgmtUser saveUser(MgmtUser u);
 
-    public void saveNewUser(Candidate c, Locale locale) throws NoSuchMessageException, MessagingException;
+    public void saveNewUser(String email, Candidate c, Locale locale) throws NoSuchMessageException, MessagingException;
 
     public List<MgmtUser> getAllUsersSortedByUsername();
 
@@ -46,7 +46,8 @@ public interface MgmtUserService {
 
     public void changePassword(String token, String newPassword) throws AuthenticationException;
 
-    public void saveNewAdmin(Locale locale, String firstname, String lastname, String email) throws NoSuchMessageException, MessagingException;
+    public void saveNewAdmin(Locale locale, String firstname, String lastname, String email)
+            throws NoSuchMessageException, MessagingException;
 
     public void saveUsersFromCSV(MultipartFile csvFile, String gremiumAbbr, Locale locale)
             throws IOException, CsvException, NoSuchMessageException, MessagingException;

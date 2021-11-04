@@ -13,33 +13,45 @@ import de.astahsrm.gremiomat.security.SecurityConfig;
 
 @Entity
 public class MgmtUser {
+
     @Version
     private long version;
+
     @Id
     @NotBlank
     private String username;
+
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String email;
+
     @NotBlank
     private String role;
+
     @OneToOne
     private Candidate details;
+
     @Column(columnDefinition = "boolean default false")
     private boolean isLocked;
 
     public MgmtUser() {
     }
 
-    public MgmtUser(@NotBlank String username, @NotBlank String password, @NotNull Candidate candidateDetails) {
+    public MgmtUser(@NotBlank String email, @NotBlank String username, @NotBlank String password,
+            @NotNull Candidate candidateDetails) {
         super();
+        this.email = email;
         this.username = username;
         this.password = password;
         this.role = SecurityConfig.USER;
         this.details = candidateDetails;
     }
 
-    public MgmtUser(@NotBlank String username, @NotBlank String password) {
+    public MgmtUser(@NotBlank String email, @NotBlank String username, @NotBlank String password) {
         super();
+        this.email = email;
         this.username = username;
         this.password = password;
         this.role = SecurityConfig.ADMIN;
@@ -97,4 +109,13 @@ public class MgmtUser {
     public boolean hasDetails() {
         return this.details != null;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

@@ -158,31 +158,32 @@ public class AdminController {
     public String postNewUser(HttpServletRequest request, @ModelAttribute CandidateDtoAdmin form, BindingResult res,
             Model m) {
         if (res.hasErrors()) {
-            return "admin/user-edit";
+            return "admin/users";
         }
         if (form.getRole().equals(SecurityConfig.ADMIN)) {
             try {
                 mgmtUserService.saveNewAdmin(request.getLocale(), form.getFirstname(), form.getLastname(),
                         form.getEmail());
-            } catch (NoSuchMessageException | MessagingException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
-            }
-        }
 
-        Candidate c = new Candidate();
-        c.setFirstname(form.getFirstname());
-        c.setLastname(form.getLastname());
-        c.setEmail(form.getEmail());
-        if (!candidateService.candidateExists(c)) {
-            try {
-                mgmtUserService.saveNewUser(candidateService.saveCandidate(c), request.getLocale());
             } catch (NoSuchMessageException | MessagingException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
             }
-            return "redirect:/admin/users/";
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");
+            Candidate c = new Candidate();
+            c.setFirstname(form.getFirstname());
+            c.setLastname(form.getLastname());
+            if (!candidateService.candidateExists(c)) {
+                try {
+                    mgmtUserService.saveNewUser(form.getEmail(), candidateService.saveCandidate(c), request.getLocale());
+                } catch (NoSuchMessageException | MessagingException e) {
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                            "Welcome Mail could not be sent!");
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");
+            }
         }
+        return "redirect:/admin/users?sent=true";
     }
 
     @PostMapping("/users/csv")
@@ -193,7 +194,7 @@ public class AdminController {
         } catch (NoSuchMessageException | MessagingException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
         }
-        return "redirect:/admin/users";
+        return "redirect:/admin/users?sent=true";
     }
 
     @GetMapping("/users/lock")

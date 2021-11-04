@@ -79,7 +79,14 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public List<MgmtUser> getAllUsersSortedByUsername() {
-        return mgmtUserRepository.findAll(Sort.by(Direction.DESC, "username")).stream().collect(Collectors.toList());
+        List<MgmtUser> list = mgmtUserRepository.findAll(Sort.by(Direction.ASC, "username")).stream()
+                .collect(Collectors.toList());
+        Collections.sort(list, (u1, u2) -> {
+            String role1 = u1.getRole();
+            String role2 = u2.getRole();
+            return role1.compareTo(role2);
+        });
+        return list;
     }
 
     @Override
@@ -105,7 +112,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     @Override
     public Optional<MgmtUser> findUserByEmail(String userEmail) {
         for (MgmtUser user : mgmtUserRepository.findAll()) {
-            if (user.hasDetails() && user.getDetails().getEmail().equals(userEmail)) {
+            if (user.getEmail().equals(userEmail)) {
                 return Optional.of(user);
             }
         }
@@ -144,8 +151,10 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     }
 
     @Override
-    public void saveNewUser(Candidate c, Locale locale) throws NoSuchMessageException, MessagingException {
-        mailService.sendWelcomeMail(locale, saveUser(new MgmtUser(generateUsername(c.getFirstname(), c.getLastname()), generatePassword(), c)));
+    public void saveNewUser(String email, Candidate c, Locale locale)
+            throws NoSuchMessageException, MessagingException {
+        mailService.sendWelcomeMail(locale, saveUser(
+                new MgmtUser(email, generateUsername(c.getFirstname(), c.getLastname()), generatePassword(), c)));
     }
 
     private String generateUsername(String firstname, String lastname) {
@@ -174,36 +183,41 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public void unlockAllUsers() {
-        for (MgmtUser user : mgmtUserRepository.findAll()) {
-            user.setLocked(false);
-            saveUser(user);
-        }
+        lockUsers(false);
     }
 
     @Override
     public void lockAllUsers() {
+        lockUsers(true);
+    }
+
+    private void lockUsers(boolean lock) {
         for (MgmtUser user : mgmtUserRepository.findAll()) {
-            user.setLocked(true);
-            saveUser(user);
+            if (user.getRole().equals(SecurityConfig.USER)) {
+                user.setLocked(lock);
+                saveUser(user);
+            }
         }
     }
 
     @Override
     public boolean areUsersLocked() {
         for (MgmtUser user : mgmtUserRepository.findAll()) {
-            if(user.getRole().equals(SecurityConfig.USER)) {
-                return user.isLocked();
+            if (user.getRole().equals(SecurityConfig.USER) && !user.isLocked()) {
+                return false;
             }
         }
         return true;
     }
 
     @Override
-    public void saveNewAdmin(Locale locale, String firstname, String lastname, String email) throws NoSuchMessageException, MessagingException {
-        mailService.sendAdminWelcomeMail(locale, saveUser(new MgmtUser(generateUsername(firstname, lastname), generatePassword())), firstname, lastname, email);
+    public void saveNewAdmin(Locale locale, String firstname, String lastname, String email)
+            throws NoSuchMessageException, MessagingException {
+        mailService.sendWelcomeMail(locale,
+                saveUser(new MgmtUser(email, generateUsername(firstname, lastname), generatePassword())));
     }
 
-       /*
+    /*
      * This function assumes that the first name of a candidate is placed in the
      * first column of a CSV file, the last name in the second column and the mail
      * address in the third column, like so:
@@ -220,14 +234,14 @@ public class MgmtUserServiceImpl implements MgmtUserService {
             Candidate candidate = new Candidate();
             candidate.setFirstname(entry[0]);
             candidate.setLastname(entry[1]);
-            candidate.setEmail(entry[2]);
             candidate = candidateService.saveCandidate(candidate);
             Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
             if (gOpt.isPresent()) {
                 candidate.addGremium(gOpt.get());
                 gremiumService.addCandidateToGremium(candidate, gOpt.get());
             }
-            saveNewUser(candidate, locale);
+            saveNewUser(entry[2], candidate, locale);
         }
     }
+
 }
