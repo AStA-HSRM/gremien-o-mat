@@ -11980,6 +11980,24 @@ footer {
       flex-shrink: 0;
 }
 
+footer .fa {
+  padding: 10px;
+  font-size: 18px;
+  width: 37px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50%;
+  background: white;
+  color: #6c757d;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+footer .fa:hover {
+  color: white;
+  background: #be1e2d;
+}
+
 .after {
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
@@ -12016,24 +12034,6 @@ footer {
 .error-title p {
   font-family: monospace;
   font-weight: 1000;
-}
-
-.fa {
-  padding: 10px;
-  font-size: 18px;
-  width: 37px;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 50%;
-  background: white;
-  color: #6c757d;
-  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-}
-
-.fa:hover {
-  color: white;
-  background: #be1e2d;
 }
 
 .image-container {

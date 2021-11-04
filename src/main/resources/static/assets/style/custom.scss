@@ -82,6 +82,22 @@ main {
 }
 
 footer {
+    .fa {
+        padding: 10px;
+        font-size: 18px;
+        width: 37px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 50%;
+        background: white;
+        color: $secondary;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+    }
+
+    .fa:hover {
+        color: white;
+        background: $primary;
+    }
     flex-shrink: 0;
 }
 
@@ -122,23 +138,6 @@ footer {
         font-family: monospace;
         font-weight: 1000;
     }
-}
-
-.fa {
-    padding: 10px;
-    font-size: 18px;
-    width: 37px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 50%;
-    background: white;
-    color: $secondary;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-}
-
-.fa:hover {
-    color: white;
-    background: $primary;
 }
 
 .image-container {
