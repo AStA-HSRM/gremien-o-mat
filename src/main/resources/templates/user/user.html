@@ -68,7 +68,7 @@
                 </div>
             </div>
             <!-- Answers -->
-            <div class="row justify-content-center" th:if="${candidate.answers != null}">
+            <div th:if="${c.answers.size() > 0}" class="row justify-content-center" th:if="${candidate.answers != null}">
                 <div class="col-lg-7">
                     <h4 class="mb-4 text-center" th:text="#{candidate.answers}"></h4>
                     <div class="accordion" id="answers">

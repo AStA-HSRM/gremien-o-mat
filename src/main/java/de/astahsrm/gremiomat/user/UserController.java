@@ -78,7 +78,7 @@ public class UserController {
             m.addAttribute("form", form);
             m.addAttribute("faculties", facultyService.getAllFaculties());
             m.addAttribute("candidate", userDetails);
-            return "user/user-info-edit";
+            return "user/user";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
     }
@@ -87,7 +87,7 @@ public class UserController {
     public String postUserInfoEditWithImage(Principal loggedInUser, @Valid CandidateDto form, BindingResult res,
             Model m) {
         if (res.hasErrors()) {
-            return "user/user-info-edit";
+            return "user/user";
         }
         Candidate c = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
         c.setFirstname(form.getFirstname());
@@ -166,7 +166,7 @@ public class UserController {
             form.setReason(ca.getReason());
             m.addAttribute("form", form);
             m.addAttribute("query", ca.getQuery());
-            return "user/answer-edit";
+            return "user/answer";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, CandidateAnswerService.ANSWER_NOT_FOUND);
     }
@@ -175,7 +175,7 @@ public class UserController {
     public String postAnswerEdit(@Valid CandidateAnswerDto form, @PathVariable long answerId, BindingResult res,
             Principal loggedInUser, Model m) {
         if (res.hasErrors()) {
-            return "user/answer-edit";
+            return "user/answer";
         }
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
         Optional<Candidate> cOpt = candidateService.getCandidateById(userDetails.getId());
