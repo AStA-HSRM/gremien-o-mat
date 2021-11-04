@@ -1,5 +1,6 @@
 package de.astahsrm.gremiomat.candidate;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,8 +12,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
+import de.astahsrm.gremiomat.candidate.answer.CandidateAnswerService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.query.Query;
 
 @Service
 public class CandidateServiceImpl implements CandidateService {
@@ -21,10 +24,24 @@ public class CandidateServiceImpl implements CandidateService {
     private CandidateRepository candidateRepository;
 
     @Autowired
+    private CandidateAnswerService candidateAnswerService;
+
+    @Autowired
     private GremiumService gremiumService;
 
     @Override
     public Candidate saveCandidate(Candidate candidate) {
+        if (candidate.getAnswers().isEmpty()) {
+            HashSet<Query> queries = new HashSet<>();
+            for (Gremium gremium : candidate.getGremien()) {
+                queries.addAll(gremium.getQueries());
+            }
+            for (Query query : queries) {
+                CandidateAnswer ca = new CandidateAnswer();
+                ca.setQuery(query);
+                candidate.addNewAnswer(candidateAnswerService.saveAnswer(ca));
+            }
+        }
         return candidateRepository.save(candidate);
     }
 
