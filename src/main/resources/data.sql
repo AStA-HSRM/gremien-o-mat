@@ -13,10 +13,10 @@ INSERT INTO query (id, version, text) VALUES
   (-2,0,'Dieser Aussage soll nicht zugestimmt werden.'),
   (-3,0,'Gegenüber dieser Frage sollte man neutral eingestimmt sein.');
 
-INSERT INTO candidate (id, version, firstname, lastname, email) VALUES
-(-20,0,'Darth','Vader','1@mail.de'),
-(-21,0,'Kim','Kardashian','2@mail.de'),
-(-22,0,'Robert','McClanahan','3@mail.de');
+INSERT INTO candidate (id, version, firstname, lastname) VALUES
+(-20,0,'Darth','Vader'),
+(-21,0,'Kim','Kardashian'),
+(-22,0,'Robert','McClanahan');
 
 INSERT INTO faculty (abbr, name, version) VALUES
 ('UDE', 'Unter den Eichen', 0),
@@ -37,9 +37,9 @@ INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-311,0,-2,-1,'Weil ich der vierte Kandidat bin!'),
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
 
-INSERT INTO mgmt_user (version, username, password, role, details_id) VALUES
-(0,'user','$2a$12$Zxm6Dkl4JRjJ5iyRIkxG6.UfPH177Qah97q99JSoVHhU37CFhTD/C','USER',-20),
-(0,'admin','$2a$12$wTNqe067K8paDzpcggpd1O2ElkaR8JQjSlnaM3wDzsVreexdILsYC', 'ADMIN', NULL);
+INSERT INTO mgmt_user (version, username, password, email, role, details_id) VALUES
+(0,'user','$2a$12$Zxm6Dkl4JRjJ5iyRIkxG6.UfPH177Qah97q99JSoVHhU37CFhTD/C', 'ismailinico@gmail.com' ,'USER',-20),
+(0,'admin','$2a$12$wTNqe067K8paDzpcggpd1O2ElkaR8JQjSlnaM3wDzsVreexdILsYC', 'ismailinico@gmail.com', 'ADMIN', NULL);
 
 INSERT INTO password_token (id, expiry_date, token, user_username) VALUES
 (92,'2023-06-15','123','user');
