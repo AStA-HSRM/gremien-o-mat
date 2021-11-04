@@ -2,7 +2,9 @@ package de.astahsrm.gremiomat.mgmt;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -114,7 +116,10 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     public String createPasswordResetTokenForUser(MgmtUser user) {
         String tokenStr = passwordTokenService.generateResetToken();
         if (getUserById(user.getUsername()).isPresent()) {
-            PasswordToken token = new PasswordToken(tokenStr, user);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DAY_OF_YEAR, 14);
+            PasswordToken token = new PasswordToken(tokenStr, user, calendar.getTime());
             passwordTokenService.save(token);
         }
         return tokenStr;
