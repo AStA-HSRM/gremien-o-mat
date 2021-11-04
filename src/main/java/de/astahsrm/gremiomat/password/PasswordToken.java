@@ -14,14 +14,13 @@ import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.mgmt.MgmtUser;
 
-
 @Entity
 public class PasswordToken {
 
     private static final int EXPIRATION = 60 * 24;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -38,10 +37,11 @@ public class PasswordToken {
         this.token = "";
     }
 
-    public PasswordToken(String token, MgmtUser user) {
+    public PasswordToken(String token, MgmtUser user, Date expDate) {
         super();
         setToken(token);
         setUser(user);
+        setExpiryDate(expDate);
     }
 
     public static int getExpiration() {
