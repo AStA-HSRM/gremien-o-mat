@@ -38,8 +38,8 @@ INSERT INTO candidate_answer (id, version, query_id, opinion, reason) VALUES
   (-312,0,-3,0,'Weil ich der vierte Kandidat bin!');
 
 INSERT INTO mgmt_user (version, username, password, email, role, details_id) VALUES
-(0,'user','$2a$12$Zxm6Dkl4JRjJ5iyRIkxG6.UfPH177Qah97q99JSoVHhU37CFhTD/C', 'ismailinico@gmail.com' ,'USER',-20),
-(0,'admin','$2a$12$wTNqe067K8paDzpcggpd1O2ElkaR8JQjSlnaM3wDzsVreexdILsYC', 'ismailinico@gmail.com', 'ADMIN', NULL);
+(0,'user','$2a$12$Zxm6Dkl4JRjJ5iyRIkxG6.UfPH177Qah97q99JSoVHhU37CFhTD/C', '123@gmail.com' ,'USER',-20),
+(0,'admin','$2a$12$wTNqe067K8paDzpcggpd1O2ElkaR8JQjSlnaM3wDzsVreexdILsYC', '234@gmail.com', 'ADMIN', NULL);
 
 INSERT INTO password_token (id, expiry_date, token, user_username) VALUES
 (92,'2023-06-15','123','user');
