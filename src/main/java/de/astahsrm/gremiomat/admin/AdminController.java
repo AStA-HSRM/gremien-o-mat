@@ -32,6 +32,7 @@ import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
+import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
@@ -43,7 +44,23 @@ import de.astahsrm.gremiomat.security.SecurityConfig;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private static final String REDIRECT_ADMIN_QUERIES = "redirect:/admin/queries";
+    private static final String ALL_GREMIEN = "allGremien";
+
+    private static final String ADMIN_GREMIUM = "admin/gremium";
+
+    private static final String ADMIN_GREMIEN = "admin/gremien";
+
+    private static final String ADMIN_QUERY = "admin/query";
+
+    private static final String ADMIN_QUERIES = "admin/queries";
+
+    private static final String ADMIN_USERS = "admin/users";
+
+    private static final String REDIRECT_ADMIN_GREMIEN = "redirect:/" + ADMIN_GREMIEN;
+
+    private static final String REDIRECT_ADMIN_QUERIES = "redirect:/" + ADMIN_QUERIES;
+
+    private static final String FORWARD_ADMIN_QUERIES = "forward:/" + ADMIN_QUERIES;
 
     @Autowired
     private CandidateService candidateService;
@@ -69,21 +86,27 @@ public class AdminController {
     public String getGremien(Model m) {
         m.addAllAttributes(gremiumService.getGremienNavMap());
         m.addAttribute("form", new GremiumDto());
-        return "admin/gremien";
+        return ADMIN_GREMIEN;
+    }
+
+    @GetMapping("/gremien/{abbr}/del")
+    public String delGremium(@PathVariable String abbr) {
+        gremiumService.delByAbbrGremium(abbr);
+        return REDIRECT_ADMIN_GREMIEN;
     }
 
     @PostMapping("/gremien/new")
     public String saveNewGremiumString(GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
-            return "admin/gremium";
+        } else {
+            Gremium gremium = new Gremium();
+            gremium.setName(form.getName());
+            gremium.setAbbr(form.getAbbr());
+            gremium.setDescription(form.getDescription());
+            gremiumService.saveGremium(gremium);
         }
-        Gremium gremium = new Gremium();
-        gremium.setName(form.getName());
-        gremium.setAbbr(form.getAbbr());
-        gremium.setDescription(form.getDescription());
-        gremiumService.saveGremium(gremium);
-        return "redirect:/admin/gremien";
+        return REDIRECT_ADMIN_GREMIEN;
     }
 
     @GetMapping("/gremien/{abbr}")
@@ -96,7 +119,7 @@ public class AdminController {
             form.setDescription(g.getDescription());
             m.addAttribute("form", form);
             m.addAttribute("gremium", g);
-            return "admin/gremium";
+            return ADMIN_GREMIUM;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
@@ -105,7 +128,7 @@ public class AdminController {
     public String postGremiumEditPage(@PathVariable String abbr, GremiumDto form, BindingResult res, Model m) {
         if (res.hasErrors()) {
             m.addAttribute("errors", res.getAllErrors());
-            return "admin/gremium";
+            return ADMIN_GREMIUM;
         }
         Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
         if (gOpt.isPresent()) {
@@ -113,17 +136,17 @@ public class AdminController {
             g.setName(form.getName());
             g.setDescription(form.getDescription());
             gremiumService.saveGremium(g);
-            return "redirect:/admin/gremien/" + abbr;
+            return REDIRECT_ADMIN_GREMIEN + "/" + abbr;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
     }
 
     @GetMapping("/gremien/{abbr}/queries/new")
     public String newQuery(Model m, @PathVariable String abbr) {
-        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("form", new QueryAdminDto());
         m.addAttribute("abbr", abbr);
-        return "admin/query";
+        return ADMIN_QUERY;
     }
 
     @GetMapping("/gremien/{abbr}/queries/{id}")
@@ -136,11 +159,11 @@ public class AdminController {
             for (Gremium g : query.getGremien()) {
                 form.addGremium(g);
             }
-            m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+            m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
             m.addAttribute("form", form);
             m.addAttribute("query", query);
             m.addAttribute("abbr", abbr);
-            return "admin/query";
+            return ADMIN_QUERY;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
     }
@@ -148,17 +171,17 @@ public class AdminController {
     @GetMapping("/users")
     public String getUserOverview(Model m) {
         m.addAttribute("allUsers", mgmtUserService.getAllUsersSortedByUsername());
-        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("usersLocked", mgmtUserService.areUsersLocked());
         m.addAttribute("form", new CandidateDtoAdmin());
-        return "admin/users";
+        return ADMIN_USERS;
     }
 
     @PostMapping("/users/new")
     public String postNewUser(HttpServletRequest request, @ModelAttribute CandidateDtoAdmin form, BindingResult res,
             Model m) {
         if (res.hasErrors()) {
-            return "admin/users";
+            return ADMIN_USERS;
         }
         if (form.getRole().equals(SecurityConfig.ADMIN)) {
             try {
@@ -166,7 +189,7 @@ public class AdminController {
                         form.getEmail());
 
             } catch (NoSuchMessageException | MessagingException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, MailService.MAIL_ERROR);
             }
         } else {
             Candidate c = new Candidate();
@@ -174,13 +197,13 @@ public class AdminController {
             c.setLastname(form.getLastname());
             if (!candidateService.candidateExists(c)) {
                 try {
-                    mgmtUserService.saveNewUser(form.getEmail(), candidateService.saveCandidate(c), request.getLocale());
+                    mgmtUserService.saveNewUser(form.getEmail(), candidateService.saveCandidate(c),
+                            request.getLocale());
                 } catch (NoSuchMessageException | MessagingException e) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                            "Welcome Mail could not be sent!");
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, MailService.MAIL_ERROR);
                 }
             } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists!");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, MgmtUserService.USER_NOT_FOUND);
             }
         }
         return "redirect:/admin/users?sent=true";
@@ -192,7 +215,7 @@ public class AdminController {
         try {
             mgmtUserService.saveUsersFromCSV(file, abbr, req.getLocale());
         } catch (NoSuchMessageException | MessagingException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Welcome Mail could not be sent!");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, MailService.MAIL_ERROR);
         }
         return "redirect:/admin/users?sent=true";
     }
@@ -210,15 +233,15 @@ public class AdminController {
     @GetMapping("/queries")
     public String getQueries(Model m) {
         m.addAttribute("allQueries", queryService.getAllQueries());
-        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
-        return "admin/queries";
+        m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
+        return ADMIN_QUERIES;
     }
 
     @GetMapping("/queries/new")
     public String getNewQuery(Model m) {
-        m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+        m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("form", new QueryAdminDto());
-        return "admin/query";
+        return ADMIN_QUERY;
     }
 
     @GetMapping("/queries/{id}")
@@ -231,10 +254,10 @@ public class AdminController {
             for (Gremium g : query.getGremien()) {
                 form.addGremium(g);
             }
-            m.addAttribute("allGremien", gremiumService.getAllGremiumsSortedByName());
+            m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
             m.addAttribute("form", form);
             m.addAttribute("query", query);
-            return "admin/query";
+            return ADMIN_QUERY;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
     }
@@ -244,7 +267,7 @@ public class AdminController {
             @RequestParam(required = false) String abbr) {
         if (res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
-            return "admin/query";
+            return ADMIN_QUERY;
         }
         Query q = new Query();
         if (abbr != null && !abbr.isBlank()) {
@@ -260,7 +283,7 @@ public class AdminController {
         q.setText(form.getTxt());
         queryService.saveQuery(q);
         if (abbr != null && !abbr.isBlank()) {
-            return "redirect:/admin/gremien/" + abbr;
+            return REDIRECT_ADMIN_GREMIEN + "/" + abbr;
         } else {
             return REDIRECT_ADMIN_QUERIES;
         }
@@ -271,7 +294,7 @@ public class AdminController {
             @RequestParam(required = false) String abbr) {
         if (res.hasErrors()) {
             m.addAttribute("error", res.getAllErrors());
-            return "admin/query";
+            return ADMIN_QUERY;
         }
         Optional<Query> qOpt = queryService.getQueryById(id);
         if (qOpt.isPresent()) {
@@ -289,7 +312,7 @@ public class AdminController {
             q.setText(form.getTxt());
             queryService.saveQuery(q);
             if (abbr != null && !abbr.isBlank()) {
-                return "redirect:/admin/gremien/" + abbr;
+                return REDIRECT_ADMIN_GREMIEN + "/" + abbr;
             } else {
                 return REDIRECT_ADMIN_QUERIES;
             }
@@ -302,7 +325,7 @@ public class AdminController {
     public String deleteQuery(Model m, @RequestParam(required = false) String abbr, @PathVariable long id) {
         queryService.delQueryById(id);
         if (abbr != null && !abbr.isBlank()) {
-            return "redirect:/admin/gremien/" + abbr;
+            return REDIRECT_ADMIN_GREMIEN + "/" + abbr;
         } else {
             return REDIRECT_ADMIN_QUERIES;
         }
@@ -317,17 +340,17 @@ public class AdminController {
 
     @PostMapping("/gremien/{abbr}/queries/new")
     public String saveNewQuery(@PathVariable String abbr) {
-        return "forward:/admin/queries/new?abbr=" + abbr;
+        return FORWARD_ADMIN_QUERIES + "/new?abbr=" + abbr;
     }
 
     @PostMapping(value = "/gremien/{abbr}/queries/{id}")
     public String postSaveGremiumQueryEditPage(@PathVariable String abbr, @PathVariable long id) {
-        return "forward:/admin/queries/" + id + "?abbr=" + abbr;
+        return FORWARD_ADMIN_QUERIES + "/" + id + "?abbr=" + abbr;
     }
 
     @GetMapping("/gremien/{abbr}/queries/{id}/delete")
     public String delGremiumQuery(@PathVariable String abbr, @PathVariable long id) {
-        return "forward:/admin/queries/" + id + "/del?abbr=" + abbr;
+        return FORWARD_ADMIN_QUERIES + "/" + id + "/del?abbr=" + abbr;
     }
 
 }
