@@ -4,23 +4,20 @@
 
 <head>
     <th:block th:insert="fragments/head.html"></th:block>
-    <title th:text="|${candidate.firstname} ${candidate.lastname} · #{title}|"></title>
+    <title th:text="|${username} · #{title}|"></title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}"><img th:src="@{/assets/img/Logo.svg}" alt="AStA Logo" width="30"></a>
-            <div>
-                <a class="btn btn-secondary btn-sm my-1" data-bs-toggle="modal" href="#uploadModal" role="button"
-                        aria-controls="uploadModalLabel" th:text="#{edit.photo}"></a>
-                <a class="btn btn-primary btn-sm my-1 mx-2" data-bs-toggle="offcanvas" href="#offcanvas" role="button"
-                    aria-controls="offcanvas" th:text="#{edit.profile}">
-                </a>
-                <a class="btn btn-outline-secondary btn-sm my-1" th:href=@{/logout} th:text="#{logout}"></a>
-            </div>
+    <th:block th:insert="fragments/admin.html :: nav"></th:block>
+    <div class="d-flex p-2 justify-content-end">
+        <div>
+            <a class="btn btn-secondary btn-sm my-1" data-bs-toggle="modal" href="#uploadModal" role="button"
+                aria-controls="uploadModalLabel" th:text="#{edit.photo}"></a>
+            <a class="btn btn-dark btn-sm my-1 mx-2" data-bs-toggle="offcanvas" href="#offcanvas" role="button"
+                aria-controls="offcanvas" th:text="#{edit.profile}">
+            </a>
         </div>
-    </nav>
+    </div>
     <!-- Main Content -->
     <main>
         <div class="container py-4 mt-lg-5">
@@ -43,7 +40,7 @@
             <div class="row justify-content-center">
                 <div class="col-auto text-center my-3">
                     <th:block th:each="g : ${candidate.gremien}">
-                        <span class="badge bg-primary text-light" th:text="${g.name}"></span>
+                        <span class="badge bg-secondary text-light" th:text="${g.name}"></span>
                     </th:block>
                     <th:block th:if="${candidate.faculty} != null">
                         <span class="badge bg-secondary text-light" th:text="${candidate.faculty.abbr}"></span>
@@ -92,11 +89,6 @@
                                                 </th:block>
                                                 <span th:text="|: ${a.reason}|"></span>
                                             </div>
-                                            <div class="col text-center text-lg-end mt-1">
-                                                <a class="btn btn-sm btn-primary text-end"
-                                                    th:href="@{/user/answers/__${a.id}__/edit}" th:text="#{edit}">
-                                                </a>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,7 +103,7 @@
     <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form th:method="POST" th:action="@{/user/info/upload}" enctype="multipart/form-data">
+                <form th:method="POST" th:action="@{/admin/users/__${username}__/upload}" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="uploadModalLabel" th:text="#{edit.photo}"></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -125,12 +117,12 @@
                     <div class="row justify-content-center p-3 pt-0">
                         <div class="col-12 col-lg-4 text-center mt-2">
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary" th:text="#{save}"></button>
+                                <button type="submit" class="btn btn-dark" th:text="#{save}"></button>
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 text-center mt-2">
                             <div class="d-grid">
-                                <a class="btn btn-secondary" th:href=@{/user/info/upload/del}
+                                <a class="btn btn-secondary" th:href="@{/admin/users/__${username}__/upload/del}"
                                     th:text="#{edit.photo.delete}"></a>
                             </div>
                         </div>
@@ -152,7 +144,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <form class="row g-2" th:method="POST" th:action="@{/user/info/edit}" th:object="${form}">
+            <form class="row g-2" th:method="POST" th:action="@{/admin/users/__${username}__}" th:object="${form}">
                 <div class="mb-3 col-md-9">
                     <label for="firstname" th:text="#{firstname}"></label>
                     <input th:field="*{firstname}" th:placeholder="#{placeholder.firstname}" type="text"
@@ -160,7 +152,7 @@
                 </div>
                 <div class="mb-3 col-md-3">
                     <label for="age" th:text="#{age}"></label>
-                    <input th:field="*{age}" type="number" min="16" max="120" class="form-control" id="age"
+                    <input th:field="*{age}" type="number" min="0" max="120" class="form-control" id="age"
                         aria-describedby="ageHelp">
                 </div>
                 <div class="mb-3 col-12">
@@ -175,7 +167,7 @@
                 </div>
                 <div class="mb-3 col-md-3">
                     <label for="semester" th:text="#{semester}"></label>
-                    <input th:field="*{semester}" type="number" min="1" class="form-control" id="semester"
+                    <input th:field="*{semester}" type="number" min="0" class="form-control" id="semester"
                         aria-describedby="semesterHelp">
                 </div>
                 <div class="mb-3">
@@ -187,10 +179,17 @@
                             th:text="${f.name}"></option>
                     </select>
                 </div>
-                <div>
+                <div class="mb-3">
                     <label for="bio" th:text="#{bio}"></label>
                     <textarea th:field="*{bio}" type="text" class="form-control" id="bio"
                         th:placeholder="#{placeholder.bio}" style="height: 12rem;"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label th:text="#{gremien}"></label>
+                    <select class="form-select" name="gremien" id="gremien" th:field="*{gremien}" multiple>
+                        <option th:each="g : ${allGremien}" th:value="${g.abbr}"><span th:text="${g.name}"></span>
+                        </option>
+                    </select>
                 </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="showCourse" th:field="*{courseShowing}">
@@ -201,12 +200,14 @@
                     <label class="form-check-label" for="showAge" th:text="#{show.age}"></label>
                 </div>
                 <div class="d-grid gap-3 mt-4">
-                    <button class="btn btn-primary" type="submit" th:text="#{edit.save}"></button>
+                    <button class="btn btn-dark" type="submit" th:text="#{edit.save}"></button>
+                </div>
+                <div class="d-grid gap-3">
+                    <a class="btn text-light btn-danger" th:text="#{admin.delete.user}" th:onclick="|return confirm('#{warning.delete.user}')|" th:href="@{/admin/users/__${username}__/del}"></a>
                 </div>
             </form>
         </div>
     </div>
-    <th:block th:insert="fragments/footer.html"></th:block>
     <th:block th:insert="fragments/scripts.html"></th:block>
 </body>
 
