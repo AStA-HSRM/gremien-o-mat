@@ -107,4 +107,8 @@ public class Query {
         else
             return false;
     }
+
+    public void delGremium(Gremium gremium) {
+        this.gremien.remove(gremium);
+    }
 }

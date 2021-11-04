@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import de.astahsrm.gremiomat.candidate.Candidate;
 import de.astahsrm.gremiomat.candidate.CandidateService;
 import de.astahsrm.gremiomat.query.Query;
+import de.astahsrm.gremiomat.query.QueryService;
 import javassist.NotFoundException;
 
 @Service
@@ -25,6 +26,9 @@ public class GremiumServiceImpl implements GremiumService {
 
     @Autowired
     private CandidateService candidateService;
+
+    @Autowired
+    private QueryService queryService;
 
     @Override
     public Gremium saveGremium(Gremium gremium) {
@@ -38,18 +42,6 @@ public class GremiumServiceImpl implements GremiumService {
 
     @Override
     public void delByAbbrGremium(String abbr) {
-        Optional<Gremium> gremiumOptional = findGremiumByAbbr(abbr);
-        if (gremiumOptional.isPresent()) {
-            Gremium gremium = gremiumOptional.get();
-            for (Candidate cand : gremium.getCandidates()) {
-                Optional<Candidate> cOptional = candidateService.getCandidateById(cand.getId());
-                if (cOptional.isPresent()) {
-                    Candidate candidate = cOptional.get();
-                    candidate.delGremium(gremium);
-                    candidateService.saveCandidate(candidate);
-                }
-            }
-        }
         gremiumRepository.deleteById(abbr);
     }
 
