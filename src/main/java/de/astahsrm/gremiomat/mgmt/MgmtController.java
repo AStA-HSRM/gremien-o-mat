@@ -21,17 +21,6 @@ public class MgmtController {
 
     @GetMapping
     public String redirectUser(Model m, Principal user) {
-        // For testing purposes:
-        if (user.getName().equalsIgnoreCase(SecurityConfig.ADMIN)) {
-            return "redirect:/admin";
-        }
-        if (user.getName().equalsIgnoreCase(SecurityConfig.USER)) {
-            return "redirect:/user";
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Cannot find user: " + user.getName() + " in database!");
-        }
-        /* Implementation with DB:
         String userRole = mgmtUserServiceImpl.getRoleOfUserById(user.getName());
         if (userRole.equals(SecurityConfig.ADMIN)) {
             return "redirect:/admin";
@@ -42,7 +31,5 @@ public class MgmtController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Cannot find user: " + user.getName() + " in database!");
         }
-        */
     }
-
 }
