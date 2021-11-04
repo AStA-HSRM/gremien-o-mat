@@ -8,6 +8,8 @@ import de.astahsrm.gremiomat.mgmt.MgmtUser;
 
 public interface MailService {
 
+        String MAIL_ERROR = "Welcome Mail could not be sent!";
+
         public void sendResetPasswordMail(Locale locale, MgmtUser user) throws MessagingException;
 
         public void sendWelcomeMail(Locale locale, MgmtUser user) throws MessagingException;
