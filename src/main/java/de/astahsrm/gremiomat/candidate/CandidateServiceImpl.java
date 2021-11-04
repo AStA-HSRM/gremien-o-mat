@@ -39,6 +39,7 @@ public class CandidateServiceImpl implements CandidateService {
             for (Query query : queries) {
                 CandidateAnswer ca = new CandidateAnswer();
                 ca.setQuery(query);
+                ca.setOpinion(2);
                 candidate.addNewAnswer(candidateAnswerService.saveAnswer(ca));
             }
         }
