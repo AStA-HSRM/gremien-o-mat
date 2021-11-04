@@ -1,7 +1,5 @@
 package de.astahsrm.gremiomat.mgmt;
 
-import java.util.List;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -22,7 +20,7 @@ public class MgmtUserDto {
     @NotBlank
     private String role;
 
-    private List<Gremium> gremien;
+    private Gremium gremien;
 
     public String getEmail() {
         return email;
@@ -56,11 +54,11 @@ public class MgmtUserDto {
         this.role = role;
     }
 
-    public List<Gremium> getGremien() {
+    public Gremium getGremien() {
         return gremien;
     }
 
-    public void setGremien(List<Gremium> gremien) {
+    public void setGremien(Gremium gremien) {
         this.gremien = gremien;
     }
 
