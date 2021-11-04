@@ -1,9 +1,14 @@
 package de.astahsrm.gremiomat.candidate;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import de.astahsrm.gremiomat.constraints.courseandsemesterbothexist.CourseAndSemesterBothExist;
+import de.astahsrm.gremiomat.gremium.Gremium;
 
 @CourseAndSemesterBothExist
 public class CandidateDto {
@@ -25,6 +30,8 @@ public class CandidateDto {
 
     @Size(max = 1000)
     private String bio;
+
+    private Set<String> gremien;
 
     private boolean ageShowing;
 
@@ -112,6 +119,21 @@ public class CandidateDto {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public Set<String> getGremien() {
+        return gremien;
+    }
+
+    public void setGremien(Set<String> gremien) {
+        this.gremien = gremien;
+    }
+
+    public void setGremienWithGremien(Set<Gremium> gremien) {
+        this.gremien = new HashSet<>();
+        for (Gremium g : gremien) {
+            this.gremien.add(g.getAbbr());
+        }
     }
 
 }
