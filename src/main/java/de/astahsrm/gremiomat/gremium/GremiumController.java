@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
+import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -15,6 +16,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,8 @@ import de.astahsrm.gremiomat.candidate.answer.CandidateAnswer;
 import de.astahsrm.gremiomat.mail.MailService;
 import de.astahsrm.gremiomat.mgmt.MgmtUser;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
+import de.astahsrm.gremiomat.password.PasswordDto;
+import de.astahsrm.gremiomat.password.PasswordTokenService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryDto;
 import de.astahsrm.gremiomat.query.QueryService;
@@ -56,6 +60,9 @@ public class GremiumController {
 
     @Autowired
     private MgmtUserService mgmtUserService;
+
+    @Autowired
+    private PasswordTokenService passwordTokenService;
 
     @Autowired
     private MailService mailService;
@@ -98,6 +105,32 @@ public class GremiumController {
             }
         }
         return "redirect:/login?reset=0";
+    }
+
+    @GetMapping("/change-password")
+    public String getChangePassword(HttpServletRequest request, @RequestParam("token") String token, Model m) {
+        if (passwordTokenService.validatePasswordResetToken(token) != null) {
+            m.addAttribute("form", new PasswordDto());
+            return "password/change-password";
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/change-password")
+    public String postChangePassword(@RequestParam("token") String token, Model m, @Valid PasswordDto form,
+            BindingResult res) {
+        if (res.hasErrors()) {
+            m.addAttribute("error", res.getAllErrors());
+            m.addAttribute("form", new PasswordDto());
+            return "password/change-password";
+        }
+        try {
+            mgmtUserService.changePassword(token, form.getNewPassword());
+            return "redirect:/login?reset=1";
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getExplanation());
+        }
     }
 
     @GetMapping("/{abbr}")

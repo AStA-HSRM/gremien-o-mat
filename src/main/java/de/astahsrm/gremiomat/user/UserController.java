@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
-import javax.naming.AuthenticationException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +29,6 @@ import de.astahsrm.gremiomat.faculty.Faculty;
 import de.astahsrm.gremiomat.faculty.FacultyService;
 import de.astahsrm.gremiomat.mgmt.MgmtUser;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
-import de.astahsrm.gremiomat.password.PasswordDto;
-import de.astahsrm.gremiomat.password.PasswordTokenService;
 import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.security.SecurityConfig;
@@ -54,9 +50,6 @@ public class UserController {
 
     @Autowired
     private PhotoService photoService;
-
-    @Autowired
-    private PasswordTokenService passwordTokenService;
 
     @Autowired
     private FacultyService facultyService;
@@ -88,32 +81,6 @@ public class UserController {
             return "user/user-info-edit";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
-    }
-
-    @GetMapping("/change-password")
-    public String getChangePassword(HttpServletRequest request, @RequestParam("token") String token, Model m) {
-        if (passwordTokenService.validatePasswordResetToken(token) != null) {
-            m.addAttribute("form", new PasswordDto());
-            return "password/change-password";
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/change-password")
-    public String postChangePassword(@RequestParam("token") String token, Model m, @Valid PasswordDto form,
-            BindingResult res) {
-        if (res.hasErrors()) {
-            m.addAttribute("error", res.getAllErrors());
-            m.addAttribute("form", new PasswordDto());
-            return "password/change-password";
-        }
-        try {
-            mgmtUserService.changePassword(token, form.getNewPassword());
-            return "redirect:/login?reset=1";
-        } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getExplanation());
-        }
     }
 
     @PostMapping("/info/edit")
