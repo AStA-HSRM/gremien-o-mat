@@ -74,6 +74,9 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public MgmtUser saveUser(MgmtUser u) {
+        if (u.hasDetails()) {
+            candidateService.saveCandidate(u.getDetails());
+        }
         return mgmtUserRepository.save(u);
     }
 
@@ -91,6 +94,13 @@ public class MgmtUserServiceImpl implements MgmtUserService {
 
     @Override
     public void delUser(MgmtUser user) {
+        passwordTokenService.deleteTokenByUsername(user.getUsername());
+        if (user.hasDetails()) {
+            Candidate c = user.getDetails();
+            user.setDetails(null);
+            saveUser(user);
+            candidateService.delCandidate(c);
+        }
         mgmtUserRepository.delete(user);
     }
 
@@ -98,12 +108,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     public void delUserById(String username) {
         Optional<MgmtUser> uOpt = getUserById(username);
         if (uOpt.isPresent()) {
-            MgmtUser mu = uOpt.get();
-            Candidate c = uOpt.get().getDetails();
-            mu.setDetails(null);
-            saveUser(mu);
-            candidateService.delCandidate(c);
-            mgmtUserRepository.delete(mu);
+            delUser(uOpt.get());
         } else {
             throw new EntityNotFoundException();
         }

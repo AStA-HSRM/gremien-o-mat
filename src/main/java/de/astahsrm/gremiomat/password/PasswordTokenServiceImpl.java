@@ -72,4 +72,14 @@ public class PasswordTokenServiceImpl implements PasswordTokenService {
         return token;
     }
 
+    @Override
+    public void deleteTokenByUsername(String username) {
+        for (PasswordToken pt : passwordTokenRepository.findAll()) {
+            if(pt.getUser().getUsername().equals(username)) {
+                deleteToken(pt);
+                return;
+            }
+        }
+    }
+
 }

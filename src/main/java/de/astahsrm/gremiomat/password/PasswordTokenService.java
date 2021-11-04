@@ -12,4 +12,6 @@ public interface PasswordTokenService {
     public PasswordToken validatePasswordResetToken(String token);
 
     public String generateResetToken();
+
+    public void deleteTokenByUsername(String username);
 }

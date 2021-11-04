@@ -1,6 +1,7 @@
 package de.astahsrm.gremiomat.admin;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import com.opencsv.exceptions.CsvException;
 
@@ -27,13 +29,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.astahsrm.gremiomat.candidate.Candidate;
-import de.astahsrm.gremiomat.candidate.CandidateDtoAdmin;
+import de.astahsrm.gremiomat.candidate.CandidateDto;
 import de.astahsrm.gremiomat.candidate.CandidateService;
+import de.astahsrm.gremiomat.faculty.Faculty;
+import de.astahsrm.gremiomat.faculty.FacultyService;
 import de.astahsrm.gremiomat.gremium.Gremium;
 import de.astahsrm.gremiomat.gremium.GremiumDto;
 import de.astahsrm.gremiomat.gremium.GremiumService;
 import de.astahsrm.gremiomat.mail.MailService;
+import de.astahsrm.gremiomat.mgmt.MgmtUser;
+import de.astahsrm.gremiomat.mgmt.MgmtUserDto;
 import de.astahsrm.gremiomat.mgmt.MgmtUserService;
+import de.astahsrm.gremiomat.photo.Photo;
 import de.astahsrm.gremiomat.photo.PhotoService;
 import de.astahsrm.gremiomat.query.Query;
 import de.astahsrm.gremiomat.query.QueryAdminDto;
@@ -54,19 +61,28 @@ public class AdminController {
 
     private static final String ADMIN_QUERIES = "admin/queries";
 
+    private static final String ADMIN_USER = "admin/user";
+
     private static final String ADMIN_USERS = "admin/users";
 
-    private static final String REDIRECT_ADMIN_GREMIEN = "redirect:/" + ADMIN_GREMIEN;
+    private static final String REDIRECT = "redirect:/";
 
-    private static final String REDIRECT_ADMIN_QUERIES = "redirect:/" + ADMIN_QUERIES;
+    private static final String REDIRECT_ADMIN_GREMIEN = REDIRECT + ADMIN_GREMIEN;
+
+    private static final String REDIRECT_ADMIN_QUERIES = REDIRECT + ADMIN_QUERIES;
 
     private static final String FORWARD_ADMIN_QUERIES = "forward:/" + ADMIN_QUERIES;
+
+    private static final String REDIRECT_ADMIN_USERS = REDIRECT + ADMIN_USERS;
 
     @Autowired
     private CandidateService candidateService;
 
     @Autowired
     private GremiumService gremiumService;
+
+    @Autowired
+    private FacultyService facultyService;
 
     @Autowired
     private QueryService queryService;
@@ -173,15 +189,15 @@ public class AdminController {
         m.addAttribute("allUsers", mgmtUserService.getAllUsersSortedByUsername());
         m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
         m.addAttribute("usersLocked", mgmtUserService.areUsersLocked());
-        m.addAttribute("form", new CandidateDtoAdmin());
+        m.addAttribute("form", new MgmtUserDto());
         return ADMIN_USERS;
     }
 
     @PostMapping("/users/new")
-    public String postNewUser(HttpServletRequest request, @ModelAttribute CandidateDtoAdmin form, BindingResult res,
+    public String postNewUser(HttpServletRequest request, @ModelAttribute MgmtUserDto form, BindingResult res,
             Model m) {
         if (res.hasErrors()) {
-            return ADMIN_USERS;
+            return ADMIN_USER;
         }
         if (form.getRole().equals(SecurityConfig.ADMIN)) {
             try {
@@ -206,7 +222,117 @@ public class AdminController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, MgmtUserService.USER_NOT_FOUND);
             }
         }
-        return "redirect:/admin/users?sent=true";
+        return REDIRECT_ADMIN_USERS + "?sent=true";
+    }
+
+    @GetMapping("users/{username}")
+    public String getUser(Model m, @PathVariable String username) {
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent()) {
+            MgmtUser user = uOpt.get();
+            if(!user.hasDetails()) {
+                return REDIRECT_ADMIN_USERS;
+            }
+            Candidate userDetails = user.getDetails();
+            CandidateDto form = new CandidateDto();
+            form.setFirstname(userDetails.getFirstname());
+            form.setLastname(userDetails.getLastname());
+            form.setAge(userDetails.getAge());
+            form.setCourse(userDetails.getCourse());
+            form.setSemester(userDetails.getSemester());
+            form.setBio(userDetails.getBio());
+            form.setAgeShowing(userDetails.isAgeShowing());
+            form.setCourseShowing(userDetails.isCourseShowing());
+            form.setGremienWithGremien(userDetails.getGremien());
+            if (userDetails.getFaculty() != null) {
+                form.setFaculty(userDetails.getFaculty().getAbbr());
+            }
+            m.addAttribute("form", form);
+            m.addAttribute("user", user);
+            m.addAttribute("username", user.getUsername());
+            m.addAttribute("faculties", facultyService.getAllFaculties());
+            m.addAttribute(ALL_GREMIEN, gremiumService.getAllGremiumsSortedByName());
+            m.addAttribute("candidate", userDetails);
+            return ADMIN_USER;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+    }
+
+    @PostMapping("users/{username}")
+    public String postUserUpdate(@PathVariable String username, @Valid CandidateDto form, BindingResult res, Model m) {
+        if (res.hasErrors()) {
+            return ADMIN_USER;
+        }
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
+        c.setFirstname(form.getFirstname());
+        c.setLastname(form.getLastname());
+        c.setAge(form.getAge());
+        c.setSemester(form.getSemester());
+        c.setAgeShowing(form.isAgeShowing());
+        c.setCourseShowing(form.isCourseShowing());
+        c.setCourse(form.getCourse());
+        c.setBio(form.getBio());
+        Optional<Faculty> fOpt = facultyService.getByAbbr(form.getFaculty());
+        if (fOpt.isPresent()) {
+            c.setFaculty(fOpt.get());
+        } else {
+            c.setFaculty(null);
+        }
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+            return REDIRECT_ADMIN_USERS + "/" + u.getUsername();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/users/{username}/upload")
+    public String uploadImage(@PathVariable String username, @RequestParam("photo") MultipartFile file, Model m)
+            throws IOException {
+        Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
+        Photo photo = new Photo();
+        photo.setFilename(file.getOriginalFilename());
+        photo.setMimeType(file.getContentType());
+        photo.setBytes(file.getBytes());
+        if (photo.getBytes().length >= 17) {
+            c.setPhoto(photoService.save(photo));
+        }
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent()) {
+            MgmtUser u = uOpt.get();
+            u.setDetails(candidateService.saveCandidate(c));
+            mgmtUserService.saveUser(u);
+            return REDIRECT_ADMIN_USERS + "/" + u.getUsername();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/users/{username}/upload/del")
+    public String getUserInfoUploadDel(@PathVariable String username, Model m) {
+        Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
+        if (uOpt.isPresent() && uOpt.get().hasDetails()) {
+            MgmtUser u = uOpt.get();
+            Photo p = u.getDetails().getPhoto();
+            u.getDetails().setPhoto(null);
+            photoService.delPhoto(p);
+            mgmtUserService.saveUser(u);
+            return REDIRECT_ADMIN_USERS + "/" + u.getUsername();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, MgmtUserService.USER_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/users/{username}/del")
+    public String delUser(Principal loggedInUser, @PathVariable String username, Model m) {
+        if(loggedInUser.getName().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        mgmtUserService.delUserById(username);
+        return REDIRECT_ADMIN_USERS;
     }
 
     @PostMapping("/users/csv")
@@ -217,7 +343,7 @@ public class AdminController {
         } catch (NoSuchMessageException | MessagingException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, MailService.MAIL_ERROR);
         }
-        return "redirect:/admin/users?sent=true";
+        return REDIRECT_ADMIN_USERS + "?sent=true";
     }
 
     @GetMapping("/users/lock")
