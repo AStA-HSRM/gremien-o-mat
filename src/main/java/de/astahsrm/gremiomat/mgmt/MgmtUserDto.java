@@ -1,4 +1,4 @@
-package de.astahsrm.gremiomat.candidate;
+package de.astahsrm.gremiomat.mgmt;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 import de.astahsrm.gremiomat.gremium.Gremium;
 
-public class CandidateDtoAdmin {
+public class MgmtUserDto {
 
     @Email
     @NotBlank
