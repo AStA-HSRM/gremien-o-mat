@@ -23,6 +23,7 @@ services:
       # Uncomment and set these vars when using SSL/TLS for mail sending
       # - SPRING_MAIL_PORT=465
       # - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      # - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE=true
       # - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SOCKETFACTORY_PORT=465
       # - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SOCKETFACTORY_CLASS=javax.net.ssl.SSLSocketFactory
       ###############################################################
