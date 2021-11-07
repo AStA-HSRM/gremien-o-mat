@@ -86,8 +86,9 @@
                                                     <strong th:case="'-1'" th:text="#{answer.disagree}"></strong>
                                                     <strong th:case="'0'" th:text="#{answer.neutral}"></strong>
                                                     <strong th:case="'1'" th:text="#{answer.agree}"></strong>
+                                                    <strong th:case="2" th:text="#{answer.empty}"></strong>
                                                 </th:block>
-                                                <span th:text="|: ${a.reason}|"></span>
+                                                <span th:text="${a.reason != ''} ? |: ${a.reason}| : |: #{candidate.reason.empty}|"></span>
                                             </div>
                                         </div>
                                     </div>

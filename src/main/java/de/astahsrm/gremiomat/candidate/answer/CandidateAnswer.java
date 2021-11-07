@@ -9,7 +9,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import de.astahsrm.gremiomat.query.Query;
@@ -33,7 +32,6 @@ public class CandidateAnswer {
     private int opinion;
 
     @Lob
-    @NotBlank
     private String reason;
 
     public CandidateAnswer() {
