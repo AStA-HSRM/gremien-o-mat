@@ -20,7 +20,8 @@ import de.astahsrm.gremiomat.mgmt.MgmtUserService;
 @Service
 public class MailServiceImpl implements MailService {
 
-    public static final String URL = "localhost:8090/change-password?token=";
+    @Value("${application.hostname}")
+    private String hostname;
 
     @Value("${spring.mail.username}")
     private String from;
@@ -40,7 +41,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendResetPasswordMail(Locale locale, MgmtUser user) throws MessagingException {
         Context context = new Context();
-        String url = URL + mgmtUserService.createPasswordResetTokenForUser(user);
+        String url = hostname + "/change-password?token=" + mgmtUserService.createPasswordResetTokenForUser(user);
         context.setVariable("url", url);
         context.setLocale(locale);
         send(messageSource.getMessage("mail.reset.subject", null, locale),
@@ -50,7 +51,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendWelcomeMail(Locale locale, MgmtUser user) throws MessagingException {
         Context context = new Context();
-        String url = URL + mgmtUserService.createPasswordResetTokenForUser(user);
+        String url = hostname + "/change-password?token=" + mgmtUserService.createPasswordResetTokenForUser(user);
         context.setVariable("user", user);
         context.setVariable("url", url);
         context.setLocale(locale);
