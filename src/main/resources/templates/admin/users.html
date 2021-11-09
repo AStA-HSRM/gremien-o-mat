@@ -28,13 +28,13 @@
                 </div>
             </div>
             <th:block th:insert="fragments/admin.html :: csv('/admin/users/csv')"></th:block>
+            <!-- User List -->
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-5 text-center">
                     <h3 th:text="#{nav.users}"></h3>
                     <p class="form-text" th:text="#{admin.help.users}"></p>
                 </div>
             </div>
-            <!-- Candidate List -->
             <th:block th:each="u : ${allUsers}">
                 <div class="row justify-content-center mb-2">
                     <div class="col-lg-5 col-12">
