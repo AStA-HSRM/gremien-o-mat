@@ -4,6 +4,7 @@ FROM openjdk:11-jdk-slim
 RUN addgroup --system spring && adduser --system --group spring
 
 ARG SPRING_FOLDER=/srv/spring
+ARG JAR_FILE
 
 # Create settings and logs folder
 RUN mkdir -pv ${SPRING_FOLDER}/logs && \
@@ -23,8 +24,10 @@ RUN chown -R spring:spring ${SPRING_FOLDER}
 USER spring:spring
 
 # Copy over compiled jar
-ARG JAR_FILE=build/libs/gremiomat-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
+ARG JAR_PATH=build/libs/$JAR_FILE
+COPY ${JAR_PATH} app.jar
+
+RUN if [ ! -f "app.jar" ]; then exit 1; fi
 
 WORKDIR ${SPRING_FOLDER}
 
