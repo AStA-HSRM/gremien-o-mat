@@ -10,12 +10,12 @@ group = 'de.astahsrm'
 version = '0.7.0-beta'
 sourceCompatibility = '11'
 
+bootJar {
+	enabled = true
+}
+
 jar {
-    manifest {
-        attributes(
-                'Main-Class': 'de.astahsrm.gremiomat.GremiomatApplication'
-        )
-    }
+	enabled = false
 }
 
 repositories {
