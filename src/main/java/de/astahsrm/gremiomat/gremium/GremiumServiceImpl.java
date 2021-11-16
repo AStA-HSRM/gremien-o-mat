@@ -95,6 +95,9 @@ public class GremiumServiceImpl implements GremiumService {
                 rest.add(gremium);
             }
         }
+        rest.sort((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
+        fsrGremien.sort((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
+        fbrGremien.sort((g1, g2) -> g1.getName().compareToIgnoreCase(g2.getName()));
         m.put("rest", rest);
         m.put("fsr", fsrGremien);
         m.put("fbr", fbrGremien);
