@@ -12012,11 +12012,11 @@ footer .fa:hover {
 }
 
 .custom-btn-w {
-  width: 15rem;
+  min-width: 15rem;
 }
 
 .custom-btn-sm-w {
-  width: 10rem;
+  min-width: 10rem;
 }
 
 .disclaimer {
