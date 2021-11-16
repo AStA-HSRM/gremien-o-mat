@@ -95,13 +95,4 @@ public class CandidateServiceImpl implements CandidateService {
         candidateRepository.delete(c);
     }
 
-    @Override
-    public boolean candidateExists(Candidate c) {
-        for (Candidate candidate : candidateRepository.findAll()) {
-            if (c.equals(candidate)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

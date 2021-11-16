@@ -211,18 +211,14 @@ public class AdminController {
             Candidate c = new Candidate();
             c.setFirstname(form.getFirstname());
             c.setLastname(form.getLastname());
-            if (!candidateService.candidateExists(c)) {
-                try {
-                    mgmtUserService.saveNewUser(form.getEmail(), candidateService.saveCandidate(c),
-                            request.getLocale());
-                } catch (NoSuchMessageException | MessagingException e) {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, MailService.MAIL_ERROR);
-                }
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, MgmtUserService.USER_NOT_FOUND);
+            try {
+                mgmtUserService.saveNewUser(form.getEmail(), candidateService.saveCandidate(c), request.getLocale());
+            } catch (NoSuchMessageException | MessagingException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, MailService.MAIL_ERROR);
             }
         }
         return REDIRECT_ADMIN_USERS + "?sent=true";
+
     }
 
     @GetMapping("users/{username}")
@@ -230,7 +226,7 @@ public class AdminController {
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
         if (uOpt.isPresent()) {
             MgmtUser user = uOpt.get();
-            if(!user.hasDetails()) {
+            if (!user.hasDetails()) {
                 return REDIRECT_ADMIN_USERS;
             }
             Candidate userDetails = user.getDetails();
@@ -328,7 +324,7 @@ public class AdminController {
 
     @GetMapping("/users/{username}/del")
     public String delUser(Principal loggedInUser, @PathVariable String username, Model m) {
-        if(loggedInUser.getName().equals(username)) {
+        if (loggedInUser.getName().equals(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         mgmtUserService.delUserById(username);

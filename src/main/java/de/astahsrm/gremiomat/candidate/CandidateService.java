@@ -20,6 +20,4 @@ public interface CandidateService {
 
     Optional<CandidateAnswer> getCandidateAnswerByQueryTxt(String queryTxt, long id);
 
-    public boolean candidateExists(Candidate c);
-
 }
