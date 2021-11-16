@@ -274,10 +274,22 @@ public class AdminController {
         } else {
             c.setFaculty(null);
         }
+        Candidate savedCandidate = candidateService.saveCandidate(c);
+        for (String abbr : form.getGremien()) {
+            Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
+            if(gOpt.isPresent()) {
+                Gremium g = gOpt.get();
+                g.addCandidate(savedCandidate);
+                gremiumService.saveGremium(g);
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+            }
+        }
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(username);
         if (uOpt.isPresent()) {
             MgmtUser u = uOpt.get();
-            u.setDetails(candidateService.saveCandidate(c));
+            u.setDetails(savedCandidate);
             mgmtUserService.saveUser(u);
             return REDIRECT_ADMIN_USERS + "/" + u.getUsername();
         } else {
