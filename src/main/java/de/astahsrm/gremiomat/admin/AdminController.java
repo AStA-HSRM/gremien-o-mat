@@ -277,12 +277,11 @@ public class AdminController {
         Candidate savedCandidate = candidateService.saveCandidate(c);
         for (String abbr : form.getGremien()) {
             Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
-            if(gOpt.isPresent()) {
+            if (gOpt.isPresent()) {
                 Gremium g = gOpt.get();
                 g.addCandidate(savedCandidate);
                 gremiumService.saveGremium(g);
-            }
-            else {
+            } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
             }
         }
@@ -298,8 +297,7 @@ public class AdminController {
     }
 
     @PostMapping("/users/{username}/upload")
-    public String uploadImage(@PathVariable String username, @RequestParam("photo") MultipartFile file, Model m)
-            throws IOException {
+    public String uploadImage( Model m, @PathVariable String username, @RequestParam("photo") MultipartFile file) throws IOException {
         Candidate c = mgmtUserService.getCandidateDetailsOfUser(username);
         Photo photo = new Photo();
         photo.setFilename(file.getOriginalFilename());
