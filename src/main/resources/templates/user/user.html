@@ -119,7 +119,8 @@
                     <div class="modal-body pb-0">
                         <div class="mb-3">
                             <label for="formFile" class="form-label" th:text="#{edit.photo.cta}"></label>
-                            <input class="form-control" name="photo" type="file" id="formFile">
+                            <input class="form-control" aria-describedby="imageHelp" name="photo" type="file" id="formFile">
+                            <div id="imageHelp" class="form-text pt-3 text-justify" th:text="#{help.image}"></div>
                         </div>
                     </div>
                     <div class="row justify-content-center p-3 pt-0">
