@@ -23,6 +23,7 @@ public class CandidateAnswerDto {
 
     public CandidateAnswerDto() {
         this.opinion = 2;
+        this.reason = "";
     }
 
     public long getAnswerId() {
