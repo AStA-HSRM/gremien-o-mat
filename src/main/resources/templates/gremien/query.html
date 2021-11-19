@@ -14,9 +14,10 @@
         <div class="container-fluid pt-lg-5 pt-0 justify-content-center">
             <div class="bg-dark rounded-3 mx-auto mt-3 mt-lg-5 mb-3 pb-4 pt-3" style="max-width: 1000px;">
                 <!-- Logo-->
-                <div class="row mb-4 mt-4 pb-3">
+                <div class="row mt-4 pb-2">
                     <div class="col-12 text-center">
                         <img th:src="@{/assets/img/LogoW.svg}" alt="AStA Logo" width="100">
+                        <p class="text-light mt-3 mb-0"th:text="|${queryIndex+1} #{from} ${gremium.queries.size()}|"></p>
                     </div>
                 </div>
                 <!-- Title -->
