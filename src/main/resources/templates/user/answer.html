@@ -59,8 +59,12 @@
                     <div class="row justify-content-center mb-4">
                         <div class="col-10">
                             <label for="reason" class="mb-1" th:text="#{candidate.reason}"></label>
-                            <textarea th:field="*{reason}" type="text" class="form-control" id="reason"
+                            <textarea th:field="*{reason}" type="text" class="form-control"
+                                th:classappend="${param.error} ? is-invalid" id="reason"
                                 th:placeholder="#{placeholder.reason}" style="height: 12rem;"></textarea>
+                            <div class="invalid-feedback" th:if="${param.error}" style="display: block;">
+                                <p th:text="#{candidate.query.error}"></p>
+                            </div>
                         </div>
                     </div>
                     <div class="row justify-content-center">

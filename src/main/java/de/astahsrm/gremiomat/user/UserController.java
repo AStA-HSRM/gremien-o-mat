@@ -59,7 +59,7 @@ public class UserController {
         Optional<MgmtUser> uOpt = mgmtUserService.getUserById(loggedInUser.getName());
         if (uOpt.isPresent()) {
             MgmtUser user = uOpt.get();
-            if(user.getRole().equals(SecurityConfig.ADMIN)) {
+            if (user.getRole().equals(SecurityConfig.ADMIN)) {
                 return "redirect:/admin/users";
             }
             Candidate userDetails = user.getDetails();
@@ -172,10 +172,10 @@ public class UserController {
     }
 
     @PostMapping("answers/{answerId}/edit")
-    public String postAnswerEdit(@Valid CandidateAnswerDto form, @PathVariable long answerId, BindingResult res,
-            Principal loggedInUser, Model m) {
+    public String postAnswerEdit(Model m, @Valid CandidateAnswerDto form, BindingResult res,
+            @PathVariable long answerId, Principal loggedInUser) {
         if (res.hasErrors()) {
-            return "user/answer";
+            return "redirect:/user/answers/" + answerId + "/edit?error=true";
         }
         Candidate userDetails = mgmtUserService.getCandidateDetailsOfUser(loggedInUser.getName());
         Optional<Candidate> cOpt = candidateService.getCandidateById(userDetails.getId());
