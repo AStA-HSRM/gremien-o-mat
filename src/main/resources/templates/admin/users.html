@@ -61,7 +61,7 @@
                                                 <br>
                                                 <span class="badge bg-dark" th:text="${u.role}"></span>
                                                 <th:block th:if="${u.details != null}">
-                                                    <span class="badge bg-secondary" th:each="g : ${u.details.gremien}"
+                                                    <span class="badge bg-secondary mx-1" th:each="g : ${u.details.gremien}"
                                                         th:text="${g.abbr}"></span>
                                                 </th:block>
                                             </p>
