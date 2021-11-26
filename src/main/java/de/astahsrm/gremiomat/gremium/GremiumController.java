@@ -1,7 +1,9 @@
 package de.astahsrm.gremiomat.gremium;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -140,7 +142,27 @@ public class GremiumController {
             if (m.getAttribute(USER_ANSWERS) != null) {
                 m.addAttribute(USER_ANSWERS, new HashMap<Query, Integer>());
             }
-            m.addAttribute(GREMIUM, gremiumOptional.get());
+            Gremium g = gremiumOptional.get();
+
+            List<Candidate> candidates = new ArrayList<>();
+            for (Candidate c : g.getCandidates()) {
+                boolean allQueriesAnswered = true;
+                if (!c.getAnswers().isEmpty()) {
+                    for (CandidateAnswer ca : c.getAnswers()) {
+                        if (ca.isNotAnswered()) {
+                            allQueriesAnswered = false;
+                            break;
+                        }
+                    }
+                } else {
+                    allQueriesAnswered = false;
+                }
+                if (allQueriesAnswered) {
+                    candidates.add(c);
+                }
+            }
+            m.addAttribute("candidates", candidates);
+            m.addAttribute(GREMIUM, g);
             m.addAllAttributes(gremiumService.getGremienNavMap());
             return "gremien/info";
         }

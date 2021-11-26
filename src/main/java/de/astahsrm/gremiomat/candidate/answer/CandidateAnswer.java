@@ -100,4 +100,8 @@ public class CandidateAnswer {
         this.reason = reason;
     }
 
+    public boolean isNotAnswered() {
+        return this.opinion == 2 || this.reason.isBlank();
+    }
+
 }
