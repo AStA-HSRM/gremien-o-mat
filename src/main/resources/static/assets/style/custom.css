@@ -12043,6 +12043,10 @@ footer .fa:hover {
   height: 13rem;
 }
 
+.min-h-5 {
+  min-height: 5rem;
+}
+
 .overlay-text {
   color: white;
   font-size: 1.2rem;
