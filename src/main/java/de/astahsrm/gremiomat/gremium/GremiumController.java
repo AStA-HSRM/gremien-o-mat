@@ -252,6 +252,7 @@ public class GremiumController {
             HashMap<Candidate, Double> compatibility = new HashMap<>();
             int skipped = 0;
             // Goes through every candidate in gremium
+            boolean allQueriesAnswered = true;
             for (Candidate candidate : gremium.getCandidates()) {
                 double percentage = 0;
                 double answersInCommon = 0;
@@ -262,18 +263,24 @@ public class GremiumController {
                      * answer. Increments 'answersInCommon' if candidate's answer and user's answer
                      * are equal.
                      */
-                    for (CandidateAnswer ans : candidate.getAnswers()) {
-                        if (ans.getQuery().equals(entry.getKey())) {
-                            if (entry.getValue() == ans.getOpinion()) {
+                    if (!candidate.getAnswers().isEmpty()) {
+                        for (CandidateAnswer ans : candidate.getAnswers()) {
+                            if (ans.isNotAnswered()) {
+                                allQueriesAnswered = false;
+                                break;
+                            }
+                            if (ans.getQuery().equals(entry.getKey()) && (entry.getValue() == ans.getOpinion())) {
                                 answersInCommon++;
                             }
-                            break;
                         }
+                    } else {
+                        allQueriesAnswered = false;
                     }
                 }
                 percentage = (answersInCommon / userAnswers.size()) * 100;
-                compatibility.put(candidate, Math.round(percentage * 100.0) / 100.0);
-                m.addAttribute(GREMIUM, gremium);
+                if (allQueriesAnswered) {
+                    compatibility.put(candidate, Math.round(percentage * 100.0) / 100.0);
+                }
             }
             for (Map.Entry<Query, Integer> entry : userAnswers.entrySet()) {
                 if (entry.getValue() == 2) {
@@ -283,12 +290,14 @@ public class GremiumController {
             LinkedHashMap<Candidate, Double> sortedByComp = compatibility.entrySet().stream()
                     .sorted((Map.Entry.<Candidate, Double>comparingByValue().reversed())).collect(Collectors
                             .toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            m.addAttribute(GREMIUM, gremium);
             m.addAttribute("comp", sortedByComp);
             m.addAttribute("skippedAnswers", skipped);
             m.addAllAttributes(gremiumService.getGremienNavMap());
             return "gremien/results";
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, GremiumService.GREMIUM_NOT_FOUND);
+
     }
 
     @PostMapping("/{abbr}/queries/results")
@@ -317,14 +326,14 @@ public class GremiumController {
                 userAnswers.put(q, form.getOpinion());
                 m.addAttribute(USER_ANSWERS, userAnswers);
                 switch (nav) {
-                case NEXT:
-                    return redirect + Integer.toString(queryIndex + 1);
-                case PREV:
-                    return redirect + Integer.toString(queryIndex - 1);
-                case RESULTS:
-                    return redirect + "results";
-                default:
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                    case NEXT:
+                        return redirect + Integer.toString(queryIndex + 1);
+                    case PREV:
+                        return redirect + Integer.toString(queryIndex - 1);
+                    case RESULTS:
+                        return redirect + "results";
+                    default:
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 }
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, QueryService.QUERY_NOT_FOUND);
