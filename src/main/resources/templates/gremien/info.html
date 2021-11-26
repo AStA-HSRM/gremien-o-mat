@@ -32,18 +32,24 @@
                 </div>
             </div>
             <!-- Candidate Heading -->
-            <div th:if="${candidates.size() > 0}" class="row justify-content-center mt-5 mb-3">
+            <div class="row justify-content-center mt-5 mb-3">
                 <div class="col-12 text-center">
                     <h3 th:text="#{info.candidates}"></h3>
                 </div>
             </div>
             <!-- Candidate List -->
-            <div class="row mb-2" th:classappend="${candidates.size() > 3} ? justify-content-start: justify-content-center">
+            <div th:if="${candidates.size() le 0}" class="row justify-content-center mb-2">
+                <div class="col-12 text-center">
+                    <p class="m-0 text-secondary" th:text="#{candidate.empty.set}"></p>
+                </div>
+            </div>
+            <div class="row mb-2"
+                th:classappend="${candidates.size() > 3} ? justify-content-start: justify-content-center">
                 <div th:block th:each="c : ${candidates}" class="col-lg-4 col-md-6 col-12 py-2">
                     <a class="text-decoration-none text-black" th:href="@{/__${gremium.abbr}__/candidates/__${c.id}__}">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
+                                <div class="row min-h-5">
                                     <div class="col-12 col-lg-3 text-center text-lg-end my-auto">
                                         <img class="thumbnail-profile-img"
                                             th:src="${c.getPhoto() != null} ? @{/api/v1/photo/__${c.id}__} : @{/assets/img/placeholder.jpg}"
@@ -52,9 +58,12 @@
                                     <div class="col-12 col-lg-9 text-center text-lg-start my-auto">
                                         <p class="m-0">
                                             <span class="card-text text-"
-                                                th:text="${c.age le 0} ? |${c.firstname} ${c.lastname}| : |${c.firstname} ${c.lastname}, ${c.age}|"></span><span th:if="${c.faculty}" class="ms-1 badge bg-dark text-light" th:text="${c.faculty.abbr}"></span><br />
+                                                th:text="${c.ageShowing} ? |${c.firstname} ${c.lastname}, ${c.age}| : |${c.firstname} ${c.lastname}|"></span>
+                                            <span th:if="${c.faculty}" class="badge bg-dark text-light"
+                                                th:text="${c.faculty.abbr}"></span>
+                                            <br />
                                             <span class="text-secondary"
-                                                th:text="${c.semester le 0 || c.course eq ''} ? #{candidate.student} : |${c.semester}. Semester, ${c.course}|"></span>
+                                                th:text="${c.courseShowing} ? |${c.semester}. Semester, ${c.course}| : #{candidate.student}"></span>
                                         </p>
                                     </div>
                                 </div>
