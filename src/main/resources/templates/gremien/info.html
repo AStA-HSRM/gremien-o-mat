@@ -38,34 +38,31 @@
                 </div>
             </div>
             <!-- Candidate List -->
-            <th:block th:each="c : ${gremium.candidates}">
-                <div class="row justify-content-center mb-2">
-                    <div class="col-lg-4 col-12">
-                        <a class="text-decoration-none text-black"
-                            th:href="@{/__${gremium.abbr}__/candidates/__${c.id}__}">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12 col-lg-2 text-center text-lg-start">
-                                            <img class="thumbnail-profile-img"
-                                                th:src="${c.getPhoto() != null} ? @{/api/v1/photo/__${c.id}__} : @{/assets/img/placeholder.jpg}"
-                                                alt="Profile picture" />
-                                        </div>
-                                        <div class="col-12 col-lg-10 text-center text-lg-start">
-                                            <p class="pt-2">
-                                                <span class="card-text text-"
-                                                    th:text="${c.age le 0} ? |${c.firstname} ${c.lastname}| : |${c.firstname} ${c.lastname}, ${c.age}|"></span><br />
-                                                <span class="text-secondary"
-                                                    th:text="${c.semester le 0 || c.course eq ''} ? #{candidate.student} : |${c.semester}. Semester, ${c.course}|"></span>
-                                            </p>
-                                        </div>
+            <div class="row justify-content-start mb-2">
+                <div th:block th:each="c : ${gremium.candidates}" class="col-lg-4 col-md-6 col-12 py-2">
+                    <a class="text-decoration-none text-black" th:href="@{/__${gremium.abbr}__/candidates/__${c.id}__}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 col-lg-3 text-center text-lg-end my-auto">
+                                        <img class="thumbnail-profile-img"
+                                            th:src="${c.getPhoto() != null} ? @{/api/v1/photo/__${c.id}__} : @{/assets/img/placeholder.jpg}"
+                                            alt="Profile picture" />
+                                    </div>
+                                    <div class="col-12 col-lg-9 text-center text-lg-start my-auto">
+                                        <p class="m-0">
+                                            <span class="card-text text-"
+                                                th:text="${c.age le 0} ? |${c.firstname} ${c.lastname}| : |${c.firstname} ${c.lastname}, ${c.age}|"></span><span th:if="${c.faculty}" class="ms-1 badge bg-dark text-light" th:text="${c.faculty.abbr}"></span><br />
+                                            <span class="text-secondary"
+                                                th:text="${c.semester le 0 || c.course eq ''} ? #{candidate.student} : |${c.semester}. Semester, ${c.course}|"></span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 </div>
-            </th:block>
+            </div>
         </div>
     </main>
     <th:block th:insert="fragments/footer.html"></th:block>
