@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import com.opencsv.exceptions.CsvException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -92,6 +93,13 @@ public class AdminController {
 
     @Autowired
     private PhotoService photoService;
+
+    /*  build version var, for later use
+    @Autowired
+    private BuildProperties buildProperties;
+
+    private final String APP_VERSION = buildProperties.getVersion();
+    */
 
     @GetMapping
     public String getAdminPage() {
