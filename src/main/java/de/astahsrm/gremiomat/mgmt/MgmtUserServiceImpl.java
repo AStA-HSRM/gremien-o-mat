@@ -170,7 +170,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
         // fill up username with x if first or last name aren't long enough
         // fill up first name if shorter than 2 chars
         if (firstname.length() < 2) {
-            firstnameStr = firstname.substring(0, 1) + "x";
+            firstnameStr = firstname.charAt(0) + "x";
         } else {
             firstnameStr = firstname.substring(0, 2);
         }
