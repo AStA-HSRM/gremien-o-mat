@@ -14,6 +14,7 @@ import javax.mail.MessagingException;
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 
+import com.google.common.base.Strings;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
@@ -163,12 +164,29 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     }
 
     private String generateUsername(String firstname, String lastname) {
-        String username = firstname.substring(0, 2).concat(lastname.substring(0, 3));
+        String firstnameStr = firstname;
+        String lastnameStr = lastname;
+
+        // fill up username with x if first or last name aren't long enough
+        // fill up first name if shorter than 2 chars
+        if (firstname.length() < 2) {
+            firstnameStr = firstname.substring(0, 1) + "x";
+        } else {
+            firstnameStr = firstname.substring(0, 2);
+        }
+
+        // fill up last name if shorter than 4 chars
+        if (lastname.length() < 4) {
+            lastnameStr = lastname.substring(0, lastname.length()) + Strings.repeat("x", 4 - lastname.length());
+        } else {
+            lastnameStr = lastname.substring(0, 4);
+        }
+        String username = firstnameStr.concat(lastnameStr);
         int count = 0;
-        String result = String.format("%s%03d", username, count);
+        String result = String.format("%s%02d", username, count);
         while (getUserById(result).isPresent()) {
             count++;
-            result = String.format("%s%03d", username, count);
+            result = String.format("%s%02d", username, count);
         }
         return result.toLowerCase();
     }
