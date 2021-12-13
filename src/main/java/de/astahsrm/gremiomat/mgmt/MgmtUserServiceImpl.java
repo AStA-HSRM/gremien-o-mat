@@ -236,16 +236,40 @@ public class MgmtUserServiceImpl implements MgmtUserService {
         CSVReader reader = new CSVReaderBuilder(new InputStreamReader(csvFile.getInputStream())).withSkipLines(1)
                 .build();
         while ((entry = reader.readNext()) != null) {
-            Candidate candidate = new Candidate();
-            candidate.setFirstname(entry[0]);
-            candidate.setLastname(entry[1]);
-            candidate = candidateService.saveCandidate(candidate);
-            Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
-            if (gOpt.isPresent()) {
-                candidate.addGremium(gOpt.get());
-                gremiumService.addCandidateToGremium(candidate, gOpt.get());
+
+            // check if user already exists
+            // try finding users by email since that's a unique attribute
+            Optional<MgmtUser> mOpt = findUserByEmail(entry[2]);
+            Candidate candidate;
+
+            if (mOpt.isPresent()) {
+                MgmtUser mUser = mOpt.get();
+                candidate = mUser.getDetails();
+
+                // add existing user to Gremium if it is set
+                Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
+                if (gOpt.isPresent()) {
+                    candidate.addGremium(gOpt.get());
+                    gremiumService.addCandidateToGremium(candidate, gOpt.get());
+                }
+                mUser.setDetails(candidate);
+
+                saveUser(mUser);
+
+            } else {
+                candidate = new Candidate();
+                candidate.setFirstname(entry[0]);
+                candidate.setLastname(entry[1]);
+                candidate = candidateService.saveCandidate(candidate);
+                
+                // add new user to Gremium if it is set
+                Optional<Gremium> gOpt = gremiumService.findGremiumByAbbr(abbr);
+                if (gOpt.isPresent()) {
+                    candidate.addGremium(gOpt.get());
+                    gremiumService.addCandidateToGremium(candidate, gOpt.get());
+                }
+                saveNewUser(entry[2], candidate, locale);
             }
-            saveNewUser(entry[2], candidate, locale);
         }
     }
 
