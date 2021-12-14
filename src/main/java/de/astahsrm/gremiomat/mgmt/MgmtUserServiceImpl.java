@@ -15,6 +15,7 @@ import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 
 import com.google.common.base.Strings;
+import com.ibm.icu.text.Transliterator;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
@@ -164,23 +165,29 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     }
 
     private String generateUsername(String firstname, String lastname) {
-        String firstnameStr = firstname;
-        String lastnameStr = lastname;
+        // transliterate umlauts into their DIN 5007-2 alternatives
+        Transliterator transliterator = Transliterator.getInstance("de-ASCII");
+        String firstnameStr = transliterator.transliterate(firstname);
+        String lastnameStr = transliterator.transliterate(lastname);
+
+        int firstnameTargetLength = 2;
+        int lastnameTargetLength = 4;
 
         // fill up username with x if first or last name aren't long enough
-        // fill up first name if shorter than 2 chars
-        if (firstname.length() < 2) {
-            firstnameStr = firstname.charAt(0) + "x";
+        // fill up first name if shorter than firstnameTargetLength
+        if (firstname.length() < firstnameTargetLength) {
+            firstnameStr = firstname.substring(0, firstname.length()) + Strings.repeat("x", firstnameTargetLength - firstname.length());;
         } else {
-            firstnameStr = firstname.substring(0, 2);
+            firstnameStr = firstname.substring(0, firstnameTargetLength);
         }
 
-        // fill up last name if shorter than 4 chars
-        if (lastname.length() < 4) {
-            lastnameStr = lastname.substring(0, lastname.length()) + Strings.repeat("x", 4 - lastname.length());
+        // fill up last name if shorter than lastnameTargetLength
+        if (lastname.length() < lastnameTargetLength) {
+            lastnameStr = lastname.substring(0, lastname.length()) + Strings.repeat("x", lastnameTargetLength - lastname.length());
         } else {
-            lastnameStr = lastname.substring(0, 4);
+            lastnameStr = lastname.substring(0, lastnameTargetLength);
         }
+
         String username = firstnameStr.concat(lastnameStr);
         int count = 0;
         String result = String.format("%s%02d", username, count);
