@@ -252,8 +252,8 @@ public class GremiumController {
             HashMap<Candidate, Double> compatibility = new HashMap<>();
             int skipped = 0;
             // Goes through every candidate in gremium
-            boolean allQueriesAnswered = true;
             for (Candidate candidate : gremium.getCandidates()) {
+                boolean allQueriesAnswered = true;
                 double percentage = 0;
                 double answersInCommon = 0;
                 // Goes through every entry inside of 'userAnswers' Map
