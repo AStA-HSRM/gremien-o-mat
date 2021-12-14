@@ -34,10 +34,10 @@
             <div class="row justify-content-center mb-4">
                 <div class="col-12 col-lg-8 text-center">
                     <h2 class="card-text text-"
-                        th:text="${candidate.age le 0} ? |${candidate.firstname} ${candidate.lastname}| : |${candidate.firstname} ${candidate.lastname}, ${candidate.age}|">
+                        th:text="${candidate.ageShowing} ? |${candidate.firstname} ${candidate.lastname}, ${candidate.age}| : |${candidate.firstname} ${candidate.lastname}|">
                     </h2>
                     <h6 class="text-secondary"
-                        th:text="${candidate.semester le 0 || candidate.course eq ''} ? #{candidate.student} : |${candidate.semester}. Semester, ${candidate.course}|">
+                    th:text="${candidate.courseShowing} ? |${candidate.semester}. #{semester}, ${candidate.course}| : #{candidate.student}">
                     </h6>
                 </div>
             </div>
