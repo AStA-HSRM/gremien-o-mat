@@ -20,11 +20,21 @@ public class MgmtUserDetailsImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         MgmtUser user;
         Optional<MgmtUser> userOptional = mgmtUserRepository.findById(username);
-        
-        if (!userOptional.isPresent() || userOptional.get().isLocked()) {
-             return null;
+
+        if (!userOptional.isPresent()) {
+            for (MgmtUser userToCheck : mgmtUserRepository.findAll()) {
+                if (userToCheck.getEmail().equals(username)) {
+                    if (userToCheck.isLocked()) {
+                        return null;
+                    } else {
+                        return User.withUsername(username).password(userToCheck.getPassword()).roles(userToCheck.getRole()).build();
+                    }
+                }
+            }
+            return null;
+        } else {
+            user = userOptional.get();
+            return User.withUsername(username).password(user.getPassword()).roles(user.getRole()).build();
         }
-        user = userOptional.get();
-        return User.withUsername(username).password(user.getPassword()).roles(user.getRole()).build();
     }
 }
