@@ -119,7 +119,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
     @Override
     public Optional<MgmtUser> findUserByEmail(String userEmail) {
         for (MgmtUser user : mgmtUserRepository.findAll()) {
-            if (user.getEmail().equals(userEmail)) {
+            if (user.getEmail().toLowerCase().equals(userEmail.toLowerCase())) {
                 return Optional.of(user);
             }
         }
@@ -293,7 +293,7 @@ public class MgmtUserServiceImpl implements MgmtUserService {
                     candidate.addGremium(gOpt.get());
                     gremiumService.addCandidateToGremium(candidate, gOpt.get());
                 }
-                saveNewUser(entry[2], candidate, locale);
+                saveNewUser(entry[2].toLowerCase(), candidate, locale);
             }
         }
     }

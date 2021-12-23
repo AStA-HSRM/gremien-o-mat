@@ -45,7 +45,7 @@ public class MailServiceImpl implements MailService {
         context.setVariable("url", url);
         context.setLocale(locale);
         send(messageSource.getMessage("mail.reset.subject", null, locale),
-                templateEngine.process("mail/reset", context), user.getEmail());
+                templateEngine.process("mail/reset", context), user.getEmail().toLowerCase());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class MailServiceImpl implements MailService {
         context.setVariable("url", url);
         context.setLocale(locale);
         send(messageSource.getMessage("mail.welcome.title", null, locale),
-                templateEngine.process("mail/welcome", context), user.getEmail());
+                templateEngine.process("mail/welcome", context), user.getEmail().toLowerCase());
     }
 
     private void send(String subject, String html, String email) throws MessagingException {
