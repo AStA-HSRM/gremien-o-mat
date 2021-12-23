@@ -23,11 +23,11 @@ public class MgmtUserDetailsImpl implements UserDetailsService {
 
         if (!userOptional.isPresent()) {
             for (MgmtUser userToCheck : mgmtUserRepository.findAll()) {
-                if (userToCheck.getEmail().equals(username)) {
+                if (userToCheck.getEmail().toLowerCase().equals(username.toLowerCase())) {
                     if (userToCheck.isLocked()) {
                         return null;
                     } else {
-                        return User.withUsername(username).password(userToCheck.getPassword()).roles(userToCheck.getRole()).build();
+                        return User.withUsername(userToCheck.getUsername()).password(userToCheck.getPassword()).roles(userToCheck.getRole()).build();
                     }
                 }
             }
