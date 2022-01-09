@@ -34,7 +34,11 @@ public class MgmtUserDetailsImpl implements UserDetailsService {
             return null;
         } else {
             user = userOptional.get();
-            return User.withUsername(username).password(user.getPassword()).roles(user.getRole()).build();
+            if (user.isLocked()) {
+                return null;
+            } else {
+                return User.withUsername(username).password(user.getPassword()).roles(user.getRole()).build();
+            }
         }
     }
 }
