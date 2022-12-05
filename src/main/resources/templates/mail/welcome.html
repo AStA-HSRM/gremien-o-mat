@@ -126,6 +126,9 @@
             <span
                 th:text="${user.role == 'ADMIN'} ? #{mail.welcome.info.admin} : #{mail.welcome.info.candidate}"></span>
             <th:block th:if="${user.role != 'ADMIN'}">
+                <span th:text="#{mail.welcome.info.candidate2}"></span>
+                <br><br>
+                <span th:text="#{mail.welcome.info.candidate3}"></span>
                 <br><br>
                 <span th:text="#{mail.deadline}"></span> <strong th:text="#{answers.deadline}"></strong>
             </th:block>
@@ -133,7 +136,12 @@
             <span th:text="#{mail.username}"></span><strong th:text="${user.username}"></strong>
         </p>
         <p>
+            <span th:text="#{mail.welcome.contact.it}"></span>
+            <span th:text="#{mail.welcome.contact.hopo}"></span>
+        </p>
+        <p>
             <span th:text="#{mail.welcome.signature}"></span>
+            <span th:text="#{mail.welcome.ps}"></span>
         </p>
         <div style="text-align: center; margin-top: 2rem;">
             <a style="text-decoration: none; color: white; padding: 1rem; background-color: #be1e2d; border-radius: 2rem;"
